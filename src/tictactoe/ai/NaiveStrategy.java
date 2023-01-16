@@ -4,6 +4,7 @@ import tictactoe.model.Game;
 import tictactoe.model.Move;
 
 import java.util.List;
+import java.util.Random;
 
 public class NaiveStrategy implements Strategy {
 
@@ -15,9 +16,13 @@ public class NaiveStrategy implements Strategy {
     @Override
     public Move determineMove(Game game) {
         List<Move> moves = game.getValidMoves();
-        int max = moves.size() - 1;
-        int min = 0;
-        int range = max - min + 1;
-        return moves.get((int) (Math.random() * range) + min);
+//        int max = moves.size() - 1;
+//        int min = 0;
+//        int range = max - min + 1;
+//        return moves.get((int) (Math.random() * range) + min);
+
+        Random random = new Random();
+        int index = random.nextInt(moves.size());
+        return moves.get(index);
     }
 }

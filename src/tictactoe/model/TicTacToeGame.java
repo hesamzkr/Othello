@@ -1,5 +1,7 @@
 package tictactoe.model;
 
+import tictactoe.ai.Score;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,5 +103,31 @@ public class TicTacToeGame implements Game {
             game.nextTurn();
         game.setBoard(board.deepCopy());
         return game;
+    }
+
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
+
+    /**
+     * requires the game to be over
+     *
+     * @return
+     */
+    public Score getScores() {
+        if (isGameover()) {
+            if (getWinner() == player1) {
+                return new Score(player1, player2, 1, -2);
+            } else if (getWinner() == player2) {
+                return new Score(player1, player2, -2, 1);
+            } else {
+                return new Score(player1, player2, 0, 0);
+            }
+        }
+        return null;
     }
 }

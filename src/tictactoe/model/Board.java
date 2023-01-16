@@ -14,10 +14,16 @@ public class Board {
     /**
      * Dimension of the board, i.e., if set to 3, the board has 3 rows and 3 columns.
      */
-    public static final int DIM = 3;
+    public static final int DIM = 5;
     private static final String DELIM = "     ";
-    private static final String[] NUMBERING = {" 0 | 1 | 2 ", "---+---+---",
-        " 3 | 4 | 5 ", "---+---+---", " 6 | 7 | 8 "};
+//    private static final String[] NUMBERING = {" 0 | 1 | 2 ", "---+---+---",
+//        " 3 | 4 | 5 ", "---+---+---", " 6 | 7 | 8 "};
+
+    private static final String[] NUMBERING = {" 0 | 1 | 2 | 3 | 4", "---+---+---+---+---",
+            " 5 | 6 | 7 | 8 | 9 ", "---+---+---+---+---", " 10 | 11 | 12 | 13 | 14 ", "---+---+---+---+---", " 15 | 16 | 17 | 18 | 19 ", "---+---+---+---+---",
+            " 20 | 21 | 22 | 23 | 24 "
+    };
+
     private static final String LINE = NUMBERING[1];
 
     /**
@@ -27,13 +33,14 @@ public class Board {
     private Mark[] fields;
 
     // -- Constructors -----------------------------------------------
+
     /**
      * Creates an empty board.
      */
     //@ ensures (\forall int i; (i >= 0 && i < DIM*DIM); fields[i] == Mark.EMPTY);
     public Board() {
-        this.fields = new Mark[DIM*DIM];
-        for(int i=0;i< fields.length;i++){
+        this.fields = new Mark[DIM * DIM];
+        for (int i = 0; i < fields.length; i++) {
             fields[i] = Mark.EMPTY;
         }
     }
@@ -55,22 +62,24 @@ public class Board {
     /**
      * Calculates the index in the linear array of fields from a (row, col). Starts from 0-2.
      * pair.
+     *
      * @return the index belonging to the (row,col)-field
      */
     /*@ requires row >= 0 && row < DIM;
     requires col >= 0 && row < DIM;
      @*/
     public int index(int row, int col) {
-        if(row < DIM && col < DIM) {
-            int i = ((row*DIM) + col);
+        if (row < DIM && col < DIM) {
+            int i = ((row * DIM) + col);
             return i;
-        }else{
+        } else {
             return -1;
         }
     }
 
     /**
      * Returns true if index is a valid index of a field on the board.
+     *
      * @return true if 0 <= index < DIM*DIM
      */
     //@ ensures index >= 0 && index < DIM*DIM ==> \result == true;
@@ -80,15 +89,17 @@ public class Board {
 
     /**
      * Returns true of the (row,col) pair refers to a valid field on the board.
+     *
      * @return true if 0 <= row < DIM && 0 <= col < DIM >> ROW/COL are counted from 0</>
      */
     //@ ensures row >= 0 && row < DIM && col >= 0 && col < DIM ==> \result == true;
     public boolean isField(int row, int col) {
         return row >= 0 && row < DIM && col >= 0 && col < DIM;
     }
-    
+
     /**
      * Returns the content of the field i.
+     *
      * @param i the number of the field (see NUMBERING)
      * @return the mark on the field
      */
@@ -105,6 +116,7 @@ public class Board {
 
     /**
      * Returns the content of the field referred to by the (row,col) pair.
+     *
      * @param row the row of the field
      * @param col the column of the field
      * @return the mark on the field
@@ -113,15 +125,16 @@ public class Board {
     ensures \result == Mark.EMPTY || \result == Mark.OO || \result == Mark.XX;
      @*/
     public Mark getField(int row, int col) {
-        if (isField(row,col)){
+        if (isField(row, col)) {
             return fields[index(row, col)];
-        }else {
+        } else {
             return null;
         }
     }
 
     /**
      * Returns true if the field i is empty.
+     *
      * @param i the index of the field (see NUMBERING)
      * @return true if the field is empty
      */
@@ -129,15 +142,16 @@ public class Board {
     ensures getField(i) == Mark.EMPTY ==> \result == true;
      @*/
     public boolean isEmptyField(int i) {
-        if(fields[i] == Mark.EMPTY){
+        if (fields[i] == Mark.EMPTY) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
     /**
      * Returns true if the field referred to by the (row,col) pair it empty.
+     *
      * @param row the row of the field
      * @param col the column of the field
      * @return true if the field is empty
@@ -146,22 +160,23 @@ public class Board {
     ensures getField(row, col) == Mark.EMPTY ==> \result == true;
      @*/
     public boolean isEmptyField(int row, int col) {
-    	 if(isField(row,col)){
-             if(fields[index(row, col)] == Mark.EMPTY){
-                 return true;
-             }
-         }
-         return false;
+        if (isField(row, col)) {
+            if (fields[index(row, col)] == Mark.EMPTY) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
      * Tests if the whole board is full.
+     *
      * @return true if all fields are occupied
      */
     //@ ensures (\forall int i; (i >= 0 && i < DIM*DIM); fields[i] == Mark.XX || fields[i] == Mark.OO);
     public boolean isFull() {
-        for(int i=0;i< fields.length;i++){
-            if(fields[i] == Mark.EMPTY){
+        for (int i = 0; i < fields.length; i++) {
+            if (fields[i] == Mark.EMPTY) {
                 return false;
             }
         }
@@ -171,53 +186,56 @@ public class Board {
     /**
      * Returns true if the game is over. The game is over when there is a winner
      * or the whole board is full.
+     *
      * @return true if the game is over
      */
     //@ ensures isFull() || hasWinner() ==> \result == true;
     public boolean gameOver() {
-    	 if(isFull() == true || hasWinner()){
-             return true;
-         }else {
-             return false;
-         }
+        if (isFull() == true || hasWinner()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
      * Checks whether there is a row which is full and only contains the mark
      * m.
+     *
      * @param m the Mark of interest
      * @return true if there is a row controlled by m
      */
     public boolean hasRow(Mark m) { //how do we find all the different rows
         HashSet<Mark> states = new HashSet<Mark>();
-        for(int i = 0; i<DIM;i++){ // checks every row
-            for(int z = 0; z<DIM;z++){
-                states.add(getField(i,z));
+        for (int i = 0; i < DIM; i++) { // checks every row
+            for (int z = 0; z < DIM; z++) {
+                states.add(getField(i, z));
             }
-            if(states.contains(m) && states.size() == 1){
+            if (states.contains(m) && states.size() == 1) {
                 return true;
-            }else{
+            } else {
                 states.clear();
             }
         }
-         return false;
+        return false;
     }
 
     /**
      * Checks whether there is a column which is full and only contains the mark
      * m.
+     *
      * @param m the Mark of interest
      * @return true if there is a column controlled by m
      */
     public boolean hasColumn(Mark m) {
         HashSet<Mark> states = new HashSet<Mark>();
-        for(int i = 0; i<DIM;i++){ // checks every column
-            for(int z = 0; z<DIM;z++){
-                states.add(getField(z,i));
+        for (int i = 0; i < DIM; i++) { // checks every column
+            for (int z = 0; z < DIM; z++) {
+                states.add(getField(z, i));
             }
-            if(states.contains(m) && states.size() == 1){
+            if (states.contains(m) && states.size() == 1) {
                 return true;
-            }else{
+            } else {
                 states.clear();
             }
         }
@@ -227,6 +245,7 @@ public class Board {
     /**
      * Checks whether there is a diagonal which is full and only contains the
      * mark m.
+     *
      * @param m the Mark of interest
      * @return true if there is a diagonal controlled by m
      */
@@ -248,12 +267,13 @@ public class Board {
                 return true;
             }
         }
-         return false;
+        return false;
     }
 
     /**
      * Checks if the mark m has won. A mark wins if it controls at
      * least one row, column or diagonal.
+     *
      * @param m the mark of interest
      * @return true if the mark has won
      */
@@ -261,9 +281,9 @@ public class Board {
     ensures hasRow(m) || hasColumn(m) || hasDiagonal(m) ==> \result == true;
      @*/
     public boolean isWinner(Mark m) {
-        if(hasColumn(m) || hasRow(m) || hasDiagonal(m)){
+        if (hasColumn(m) || hasRow(m) || hasDiagonal(m)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -271,15 +291,16 @@ public class Board {
     /**
      * Returns true if the game has a winner. This is the case when one of the
      * marks controls at least one row, column or diagonal.
+     *
      * @return true if the student has a winner.
      */
     //@ ensures isWinner(Mark.XX) || isWinner(Mark.OO) ==> \result == true;
     public boolean hasWinner() {
-    	 if(isWinner(Mark.XX) || isWinner(Mark.OO)){
-             return true;
-         }else {
-             return false;
-         }
+        if (isWinner(Mark.XX) || isWinner(Mark.OO)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -312,13 +333,14 @@ public class Board {
      */
     //@ ensures (\forall int i; (i >= 0 && i < DIM*DIM); fields[i] == Mark.EMPTY);
     public void reset() {
-    	for(int i=0; i<fields.length;i++){
+        for (int i = 0; i < fields.length; i++) {
             fields[i] = Mark.EMPTY;
         }
     }
 
     /**
      * Sets the content of field i to the mark m.
+     *
      * @param i the field number (see NUMBERING)
      * @param m the mark to be placed
      */
@@ -326,7 +348,7 @@ public class Board {
     ensures getField(i) == m;
      @*/
     public void setField(int i, Mark m) {
-        if(isField(i)){
+        if (isField(i)) {
             fields[i] = m;
         }
     }
@@ -334,16 +356,17 @@ public class Board {
     /**
      * Sets the content of the field represented by
      * the (row,col) pair to the mark m.
+     *
      * @param row the field's row
      * @param col the field's column
-     * @param m the mark to be placed
+     * @param m   the mark to be placed
      */
     /*@ requires isField(row, col);
     ensures getField(row, col) == m;
      @*/
     public void setField(int row, int col, Mark m) {
-        if(isField(row,col)){
-            fields[index(row,col)] = m;
+        if (isField(row, col)) {
+            fields[index(row, col)] = m;
         }
     }
 }

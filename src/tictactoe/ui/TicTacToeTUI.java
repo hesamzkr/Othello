@@ -1,8 +1,6 @@
 package tictactoe.ui;
 
-import tictactoe.ai.ComputerPlayer;
-import tictactoe.ai.NaiveStrategy;
-import tictactoe.ai.SmartStrategy;
+import tictactoe.ai.*;
 import tictactoe.model.*;
 
 import java.util.Scanner;
@@ -71,8 +69,27 @@ public class TicTacToeTUI {
                 return new ComputerPlayer(mark, new NaiveStrategy());
             case "-S":
                 return new ComputerPlayer(mark, new SmartStrategy());
+            case "-M":
+                return new ComputerPlayer(mark, new MonteCarloStrategy(selectDifficulty(scanner)));
             default:
                 return new HumanPlayer(playerName);
+        }
+    }
+
+    private static Difficulty selectDifficulty(Scanner scanner) {
+        System.out.println("Select a difficulty: easy, mid (medium), hard");
+        String setting = scanner.nextLine();
+        while (true) {
+            switch (setting) {
+                case "easy":
+                    return Difficulty.EASY;
+                case "mid":
+                    return Difficulty.MEDIUM;
+                case "hard":
+                    return Difficulty.HARD;
+                default:
+                    System.out.println("Select a valid difficulty.");
+            }
         }
     }
 
