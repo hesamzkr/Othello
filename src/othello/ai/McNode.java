@@ -1,9 +1,9 @@
-package tictactoe.ai;
+package othello.ai;
 
-import tictactoe.model.Move;
-import tictactoe.model.Player;
-import tictactoe.model.TicTacToeGame;
-import tictactoe.model.TicTacToeMove;
+import othello.game.Move;
+import othello.game.Player;
+import othello.game.TicTacToeGame;
+import othello.game.TicTacToeMove;
 
 import java.util.ArrayList;
 import java.util.List;

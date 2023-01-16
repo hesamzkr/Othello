@@ -1,4 +1,4 @@
-package tictactoe.model;
+package othello.game;
 
 /**
  * A player of a turn-based game.

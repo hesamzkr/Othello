@@ -1,6 +1,5 @@
-package tictactoe.model;
+package othello.game;
 
-import java.util.Arrays;
 import java.util.HashSet;
 
 /**

@@ -1,8 +1,7 @@
-package tictactoe.ai;
+package othello.ai;
 
-import tictactoe.model.Player;
+import othello.game.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface Node {

@@ -1,10 +1,10 @@
-package tictactoe.ai;
+package othello.ai;
 
-import tictactoe.model.Game;
-import tictactoe.model.Move;
-import tictactoe.model.TicTacToeGame;
+import othello.game.Game;
+import othello.game.Move;
+import othello.game.TicTacToeGame;
 
-public class MonteCarloStrategy implements Strategy {
+public class MonteCarloStrategy implements othello.ai.Strategy {
 
     private int numIterations;
 

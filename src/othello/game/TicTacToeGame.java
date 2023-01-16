@@ -1,6 +1,6 @@
-package tictactoe.model;
+package othello.game;
 
-import tictactoe.ai.Score;
+import othello.ai.Score;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package tictactoe.ai;
+package othello.ai;
 
 public class Tree {
     Node root;

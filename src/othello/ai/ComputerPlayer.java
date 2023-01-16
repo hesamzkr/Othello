@@ -1,9 +1,9 @@
-package tictactoe.ai;
+package othello.ai;
 
-import tictactoe.model.AbstractPlayer;
-import tictactoe.model.Game;
-import tictactoe.model.Mark;
-import tictactoe.model.Move;
+import othello.game.AbstractPlayer;
+import othello.game.Game;
+import othello.game.Mark;
+import othello.game.Move;
 
 public class ComputerPlayer extends AbstractPlayer {
 

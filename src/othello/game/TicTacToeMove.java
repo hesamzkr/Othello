@@ -1,4 +1,4 @@
-package tictactoe.model;
+package othello.game;
 
 public class TicTacToeMove implements Move {
     private Mark mark;

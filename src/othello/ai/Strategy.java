@@ -1,12 +1,13 @@
-package tictactoe.ai;
+package othello.ai;
 
-import tictactoe.model.Game;
-import tictactoe.model.Move;
+import othello.game.Game;
+import othello.game.Move;
 
 public interface Strategy {
 
     /**
      * get the name of the strategy
+     *
      * @return name of the strategy
      */
     //@ ensures \result != null;
@@ -15,6 +16,7 @@ public interface Strategy {
     /**
      * Returns a legal move, given the current state
      * of the game.
+     *
      * @param game the game strategy is for
      * @return a legal move
      */

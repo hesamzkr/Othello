@@ -1,6 +1,6 @@
-package tictactoe.ai;
+package othello.ai;
 
-import tictactoe.model.Player;
+import othello.game.Player;
 
 import java.util.HashMap;
 import java.util.Map;

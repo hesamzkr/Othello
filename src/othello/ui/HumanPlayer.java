@@ -1,6 +1,6 @@
-package tictactoe.ui;
+package othello.ui;
 
-import tictactoe.model.*;
+import othello.game.*;
 
 import java.util.Scanner;
 

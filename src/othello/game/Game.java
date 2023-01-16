@@ -1,4 +1,4 @@
-package tictactoe.model;
+package othello.game;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ public interface Game {
 
     /**
      * Check if the game is over, i.e., there is a winner or no more moves are available.
+     *
      * @return whether the game is over
      */
     //@ pure;
@@ -19,6 +20,7 @@ public interface Game {
 
     /**
      * Query whose turn it is
+     *
      * @return the player whose turn it is
      */
     //@ pure;
@@ -26,6 +28,7 @@ public interface Game {
 
     /**
      * Get the winner of the game. If the game is a draw, then this method returns null.
+     *
      * @return the winner, or null if no player is the winner
      */
     //@ pure;
@@ -42,6 +45,7 @@ public interface Game {
 
     /**
      * Check if a move is a valid move
+     *
      * @param move the move to check
      * @return true if the move is a valid move
      */
@@ -51,6 +55,7 @@ public interface Game {
 
     /**
      * Perform the move, assuming it is a valid move.
+     *
      * @param move the move to play
      */
     //@ requires isValidMove(move);

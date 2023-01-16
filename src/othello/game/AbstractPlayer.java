@@ -1,4 +1,4 @@
-package tictactoe.model;
+package othello.game;
 
 /**
  * A player of a game.
@@ -18,6 +18,7 @@ public abstract class AbstractPlayer implements Player {
 
     /**
      * Returns the name of the player.
+     *
      * @return the name of the player
      */
     public String getName() {
@@ -26,6 +27,7 @@ public abstract class AbstractPlayer implements Player {
 
     /**
      * Determines the next move, if the game still has available moves.
+     *
      * @param game the current game
      * @return the player's choice
      */
@@ -35,6 +37,7 @@ public abstract class AbstractPlayer implements Player {
 
     /**
      * Returns a representation of a player, i.e., their name
+     *
      * @return the String representation of this object
      */
     @Override

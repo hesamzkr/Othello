@@ -1,4 +1,4 @@
-package tictactoe;
+package othello;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
-import tictactoe.model.Board;
-import tictactoe.model.Mark;
+import othello.game.Board;
+import othello.game.Mark;
 
 public class BoardTest {
     private Board board;
