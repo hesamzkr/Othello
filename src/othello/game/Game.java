@@ -41,7 +41,7 @@ public interface Game {
      */
     //@ ensures (\forall Move m; \result.contains(m); isValidMove(m));
     //@ pure;
-    List<Move> getValidMoves();
+    List<Move> getValidMoves(Mark m);
 
     /**
      * Check if a move is a valid move

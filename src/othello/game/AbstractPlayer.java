@@ -5,6 +5,7 @@ package othello.game;
  */
 public abstract class AbstractPlayer implements Player {
     private final String name;
+    private Mark mark;
 
     /**
      * Creates a new Player object.
@@ -23,6 +24,10 @@ public abstract class AbstractPlayer implements Player {
      */
     public String getName() {
         return name;
+    }
+
+    public Mark getMark() {
+        return mark;
     }
 
     /**
