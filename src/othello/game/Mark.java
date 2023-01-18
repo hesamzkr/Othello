@@ -2,24 +2,24 @@ package othello.game;
 
 /**
  * Represents a mark in the Tic Tac Toe game. There three possible values:
- * Mark.XX, Mark.OO and Mark.EMPTY.
+ * Mark.BB, Mark.WW and Mark.EMPTY.
  * Module 2 lab assignment
  */
 public enum Mark {
 
-    EMPTY, XX, OO;
+    EMPTY, BLACK, WHITE;
 
     /**
      * Returns the other mark.
      *
-     * @return the other mark is this mark is not EMPTY or EMPTY
+     * @return the other mark if this mark is not EMPTY or EMPTY
      */
-    //@ ensures this == XX ==> \result == OO && this == OO ==> \result == XX;
+    //@ ensures this == BLACK ==> \result == WHITE && this == WHITE ==> \result == BLACK;
     public Mark other() {
-        if (this == XX) {
-            return OO;
-        } else if (this == OO) {
-            return XX;
+        if (this == BLACK) {
+            return WHITE;
+        } else if (this == WHITE) {
+            return BLACK;
         } else {
             return EMPTY;
         }

@@ -20,9 +20,9 @@ public class TicTacToeTUI {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Player1 name: ");
-        AbstractPlayer player1 = createPlayer(scanner, Mark.XX);
+        AbstractPlayer player1 = createPlayer(scanner, Mark.BLACK);
         System.out.print("Player2 name: ");
-        AbstractPlayer player2 = createPlayer(scanner, Mark.OO);
+        AbstractPlayer player2 = createPlayer(scanner, Mark.WHITE);
 
         TicTacToeTUI tui = new TicTacToeTUI(new TicTacToeGame(player1, player2), player1, player2);
         tui.run();

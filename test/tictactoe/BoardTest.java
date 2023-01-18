@@ -52,15 +52,15 @@ public class BoardTest {
 
     @Test
     public void testSetAndGetFieldIndex() {
-        board.setField(0, Mark.XX);
-        assertEquals(Mark.XX, board.getField(0));
+        board.setField(0, Mark.BLACK);
+        assertEquals(Mark.BLACK, board.getField(0));
         assertEquals(Mark.EMPTY, board.getField(1));
     }
 
     @Test
     public void testSetAndGetFieldRowCol() {
-        board.setField(0, 0, Mark.XX);
-        assertEquals(Mark.XX, board.getField(0, 0));
+        board.setField(0, 0, Mark.BLACK);
+        assertEquals(Mark.BLACK, board.getField(0, 0));
         assertEquals(Mark.EMPTY, board.getField(0, 1));
         assertEquals(Mark.EMPTY, board.getField(1, 0));
         assertEquals(Mark.EMPTY, board.getField(1, 1));
@@ -76,8 +76,8 @@ public class BoardTest {
 
     @Test
     public void testReset() {
-        board.setField(0, Mark.XX);
-        board.setField(Board.DIM * Board.DIM - 1, Mark.OO);
+        board.setField(0, Mark.BLACK);
+        board.setField(Board.DIM * Board.DIM - 1, Mark.WHITE);
         board.reset();
         assertEquals(Mark.EMPTY, board.getField(0));
         assertEquals(Mark.EMPTY, board.getField(Board.DIM * Board.DIM - 1));
@@ -85,8 +85,8 @@ public class BoardTest {
 
     @Test
     public void testDeepCopy() {
-        board.setField(0, Mark.XX);
-        board.setField(Board.DIM * Board.DIM - 1, Mark.OO);
+        board.setField(0, Mark.BLACK);
+        board.setField(Board.DIM * Board.DIM - 1, Mark.WHITE);
         Board deepCopyBoard = board.deepCopy();
 
         // First test if all the fields are the same
@@ -95,22 +95,22 @@ public class BoardTest {
         }
 
         // Check if a field in the deepcopied board the original remains the same
-        deepCopyBoard.setField(0, Mark.OO);
+        deepCopyBoard.setField(0, Mark.WHITE);
 
-        assertEquals(Mark.XX, board.getField(0));
-        assertEquals(Mark.OO, deepCopyBoard.getField(0));
+        assertEquals(Mark.BLACK, board.getField(0));
+        assertEquals(Mark.WHITE, deepCopyBoard.getField(0));
     }
 
     @Test
     public void testIsEmptyFieldIndex() {
-        board.setField(0, Mark.XX);
+        board.setField(0, Mark.BLACK);
         assertFalse(board.isEmptyField(0));
         assertTrue(board.isEmptyField(1));
     }
 
     @Test
     public void testIsEmptyFieldRowCol() {
-        board.setField(0, 0, Mark.XX);
+        board.setField(0, 0, Mark.BLACK);
         assertFalse(board.isEmptyField(0, 0));
         assertTrue(board.isEmptyField(0, 1));
         assertTrue(board.isEmptyField(1, 0));
@@ -119,11 +119,11 @@ public class BoardTest {
     @Test
     public void testIsFull() {
         for (int i = 0; i < Board.DIM * Board.DIM - 1; i++) {
-            board.setField(i, Mark.XX);
+            board.setField(i, Mark.BLACK);
         }
         assertFalse(board.isFull());
 
-        board.setField(Board.DIM * Board.DIM - 1, Mark.XX);
+        board.setField(Board.DIM * Board.DIM - 1, Mark.BLACK);
         assertTrue(board.isFull());
     }
 
@@ -134,111 +134,111 @@ public class BoardTest {
          * oox
          * xxo
          */
-        board.setField(0, 0, Mark.XX);
-        board.setField(0, 1, Mark.XX);
-        board.setField(0, 2, Mark.OO);
-        board.setField(1, 0, Mark.OO);
-        board.setField(1, 1, Mark.OO);
-        board.setField(1, 2, Mark.XX);
-        board.setField(2, 0, Mark.XX);
-        board.setField(2, 1, Mark.OO);
+        board.setField(0, 0, Mark.BLACK);
+        board.setField(0, 1, Mark.BLACK);
+        board.setField(0, 2, Mark.WHITE);
+        board.setField(1, 0, Mark.WHITE);
+        board.setField(1, 1, Mark.WHITE);
+        board.setField(1, 2, Mark.BLACK);
+        board.setField(2, 0, Mark.BLACK);
+        board.setField(2, 1, Mark.WHITE);
 
         assertFalse(board.gameOver());
         assertFalse(board.hasWinner());
-        board.setField(2, 2, Mark.XX);
+        board.setField(2, 2, Mark.BLACK);
         assertTrue(board.gameOver());
         assertFalse(board.hasWinner());
     }
 
     @Test
     public void testHasRow() {
-        board.setField(0, Mark.XX);
-        board.setField(1, Mark.XX);
-        assertFalse(board.hasRow(Mark.XX));
-        assertFalse(board.hasRow(Mark.OO));
+        board.setField(0, Mark.BLACK);
+        board.setField(1, Mark.BLACK);
+        assertFalse(board.hasRow(Mark.BLACK));
+        assertFalse(board.hasRow(Mark.WHITE));
 
-        board.setField(2, Mark.XX);
-        assertTrue(board.hasRow(Mark.XX));
-        assertFalse(board.hasRow(Mark.OO));
+        board.setField(2, Mark.BLACK);
+        assertTrue(board.hasRow(Mark.BLACK));
+        assertFalse(board.hasRow(Mark.WHITE));
 
         board.reset();
 
-        board.setField(6, Mark.OO);
-        board.setField(7, Mark.OO);
-        assertFalse(board.hasRow(Mark.OO));
-        assertFalse(board.hasRow(Mark.XX));
+        board.setField(6, Mark.WHITE);
+        board.setField(7, Mark.WHITE);
+        assertFalse(board.hasRow(Mark.WHITE));
+        assertFalse(board.hasRow(Mark.BLACK));
 
-        board.setField(8, Mark.OO);
-        assertTrue(board.hasRow(Mark.OO));
-        assertFalse(board.hasRow(Mark.XX));
+        board.setField(8, Mark.WHITE);
+        assertTrue(board.hasRow(Mark.WHITE));
+        assertFalse(board.hasRow(Mark.BLACK));
     }
 
     @Test
     public void testHasColumn() {
-        board.setField(0, Mark.XX);
-        board.setField(3, Mark.XX);
-        assertFalse(board.hasColumn(Mark.XX));
-        assertFalse(board.hasColumn(Mark.OO));
+        board.setField(0, Mark.BLACK);
+        board.setField(3, Mark.BLACK);
+        assertFalse(board.hasColumn(Mark.BLACK));
+        assertFalse(board.hasColumn(Mark.WHITE));
 
-        board.setField(6, Mark.XX);
-        assertTrue(board.hasColumn(Mark.XX));
-        assertFalse(board.hasColumn(Mark.OO));
+        board.setField(6, Mark.BLACK);
+        assertTrue(board.hasColumn(Mark.BLACK));
+        assertFalse(board.hasColumn(Mark.WHITE));
 
         board.reset();
 
-        board.setField(2, Mark.OO);
-        board.setField(5, Mark.OO);
-        assertFalse(board.hasColumn(Mark.XX));
-        assertFalse(board.hasColumn(Mark.OO));
+        board.setField(2, Mark.WHITE);
+        board.setField(5, Mark.WHITE);
+        assertFalse(board.hasColumn(Mark.BLACK));
+        assertFalse(board.hasColumn(Mark.WHITE));
 
-        board.setField(8, Mark.OO);
-        assertTrue(board.hasColumn(Mark.OO));
-        assertFalse(board.hasColumn(Mark.XX));
+        board.setField(8, Mark.WHITE);
+        assertTrue(board.hasColumn(Mark.WHITE));
+        assertFalse(board.hasColumn(Mark.BLACK));
     }
 
     @Test
     public void testHasDiagonalDown() {
-        board.setField(0, 0, Mark.XX);
-        board.setField(1, 1, Mark.XX);
-        assertFalse(board.hasDiagonal(Mark.XX));
-        assertFalse(board.hasDiagonal(Mark.OO));
+        board.setField(0, 0, Mark.BLACK);
+        board.setField(1, 1, Mark.BLACK);
+        assertFalse(board.hasDiagonal(Mark.BLACK));
+        assertFalse(board.hasDiagonal(Mark.WHITE));
 
-        board.setField(2, 2, Mark.XX);
-        assertTrue(board.hasDiagonal(Mark.XX));
-        assertFalse(board.hasDiagonal(Mark.OO));
+        board.setField(2, 2, Mark.BLACK);
+        assertTrue(board.hasDiagonal(Mark.BLACK));
+        assertFalse(board.hasDiagonal(Mark.WHITE));
     }
 
     @Test
     public void testHasDiagonalUp() {
-        board.setField(0, 2, Mark.XX);
-        board.setField(1, 1, Mark.XX);
-        assertFalse(board.hasDiagonal(Mark.XX));
-        assertFalse(board.hasDiagonal(Mark.OO));
+        board.setField(0, 2, Mark.BLACK);
+        board.setField(1, 1, Mark.BLACK);
+        assertFalse(board.hasDiagonal(Mark.BLACK));
+        assertFalse(board.hasDiagonal(Mark.WHITE));
 
-        board.setField(2, 0, Mark.XX);
-        assertTrue(board.hasDiagonal(Mark.XX));
-        assertFalse(board.hasDiagonal(Mark.OO));
+        board.setField(2, 0, Mark.BLACK);
+        assertTrue(board.hasDiagonal(Mark.BLACK));
+        assertFalse(board.hasDiagonal(Mark.WHITE));
     }
 
     @Test
     public void testIsWinner() {
-        board.setField(0, Mark.XX);
-        board.setField(1, Mark.XX);
-        assertFalse(board.isWinner(Mark.XX));
-        assertFalse(board.isWinner(Mark.OO));
+        board.setField(0, Mark.BLACK);
+        board.setField(1, Mark.BLACK);
+        assertFalse(board.isWinner(Mark.BLACK));
+        assertFalse(board.isWinner(Mark.WHITE));
 
-        board.setField(2, Mark.XX);
-        assertTrue(board.isWinner(Mark.XX));
-        assertFalse(board.isWinner(Mark.OO));
+        board.setField(2, Mark.BLACK);
+        assertTrue(board.isWinner(Mark.BLACK));
+        assertFalse(board.isWinner(Mark.WHITE));
 
-        board.setField(0, 0, Mark.OO);
-        board.setField(1, 1, Mark.OO);
-        assertFalse(board.isWinner(Mark.XX));
-        assertFalse(board.isWinner(Mark.OO));
+        board.setField(0, 0, Mark.WHITE);
+        board.setField(1, 1, Mark.WHITE);
+        assertFalse(board.isWinner(Mark.BLACK));
+        assertFalse(board.isWinner(Mark.WHITE));
 
-        board.setField(2, 2, Mark.OO);
-        assertFalse(board.isWinner(Mark.XX));
-        assertTrue(board.isWinner(Mark.OO));
+        board.setField(2, 2, Mark.WHITE);
+        assertFalse(board.isWinner(Mark.BLACK));
+        assertTrue(board.isWinner(Mark.WHITE));
     }
 
     @Test
@@ -248,90 +248,90 @@ public class BoardTest {
          * oox
          * xxo
          */
-        board.setField(0, 0, Mark.XX);
-        board.setField(0, 1, Mark.XX);
-        board.setField(0, 2, Mark.OO);
-        board.setField(1, 0, Mark.OO);
-        board.setField(1, 1, Mark.OO);
-        board.setField(1, 2, Mark.XX);
-        board.setField(2, 0, Mark.XX);
-        board.setField(2, 1, Mark.OO);
-        board.setField(2, 2, Mark.XX);
+        board.setField(0, 0, Mark.BLACK);
+        board.setField(0, 1, Mark.BLACK);
+        board.setField(0, 2, Mark.WHITE);
+        board.setField(1, 0, Mark.WHITE);
+        board.setField(1, 1, Mark.WHITE);
+        board.setField(1, 2, Mark.BLACK);
+        board.setField(2, 0, Mark.BLACK);
+        board.setField(2, 1, Mark.WHITE);
+        board.setField(2, 2, Mark.BLACK);
         assertFalse(board.hasWinner());
     }
 
     @Test
     public void testHasWinnerRow() {
-        board.setField(0, Mark.XX);
-        board.setField(1, Mark.XX);
+        board.setField(0, Mark.BLACK);
+        board.setField(1, Mark.BLACK);
         assertFalse(board.hasWinner());
 
-        board.setField(2, Mark.XX);
+        board.setField(2, Mark.BLACK);
         assertTrue(board.hasWinner());
 
         board.reset();
 
-        board.setField(3, Mark.XX);
-        board.setField(4, Mark.XX);
+        board.setField(3, Mark.BLACK);
+        board.setField(4, Mark.BLACK);
         assertFalse(board.hasWinner());
 
-        board.setField(5, Mark.XX);
+        board.setField(5, Mark.BLACK);
         assertTrue(board.hasWinner());
 
         board.reset();
 
-        board.setField(6, Mark.XX);
-        board.setField(7, Mark.XX);
+        board.setField(6, Mark.BLACK);
+        board.setField(7, Mark.BLACK);
         assertFalse(board.hasWinner());
 
-        board.setField(8, Mark.XX);
+        board.setField(8, Mark.BLACK);
         assertTrue(board.hasWinner());
     }
 
     @Test
     public void testHasWinnerColumn() {
-        board.setField(0, Mark.XX);
-        board.setField(3, Mark.XX);
+        board.setField(0, Mark.BLACK);
+        board.setField(3, Mark.BLACK);
         assertFalse(board.hasWinner());
 
-        board.setField(6, Mark.XX);
+        board.setField(6, Mark.BLACK);
         assertTrue(board.hasWinner());
 
         board.reset();
 
-        board.setField(1, Mark.XX);
-        board.setField(4, Mark.XX);
+        board.setField(1, Mark.BLACK);
+        board.setField(4, Mark.BLACK);
         assertFalse(board.hasWinner());
 
-        board.setField(7, Mark.XX);
+        board.setField(7, Mark.BLACK);
         assertTrue(board.hasWinner());
 
         board.reset();
 
-        board.setField(2, Mark.XX);
-        board.setField(5, Mark.XX);
+        board.setField(2, Mark.BLACK);
+        board.setField(5, Mark.BLACK);
         assertFalse(board.hasWinner());
 
-        board.setField(8, Mark.XX);
+        board.setField(8, Mark.BLACK);
         assertTrue(board.hasWinner());
     }
 
     @Test
     public void testHasWinnerDiagonal() {
-        board.setField(0, Mark.XX);
-        board.setField(4, Mark.XX);
+        board.setField(0, Mark.BLACK);
+        board.setField(4, Mark.BLACK);
         assertFalse(board.hasWinner());
 
-        board.setField(8, Mark.XX);
+        board.setField(8, Mark.BLACK);
         assertTrue(board.hasWinner());
 
         board.reset();
 
-        board.setField(2, Mark.XX);
-        board.setField(4, Mark.XX);
+        board.setField(2, Mark.BLACK);
+        board.setField(4, Mark.BLACK);
         assertFalse(board.hasWinner());
 
-        board.setField(6, Mark.XX);
+        board.setField(6, Mark.BLACK);
         assertTrue(board.hasWinner());
     }
 }

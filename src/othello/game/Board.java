@@ -1,35 +1,29 @@
 package othello.game;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Board for the Tic Tac Toe game.
  */
 public class Board {
-    /*@ public invariant fields.length == DIM*DIM;
-        public invariant (\forall int i; (i >= 0 && i < DIM*DIM); fields[i] == Mark.EMPTY || fields[i] == Mark.XX || fields[i] == Mark.OO);
-    @*/
-
     /**
      * Dimension of the board, i.e., if set to 3, the board has 3 rows and 3 columns.
      */
-    public static final int DIM = 5;
+    public static final int DIM = 8;
     private static final String DELIM = "     ";
-//    private static final String[] NUMBERING = {" 0 | 1 | 2 ", "---+---+---",
-//        " 3 | 4 | 5 ", "---+---+---", " 6 | 7 | 8 "};
-
-    private static final String[] NUMBERING = {" 0 | 1 | 2 | 3 | 4", "---+---+---+---+---",
-            " 5 | 6 | 7 | 8 | 9 ", "---+---+---+---+---", " 10 | 11 | 12 | 13 | 14 ", "---+---+---+---+---", " 15 | 16 | 17 | 18 | 19 ", "---+---+---+---+---",
-            " 20 | 21 | 22 | 23 | 24 "
-    };
-
+    private static final String[] NUMBERING = {" 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 ", "---+---+---+---+---+---+---+---",
+            " 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15", "---+---+---+---+---+---+---+---", " 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 ", "---+---+---+---+---+---+---+---",
+            " 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 ", "---+---+---+---+---+---+---+---", " 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39", "---+---+---+---+---+---+---+---",
+            " 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 ", "---+---+---+---+---+---+---+---", " 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 ", "---+---+---+---+---+---+---+---",
+            " 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63 "};
     private static final String LINE = NUMBERING[1];
 
     /**
      * The DIM by DIM fields of the Tic Tac Toe board. See NUMBERING for the
      * coding of the fields.
      */
-    private Mark[] fields;
+    private Mark[][] fields;
 
     // -- Constructors -----------------------------------------------
 
@@ -38,10 +32,16 @@ public class Board {
      */
     //@ ensures (\forall int i; (i >= 0 && i < DIM*DIM); fields[i] == Mark.EMPTY);
     public Board() {
-        this.fields = new Mark[DIM * DIM];
+        this.fields = new Mark[DIM][DIM];
         for (int i = 0; i < fields.length; i++) {
-            fields[i] = Mark.EMPTY;
+            for (int z = 0; i < fields.length; z++) {
+                fields[i][z] = Mark.EMPTY;
+            }
         }
+        this.setField(3, 3, Mark.WHITE);
+        this.setField(4, 4, Mark.WHITE);
+        this.setField(3, 4, Mark.BLACK);
+        this.setField(4, 3, Mark.BLACK);
     }
 
     /**
@@ -58,32 +58,8 @@ public class Board {
         return copy;
     }
 
-    /**
-     * Calculates the index in the linear array of fields from a (row, col). Starts from 0-2.
-     * pair.
-     *
-     * @return the index belonging to the (row,col)-field
-     */
-    /*@ requires row >= 0 && row < DIM;
-    requires col >= 0 && row < DIM;
-     @*/
-    public int index(int row, int col) {
-        if (row < DIM && col < DIM) {
-            int i = ((row * DIM) + col);
-            return i;
-        } else {
-            return -1;
-        }
-    }
-
-    /**
-     * Returns true if index is a valid index of a field on the board.
-     *
-     * @return true if 0 <= index < DIM*DIM
-     */
-    //@ ensures index >= 0 && index < DIM*DIM ==> \result == true;
-    public boolean isField(int index) {
-        return index >= 0 && index < (DIM * DIM);
+    public Board setUp() {
+        return null;
     }
 
     /**
@@ -97,23 +73,6 @@ public class Board {
     }
 
     /**
-     * Returns the content of the field i.
-     *
-     * @param i the number of the field (see NUMBERING)
-     * @return the mark on the field
-     */
-    /*@ requires isField(i);
-    ensures \result == Mark.EMPTY || \result == Mark.OO || \result == Mark.XX;
-     @*/
-    public Mark getField(int i) {
-        if (isField(i)) {
-            return fields[i];
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Returns the content of the field referred to by the (row,col) pair.
      *
      * @param row the row of the field
@@ -121,50 +80,22 @@ public class Board {
      * @return the mark on the field
      */
     /*@ requires isField(row, col);
-    ensures \result == Mark.EMPTY || \result == Mark.OO || \result == Mark.XX;
+    ensures \result == Mark.EMPTY || \result == Mark.BLACK || \result == Mark.WHITE;
      @*/
     public Mark getField(int row, int col) {
-        if (isField(row, col)) {
-            return fields[index(row, col)];
-        } else {
-            return null;
-        }
+        return isField(row, col) ? fields[row][col] : null;
     }
 
     /**
-     * Returns true if the field i is empty.
+     * Checks if field is empty
      *
-     * @param i the index of the field (see NUMBERING)
-     * @return true if the field is empty
+     * @param row
+     * @param col
      */
-    /*@ requires isField(i);
-    ensures getField(i) == Mark.EMPTY ==> \result == true;
-     @*/
-    public boolean isEmptyField(int i) {
-        if (fields[i] == Mark.EMPTY) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Returns true if the field referred to by the (row,col) pair it empty.
-     *
-     * @param row the row of the field
-     * @param col the column of the field
-     * @return true if the field is empty
-     */
-    /*@ requires isField(row, col);
-    ensures getField(row, col) == Mark.EMPTY ==> \result == true;
+    /*@ensures getField(row, col) == Mark.EMPTY ==> \result == true;
      @*/
     public boolean isEmptyField(int row, int col) {
-        if (isField(row, col)) {
-            if (fields[index(row, col)] == Mark.EMPTY) {
-                return true;
-            }
-        }
-        return false;
+        return getField(row, col) == Mark.EMPTY;
     }
 
     /**
@@ -172,119 +103,154 @@ public class Board {
      *
      * @return true if all fields are occupied
      */
-    //@ ensures (\forall int i; (i >= 0 && i < DIM*DIM); fields[i] == Mark.XX || fields[i] == Mark.OO);
+    /*@ ensures (\forall int i; (i >= 0 && i < DIM);
+        (\forall int j; (j >= 0 && j < DIM); isEmptyField(i, j) == false));
+    */
     public boolean isFull() {
         for (int i = 0; i < fields.length; i++) {
-            if (fields[i] == Mark.EMPTY) {
-                return false;
-            }
+            for (int j = 0; i < fields.length; j++)
+                if (getField(i, j) == Mark.EMPTY) {
+                    return false;
+                }
         }
         return true;
     }
 
     /**
-     * Returns true if the game is over. The game is over when there is a winner
-     * or the whole board is full.
+     * checks left diagonal of a piece is possible
+     * if there is an opposite mark there continue scanning
+     * else return null
      *
-     * @return true if the game is over
+     * @param row,col,m
+     * @return
      */
-    //@ ensures isFull() || hasWinner() ==> \result == true;
-    public boolean gameOver() {
-        if (isFull() == true || hasWinner()) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean HasLeftUpperDiagPiece(int row, int col, Mark m) {
+        return getField(row - 1, col - 1) == m.other();
     }
 
     /**
-     * Checks whether there is a row which is full and only contains the mark
-     * m.
-     *
-     * @param m the Mark of interest
-     * @return true if there is a row controlled by m
+     * @param row
+     * @param col
+     * @param m
+     * @return
      */
-    public boolean hasRow(Mark m) { //how do we find all the different rows
-        HashSet<Mark> states = new HashSet<Mark>();
-        for (int i = 0; i < DIM; i++) { // checks every row
-            for (int z = 0; z < DIM; z++) {
-                states.add(getField(i, z));
-            }
-            if (states.contains(m) && states.size() == 1) {
-                return true;
-            } else {
-                states.clear();
-            }
-        }
-        return false;
+    public boolean HasRightUpperDiagPiece(int row, int col, Mark m) {
+        return getField(row - 1, col) == m.other();
     }
 
     /**
-     * Checks whether there is a column which is full and only contains the mark
-     * m.
-     *
-     * @param m the Mark of interest
-     * @return true if there is a column controlled by m
+     * @param row
+     * @param col
+     * @param m
+     * @return
      */
-    public boolean hasColumn(Mark m) {
-        HashSet<Mark> states = new HashSet<Mark>();
-        for (int i = 0; i < DIM; i++) { // checks every column
-            for (int z = 0; z < DIM; z++) {
-                states.add(getField(z, i));
-            }
-            if (states.contains(m) && states.size() == 1) {
-                return true;
-            } else {
-                states.clear();
-            }
-        }
-        return false;
+    public boolean HasUpperPiece(int row, int col, Mark m) {
+        return getField(row - 1, col + 1) == m.other();
     }
 
     /**
-     * Checks whether there is a diagonal which is full and only contains the
-     * mark m.
-     *
-     * @param m the Mark of interest
-     * @return true if there is a diagonal controlled by m
+     * @param row
+     * @param col
+     * @param m
+     * @return
      */
-    public boolean hasDiagonal(Mark m) {
-        boolean neg; // diag with negative slope
-        boolean pos; // diag with positive slope
-        HashSet<Mark> states = new HashSet<Mark>();
-        for (int i = 0; i < DIM; i++) {
-            states.add(getField(i, i));
-        }
-        if (states.contains(m) && states.size() == 1) {
-            return true;
-        } else {
-            states.clear();
-            for (int i = 0; i < DIM; i++) {
-                states.add(getField(i, -i + 2));
-            }
-            if (states.contains(m) && states.size() == 1) {
-                return true;
-            }
-        }
-        return false;
+    public boolean HasLeftPiece(int row, int col, Mark m) {
+        return getField(row, col - 1) == m.other();
     }
 
     /**
-     * Checks if the mark m has won. A mark wins if it controls at
-     * least one row, column or diagonal.
+     * @param row
+     * @param col
+     * @param m
+     * @return
+     */
+    public boolean HasRightPiece(int row, int col, Mark m) {
+        return getField(row, col + 1) == m.other();
+    }
+
+    /**
+     * @param row
+     * @param col
+     * @param m
+     * @return
+     */
+    public boolean HasLeftLowerDiagPiece(int row, int col, Mark m) {
+        return getField(row + 1, col - 1) == m.other();
+    }
+
+    /**
+     * @param row
+     * @param col
+     * @param m
+     * @return
+     */
+    public boolean HasRightLowerDiagPiece(int row, int col, Mark m) {
+        return getField(row + 1, col + 1) == m.other();
+    }
+
+    public boolean HasLowerPiece(int row, int col, Mark m) {
+        return getField(row + 1, col) == m.other();
+    }
+
+
+    /**
+     * Checks if a mark has won
+     * By counting if it has more marks than the other color -> only happens if game is over
      *
      * @param m the mark of interest
      * @return true if the mark has won
      */
-    /*@ requires m == Mark.XX || m == Mark.OO;
-    ensures hasRow(m) || hasColumn(m) || hasDiagonal(m) ==> \result == true;
+    /*@ requires m == Mark.BLACK || m == Mark.WHITE;
+    ensures m == Mark.BLACK && (currentScore().get(Mark.BLACK) > currentScore().get(Mark.WHITE)) ==> \result == true;
+    ensures m == Mark.WHITE && (currentScore().get(Mark.WHITE) > currentScore().get(Mark.BLACK)) ==> \result == true;
      @*/
     public boolean isWinner(Mark m) {
-        if (hasColumn(m) || hasRow(m) || hasDiagonal(m)) {
-            return true;
-        } else {
-            return false;
+        Map<Mark, Integer> score = currentScore();
+        return m == Mark.BLACK && (score.get(Mark.BLACK) > score.get(Mark.WHITE))
+                || m == Mark.WHITE && (score.get(Mark.WHITE) > score.get(Mark.BLACK));
+    }
+
+    /**
+     * checks whether the game was a draw
+     * does this by using value from isWinner
+     *
+     * @return
+     */
+    /*
+    @ requires isFull() == true;
+    ensures currentScore().get(Mark.BLACK).equals(currentScore().get(Mark.WHITE)) ==> \result == true;
+    @*/
+    public boolean isDraw() {
+        Map<Mark, Integer> score = currentScore();
+        return score.get(Mark.BLACK).equals(score.get(Mark.WHITE));
+    }
+
+    /**
+     * Checks if the current score
+     * By counting if it has more marks than the other color -> only happens if game is over
+     *
+     * @return true if the mark has won
+     */
+    /*
+    @ensures \result.get(Mark.BLACK) == (\num_of \forall int i; (i >= 0 && i < DIM); \forall int j; (j >= 0 && j < DIM); getField(i, j) == Mark.BLACK);
+    @ensures \result.get(Mark.WHITE) == (\num_of \forall int i; (i >= 0 && i < DIM); \forall int j; (j >= 0 && j < DIM); getField(i, j) == Mark.WHITE);
+     */
+    public Map<Mark, Integer> currentScore() {
+        Map<Mark, Integer> score = new HashMap<>();
+        int numBlack = 0;
+        int numWhite = 0;
+        for (int row = 0; row < DIM; row++) {
+            for (int col = 0; col < DIM; col++) {
+                if (getField(row, col) == Mark.BLACK) {
+                    numBlack += 1;
+                    score.put(Mark.BLACK, numBlack);
+                } else {
+                    numWhite += 1;
+                    score.put(Mark.WHITE, numWhite);
+                }
+            }
         }
+        return score;
     }
 
     /**
@@ -293,13 +259,9 @@ public class Board {
      *
      * @return true if the student has a winner.
      */
-    //@ ensures isWinner(Mark.XX) || isWinner(Mark.OO) ==> \result == true;
+    /* @ ensures isWinner(Mark.BB) || isWinner(Mark.WW) ==> \result == true; */
     public boolean hasWinner() {
-        if (isWinner(Mark.XX) || isWinner(Mark.OO)) {
-            return true;
-        } else {
-            return false;
-        }
+        return isWinner(Mark.BLACK) || isWinner(Mark.WHITE);
     }
 
     /**
@@ -332,40 +294,26 @@ public class Board {
      */
     //@ ensures (\forall int i; (i >= 0 && i < DIM*DIM); fields[i] == Mark.EMPTY);
     public void reset() {
-        for (int i = 0; i < fields.length; i++) {
-            fields[i] = Mark.EMPTY;
+        for (int i = 0; i < DIM; i++) {
+            for (int j = 0; j < DIM; j++) {
+                fields[i][j] = Mark.EMPTY;
+            }
         }
     }
 
     /**
-     * Sets the content of field i to the mark m.
+     * Sets the field to that mark
      *
-     * @param i the field number (see NUMBERING)
-     * @param m the mark to be placed
-     */
-    /*@ requires isField(i);
-    ensures getField(i) == m;
-     @*/
-    public void setField(int i, Mark m) {
-        if (isField(i)) {
-            fields[i] = m;
-        }
-    }
-
-    /**
-     * Sets the content of the field represented by
-     * the (row,col) pair to the mark m.
-     *
-     * @param row the field's row
-     * @param col the field's column
-     * @param m   the mark to be placed
+     * @param row
+     * @param col
+     * @param m   mark
      */
     /*@ requires isField(row, col);
-    ensures getField(row, col) == m;
+       ensures getField(row, col) == m;
      @*/
     public void setField(int row, int col, Mark m) {
         if (isField(row, col)) {
-            fields[index(row, col)] = m;
+            fields[row][col] = m;
         }
     }
 }
