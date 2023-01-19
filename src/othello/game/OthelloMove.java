@@ -11,6 +11,8 @@ public class OthelloMove implements Move {
     private final List<OthelloMove> toFlip;
 
     public OthelloMove(Mark mark, int row, int col) {
+        this.row = row;
+        this.col = col;
         this.mark = mark;
         toFlip = new ArrayList<>();
     }

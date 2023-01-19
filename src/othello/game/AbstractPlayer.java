@@ -30,6 +30,10 @@ public abstract class AbstractPlayer implements Player {
         return mark;
     }
 
+    public void setMark(Mark mark) {
+        this.mark = mark;
+    }
+
     /**
      * Determines the next move, if the game still has available moves.
      *

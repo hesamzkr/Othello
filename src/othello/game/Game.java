@@ -6,9 +6,9 @@ import java.util.List;
  * A simple turn-based game.
  */
 public interface Game {
-    //@ invariant !isGameover() ==> getValidMoves().size() > 0;
-    //@ invariant !isGameover() ==> getWinner() == null;
-    //@ invariant !isGameover() ==> getTurn() != null;
+    //@ public invariant !isGameOver() ==> getValidMoves(Mark.BLACK).size() > 0;
+    //@ public invariant !isGameOver() ==> getWinner() == null;
+    //@ public invariant !isGameOver() ==> getTurn() != null;
 
     /**
      * Check if the game is over, i.e., there is a winner or no more moves are available.
@@ -16,7 +16,7 @@ public interface Game {
      * @return whether the game is over
      */
     //@ pure;
-    boolean isGameover();
+    boolean isGameOver();
 
     /**
      * Query whose turn it is
@@ -39,26 +39,15 @@ public interface Game {
      *
      * @return the list of currently valid moves
      */
-    //@ ensures (\forall Move m; \result.contains(m); isValidMove(m));
     //@ pure;
     List<Move> getValidMoves(Mark m);
-
-    /**
-     * Check if a move is a valid move
-     *
-     * @param move the move to check
-     * @return true if the move is a valid move
-     */
-    //@ ensures \result <==> (\exists Move m; getValidMoves().contains(m); m.equals(move));
-    //@ pure;
-    boolean isValidMove(Move move);
 
     /**
      * Perform the move, assuming it is a valid move.
      *
      * @param move the move to play
      */
-    //@ requires isValidMove(move);
+    //@ pure;
     void doMove(Move move);
 
     Game deepCopy();

@@ -4,7 +4,7 @@ import othello.game.Game;
 import othello.game.Move;
 import othello.game.OthelloGame;
 
-public class MonteCarloStrategy implements othello.ai.Strategy {
+public class MonteCarloStrategy implements Strategy {
 
     private int numIterations;
 

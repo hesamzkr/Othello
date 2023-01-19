@@ -25,28 +25,14 @@ public class BoardTest {
     }
 
     @Test
-    public void testIsFieldIndex() {
-        assertFalse(board.isField(-1));
-        assertTrue(board.isField(0));
-        assertTrue(board.isField(Board.DIM * Board.DIM - 1));
-        assertFalse(board.isField(Board.DIM * Board.DIM));
-    }
-
-    @Test
     public void testIsFieldRowCol() {
         assertFalse(board.isField(-1, 0));
         assertFalse(board.isField(0, -1));
         assertTrue(board.isField(0, 0));
         assertTrue(board.isField(2, 2));
-        assertFalse(board.isField(2, 3));
-        assertFalse(board.isField(3, 2));
-    }
-
-    @Test
-    public void testSetAndGetFieldIndex() {
-        board.setField(0, Mark.BLACK);
-        assertEquals(Mark.BLACK, board.getField(0));
-        assertEquals(Mark.EMPTY, board.getField(1));
+        assertTrue(board.isField(Board.DIM - 1, Board.DIM - 1));
+        assertFalse(board.isField(Board.DIM + 1, Board.DIM));
+        assertFalse(board.isField(Board.DIM, Board.DIM + 1));
     }
 
     @Test
@@ -61,43 +47,54 @@ public class BoardTest {
     @Test
     public void testSetup() {
         for (int i = 0; i < Board.DIM * Board.DIM; i++) {
-            assertEquals(Mark.EMPTY, board.getField(i));
+            switch (i) {
+                case 27:
+                    assertEquals(Mark.WHITE, board.getField(3, 3));
+                    break;
+                case 28:
+                    assertEquals(Mark.BLACK, board.getField(3, 4));
+                    break;
+                case 35:
+                    assertEquals(Mark.BLACK, board.getField(4, 3));
+                    break;
+                case 36:
+                    assertEquals(Mark.WHITE, board.getField(4, 4));
+                    break;
+                default:
+                    int row = i / Board.DIM;
+                    int col = i % Board.DIM;
+                    assertEquals(Mark.EMPTY, board.getField(row, col));
+            }
+
         }
-//        assertEquals(Mark.EMPTY, board.getField(Board.DIM * Board.DIM - 1));
+
     }
 
     @Test
     public void testReset() {
-        board.setField(0, Mark.BLACK);
-        board.setField(Board.DIM * Board.DIM - 1, Mark.WHITE);
+        board.setField(0, 0, Mark.BLACK);
+        board.setField(Board.DIM - 1, Board.DIM - 1, Mark.WHITE);
         board.reset();
-        assertEquals(Mark.EMPTY, board.getField(0));
-        assertEquals(Mark.EMPTY, board.getField(Board.DIM * Board.DIM - 1));
+        assertEquals(Mark.EMPTY, board.getField(0, 0));
+        assertEquals(Mark.EMPTY, board.getField(Board.DIM - 1, Board.DIM - 1));
     }
 
     @Test
     public void testDeepCopy() {
-        board.setField(0, Mark.BLACK);
-        board.setField(Board.DIM * Board.DIM - 1, Mark.WHITE);
+        board.setField(0, 0, Mark.BLACK);
+        board.setField(Board.DIM - 1, Board.DIM - 1, Mark.WHITE);
         Board deepCopyBoard = board.deepCopy();
 
-        // First test if all the fields are the same
         for (int i = 0; i < Board.DIM * Board.DIM; i++) {
-            assertEquals(board.getField(i), deepCopyBoard.getField(i));
+            int row = i / Board.DIM;
+            int col = i % Board.DIM;
+            assertEquals(board.getField(row, col), deepCopyBoard.getField(row, col));
         }
 
-        // Check if a field in the deepcopied board the original remains the same
-        deepCopyBoard.setField(0, Mark.WHITE);
+        deepCopyBoard.setField(0, 0, Mark.WHITE);
 
-        assertEquals(Mark.BLACK, board.getField(0));
-        assertEquals(Mark.WHITE, deepCopyBoard.getField(0));
-    }
-
-    @Test
-    public void testIsEmptyFieldIndex() {
-        board.setField(0, 1, Mark.BLACK);
-        assertFalse(board.isEmptyField(0));
-        assertTrue(board.isEmptyField(1));
+        assertEquals(Mark.BLACK, board.getField(0, 0));
+        assertEquals(Mark.WHITE, deepCopyBoard.getField(0, 0));
     }
 
     @Test
@@ -111,11 +108,12 @@ public class BoardTest {
     @Test
     public void testIsFull() {
         for (int i = 0; i < Board.DIM * Board.DIM - 1; i++) {
-            board.setField(i, Mark.BLACK);
+            int row = i / Board.DIM;
+            int col = i % Board.DIM;
+            board.setField(row, col, Mark.BLACK);
         }
         assertFalse(board.isFull());
-
-        board.setField(Board.DIM * Board.DIM - 1, Mark.BLACK);
+        board.setField(Board.DIM - 1, Board.DIM - 1, Mark.BLACK);
         assertTrue(board.isFull());
     }
 }

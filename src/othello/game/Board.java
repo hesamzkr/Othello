@@ -23,14 +23,13 @@ public class Board {
      * The DIM by DIM fields of the Tic Tac Toe board. See NUMBERING for the
      * coding of the fields.
      */
-    private Mark[][] fields;
+    private final Mark[][] fields;
 
     // -- Constructors -----------------------------------------------
 
     /**
      * Creates an empty board.
      */
-    //@ ensures (\forall int i; (i >= 0 && i < DIM*DIM); fields[i] == Mark.EMPTY);
     public Board() {
         this.fields = new Mark[DIM][DIM];
         for (int i = 0; i < DIM; i++) {
@@ -52,8 +51,10 @@ public class Board {
      @*/
     public Board deepCopy() {
         Board copy = new Board();
-        for (int i = 0; i < fields.length; i++) {
-            copy.fields[i] = fields[i];
+        for (int i = 0; i < DIM * DIM; i++) {
+            int row = i / DIM;
+            int col = i % DIM;
+            copy.fields[row][col] = fields[row][col];
         }
         return copy;
     }
@@ -104,8 +105,8 @@ public class Board {
         (\forall int j; (j >= 0 && j < DIM); isEmptyField(i, j) == false));
     */
     public boolean isFull() {
-        for (int i = 0; i < fields.length; i++) {
-            for (int j = 0; i < fields.length; j++)
+        for (int i = 0; i < DIM; i++) {
+            for (int j = 0; j < DIM; j++)
                 if (getField(i, j) == Mark.EMPTY) {
                     return false;
                 }
@@ -189,22 +190,18 @@ public class Board {
         return getField(row + 1, col) == m.other();
     }
 
-
     /**
-     * Checks if a mark has won
-     * By counting if it has more marks than the other color -> only happens if game is over
-     *
-     * @param m the mark of interest
-     * @return true if the mark has won
+     * @return
      */
-    /*@ requires m == Mark.BLACK || m == Mark.WHITE;
-    ensures m == Mark.BLACK && (currentScore().get(Mark.BLACK) > currentScore().get(Mark.WHITE)) ==> \result == true;
-    ensures m == Mark.WHITE && (currentScore().get(Mark.WHITE) > currentScore().get(Mark.BLACK)) ==> \result == true;
-     @*/
-    public boolean isWinner(Mark m) {
-        Map<Mark, Integer> score = currentScore();
-        return m == Mark.BLACK && (score.get(Mark.BLACK) > score.get(Mark.WHITE))
-                || m == Mark.WHITE && (score.get(Mark.WHITE) > score.get(Mark.BLACK));
+    public Mark getWinner() {
+        Map<Mark, Integer> scores = currentScore();
+        if (scores.get(Mark.BLACK) > scores.get(Mark.WHITE)) {
+            return Mark.BLACK;
+        } else if (scores.get(Mark.BLACK) < scores.get(Mark.WHITE)) {
+            return Mark.WHITE;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -228,10 +225,9 @@ public class Board {
      *
      * @return true if the mark has won
      */
-    /*
-    @ensures \result.get(Mark.BLACK) == (\num_of \forall int i; (i >= 0 && i < DIM); \forall int j; (j >= 0 && j < DIM); getField(i, j) == Mark.BLACK);
-    @ensures \result.get(Mark.WHITE) == (\num_of \forall int i; (i >= 0 && i < DIM); \forall int j; (j >= 0 && j < DIM); getField(i, j) == Mark.WHITE);
-     */
+    /*@ ensures \result.get(Mark.BLACK) == (\sum int y; 0 <= y && y < DIM; ((\num_of int x; 0 <= x && x < DIM; getField(x,y) == Mark.BLACK)));
+    ensures \result.get(Mark.WHITE) == (\sum int y; 0 <= y && y < DIM; ((\num_of int x; 0 <= x && x < DIM; getField(x,y) == Mark.WHITE)));
+    @*/
     public Map<Mark, Integer> currentScore() {
         Map<Mark, Integer> score = new HashMap<>();
         int numBlack = 0;
@@ -248,17 +244,6 @@ public class Board {
             }
         }
         return score;
-    }
-
-    /**
-     * Returns true if the game has a winner. This is the case when one of the
-     * marks controls at least one row, column or diagonal.
-     *
-     * @return true if the student has a winner.
-     */
-    /* @ ensures isWinner(Mark.BB) || isWinner(Mark.WW) ==> \result == true; */
-    public boolean hasWinner() {
-        return isWinner(Mark.BLACK) || isWinner(Mark.WHITE);
     }
 
     /**
@@ -285,17 +270,17 @@ public class Board {
         return s;
     }
 
-    /**
-     * Empties all fields of this board (i.e., let them refer to the value
-     * Mark.EMPTY).
-     */
-    //@ ensures (\forall int i; (i >= 0 && i < DIM*DIM); fields[i] == Mark.EMPTY);
+
     public void reset() {
         for (int i = 0; i < DIM; i++) {
             for (int j = 0; j < DIM; j++) {
                 fields[i][j] = Mark.EMPTY;
             }
         }
+        setField(3, 3, Mark.WHITE);
+        setField(4, 4, Mark.WHITE);
+        setField(3, 4, Mark.BLACK);
+        setField(4, 3, Mark.BLACK);
     }
 
     /**
