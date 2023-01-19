@@ -1,6 +1,7 @@
 package othello.ai;
 
 import othello.game.Move;
+import othello.game.OthelloGame;
 import othello.game.Player;
 import othello.game.TicTacToeGame;
 import othello.game.TicTacToeMove;
@@ -88,7 +89,7 @@ public class McNode implements Node {
         return uctValue;
     }
 
-    public Node expandNode(TicTacToeGame game) {
+    public Node expandNode(OthelloGame game) {
         if (!canExpandNode()) {
             return this;
         }

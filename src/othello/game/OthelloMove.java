@@ -1,25 +1,19 @@
 package othello.game;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class OthelloMove implements Move {
-    private Mark mark;
-    private int row;
-    private int col;
+    private final Mark mark;
+    private final int row;
+    private final int col;
 
-    private Move linkedMove;
-
-    private ArrayList toFlip;
+    private final List<OthelloMove> toFlip;
 
     public OthelloMove(Mark mark, int row, int col) {
         this.mark = mark;
         toFlip = new ArrayList<>();
-//        this.index = index;
     }
-
-//    public int getIndex() {
-//        return index;
-//    }
 
     public int getRow() {
         return row;
@@ -29,20 +23,12 @@ public class OthelloMove implements Move {
         return col;
     }
 
-    public Move getLinkedMove() {
-        return linkedMove;
-    }
-
-    public void setLinkedMark(Move move) {
-        this.linkedMove = move;
-    }
-
-    public void setToFlip(Move move) {
-        toFlip.add(move);
-    }
-
-    public void addToFlip(ArrayList moves) {
+    public void addToFlip(List<OthelloMove> moves) {
         toFlip.addAll(moves);
+    }
+
+    public List<OthelloMove> getToFlip() {
+        return toFlip;
     }
 
     public Mark getMark() {

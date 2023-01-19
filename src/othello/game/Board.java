@@ -33,8 +33,8 @@ public class Board {
     //@ ensures (\forall int i; (i >= 0 && i < DIM*DIM); fields[i] == Mark.EMPTY);
     public Board() {
         this.fields = new Mark[DIM][DIM];
-        for (int i = 0; i < fields.length; i++) {
-            for (int z = 0; i < fields.length; z++) {
+        for (int i = 0; i < DIM; i++) {
+            for (int z = 0; z < DIM; z++) {
                 fields[i][z] = Mark.EMPTY;
             }
         }
@@ -58,9 +58,6 @@ public class Board {
         return copy;
     }
 
-    public Board setUp() {
-        return null;
-    }
 
     /**
      * Returns true of the (row,col) pair refers to a valid field on the board.

@@ -1,5 +1,6 @@
-package othello.ai;
+package othello.game;
 
+import othello.ai.Strategy;
 import othello.game.AbstractPlayer;
 import othello.game.Game;
 import othello.game.Mark;
