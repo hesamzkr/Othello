@@ -212,21 +212,6 @@ public class Board {
     }
 
     /**
-     * checks whether the game was a draw
-     * does this by using value from isWinner
-     *
-     * @return
-     */
-    /*
-    @ requires isFull() == true;
-    ensures currentScore().get(Mark.BLACK).equals(currentScore().get(Mark.WHITE)) ==> \result == true;
-    @*/
-    public boolean isDraw() {
-        Map<Mark, Integer> score = currentScore();
-        return score.get(Mark.BLACK).equals(score.get(Mark.WHITE));
-    }
-
-    /**
      * Checks if the current score
      * By counting if it has more marks than the other color -> only happens if game is over
      *

@@ -25,7 +25,7 @@ public class OthelloGame implements Game {
 
     public boolean isGameOver() {
         Map<Mark, Integer> scores = board.currentScore();
-        return board.isFull() || scores.get(Mark.BLACK) == 0 || scores.get(Mark.WHITE) == 0;
+        return (getValidMoves(Mark.BLACK).isEmpty() && getValidMoves(Mark.WHITE).isEmpty()) || board.isFull() || scores.get(Mark.BLACK) == 0 || scores.get(Mark.WHITE) == 0;
     }
 
     public Player getTurn() {

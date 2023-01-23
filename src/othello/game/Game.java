@@ -51,4 +51,6 @@ public interface Game {
     void doMove(List<Move> move);
 
     Game deepCopy();
+
+    Board getBoard();
 }
