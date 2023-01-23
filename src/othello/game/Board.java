@@ -10,12 +10,19 @@ public class Board {
     /**
      * Dimension of the board, i.e., if set to 3, the board has 3 rows and 3 columns.
      */
+    public static final String BLACK = "\u001B[30m";
+
+    public static final String RESET = "\u001B[0m";
+
+    public static final String GREEN_BACKGROUND = "\u001B[42m";
+
+    public static final String RED = "\u001B[31m";
     public static final int DIM = 8;
-    private static final String DELIM = "     ";
-    private static final String[] NUMBERING = {" 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 ", "---+---+---+---+---+---+---+---",
-            " 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15", "---+---+---+---+---+---+---+---", " 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 ", "---+---+---+---+---+---+---+---",
-            " 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 ", "---+---+---+---+---+---+---+---", " 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39", "---+---+---+---+---+---+---+---",
-            " 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 ", "---+---+---+---+---+---+---+---", " 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 ", "---+---+---+---+---+---+---+---",
+    private static final String DELIM = "    ";
+    private static final String[] NUMBERING = {" 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 ", "----+----+----+----+----+----+----+----",
+            " 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15", "----+----+----+----+----+----+----+----", " 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 ", "----+----+----+----+----+----+----+----",
+            " 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 ", "----+----+----+----+----+----+----+----", " 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39", "----+----+----+----+----+----+----+----",
+            " 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 ", "----+----+----+----+----+----+----+----", " 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 ", "----+----+----+----+----+----+----+----",
             " 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63 "};
     private static final String LINE = NUMBERING[1];
 
@@ -133,7 +140,7 @@ public class Board {
      * @return
      */
     public boolean HasRightUpperDiagPiece(int row, int col, Mark m) {
-        return getField(row - 1, col) == m.other();
+        return getField(row - 1, col + 1) == m.other();
     }
 
     /**
@@ -143,7 +150,7 @@ public class Board {
      * @return
      */
     public boolean HasUpperPiece(int row, int col, Mark m) {
-        return getField(row - 1, col + 1) == m.other();
+        return getField(row - 1, col) == m.other();
     }
 
     /**
@@ -257,14 +264,33 @@ public class Board {
         for (int i = 0; i < DIM; i++) {
             String row = "";
             for (int j = 0; j < DIM; j++) {
-                row += " " + getField(i, j).toString().substring(0, 1).replace("E", " ") + " ";
+                switch (getField(i, j)) {
+                    case VALID:
+                        int index = (DIM * i) + j;
+                        row += " " + getField(i, j).toString().substring(0, 1).replace("V", RED + Integer.toString(index)) + " " + RESET + GREEN_BACKGROUND;
+                        break;
+                    case BLACK:
+                        row += " " + getField(i, j).toString().substring(0, 1).replace("B", BLACK + "()" + RESET + GREEN_BACKGROUND) + " ";
+                        break;
+                    case WHITE:
+                        row += " " + getField(i, j).toString().substring(0, 1).replace("W", "()") + " ";
+                        break;
+                    default:
+                        row += " " + getField(i, j).toString().substring(0, 1).replace("E", "  ") + " ";
+                }
+//                if (getField(i, j) == Mark.VALID) {
+//                    int index = (DIM * i) + j;
+//                    row += " " + getField(i, j).toString().substring(0, 1).replace("V", Integer.toString(index)) + " ";
+//                } else {
+//                    row += " " + getField(i, j).toString().substring(0, 1).replace("E", " ") + " ";
+//                }
                 if (j < DIM - 1) {
-                    row = row + "|";
+                    row = GREEN_BACKGROUND + row + "|";
                 }
             }
-            s = s + row + DELIM + NUMBERING[i * 2];
+            s = GREEN_BACKGROUND + s + row + RESET + DELIM;
             if (i < DIM - 1) {
-                s = s + "\n" + LINE + DELIM + NUMBERING[i * 2 + 1] + "\n";
+                s = s + "\n" + LINE + DELIM + "\n";
             }
         }
         return s;
@@ -297,5 +323,10 @@ public class Board {
         if (isField(row, col)) {
             fields[row][col] = m;
         }
+    }
+
+    public static void main(String[] args) {
+        Board b = new Board();
+        System.out.println(b.toString());
     }
 }

@@ -7,7 +7,7 @@ package othello.game;
  */
 public enum Mark {
 
-    EMPTY, BLACK, WHITE;
+    EMPTY, BLACK, WHITE, VALID;
 
     /**
      * Returns the other mark.

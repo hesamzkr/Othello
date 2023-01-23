@@ -1,11 +1,13 @@
 package othello.game;
 
+import java.util.List;
+
 /**
  * A player of a game.
  */
 public abstract class AbstractPlayer implements Player {
     private final String name;
-    private Mark mark;
+    protected Mark mark;
 
     /**
      * Creates a new Player object.
@@ -42,7 +44,7 @@ public abstract class AbstractPlayer implements Player {
      */
     //@ requires !game.isGameover();
     //@ ensures game.isValidMove(\result);
-    public abstract Move determineMove(Game game);
+    public abstract List<Move> determineMove(Game game) throws NoValidMoves;
 
     /**
      * Returns a representation of a player, i.e., their name

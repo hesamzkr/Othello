@@ -48,7 +48,7 @@ public interface Game {
      * @param move the move to play
      */
     //@ pure;
-    void doMove(Move move);
+    void doMove(List<Move> move);
 
     Game deepCopy();
 }

@@ -1,6 +1,6 @@
 package othello.game;
 
-import othello.ai.Score;
+//import othello.ai.Score;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +15,12 @@ public class OthelloGame implements Game {
     private Player turn;
 
     public OthelloGame(Player player1, Player player2) {
-        player1.setMark(Mark.BLACK);
         this.player1 = player1;
-        player2.setMark(Mark.WHITE);
+        player1.setMark(Mark.BLACK);
         this.player2 = player2;
-        this.board = new Board();
+        player2.setMark(Mark.WHITE);
+        board = new Board();
+        turn = player1;
     }
 
     public boolean isGameOver() {
@@ -50,8 +51,6 @@ public class OthelloGame implements Game {
      */
     public List<Move> getValidMoves(Mark m) {
         List<Move> validMoves = new ArrayList<>();
-        if (isGameOver())
-            return validMoves;
 
         for (int row = 0; row < Board.DIM; row++) {
             for (int col = 0; col < Board.DIM; col++) {
@@ -174,7 +173,7 @@ public class OthelloGame implements Game {
                 move.addToFlip(toFlip);
                 return move;
             } else if (board.getField(row, checkCol) == m.other()) {
-                toFlip.add(new OthelloMove(m, row, col));
+                toFlip.add(new OthelloMove(m, row, checkCol));
                 checkCol -= 1;
             } else {
                 break;
@@ -255,7 +254,7 @@ public class OthelloGame implements Game {
                 move.addToFlip(toFlip);
                 return move;
             } else if (board.getField(checkRow, col) == m.other()) {
-                toFlip.add(new OthelloMove(m, row, checkRow));
+                toFlip.add(new OthelloMove(m, checkRow, col));
                 checkRow += 1;
             } else {
                 break;
@@ -264,14 +263,27 @@ public class OthelloGame implements Game {
         return null;
     }
 
-    public void doMove(Move move) {
-        if (move instanceof OthelloMove othelloMove) {
-            for (Move m : othelloMove.getToFlip()) {
-                doFlips(m);
+    public void doMove(List<Move> moves) {
+        for (Move move : moves) {
+            if (move instanceof OthelloMove othelloMove) {
+                for (Move m : othelloMove.getToFlip()) {
+                    doFlips(m);
+                }
+                doFlips(move);
             }
-            doFlips(move);
         }
     }
+
+//    public String showValids() {
+//        List<Move> moves = getValidMoves(getTurn().getMark());
+//        Game copy = deepCopy();
+//        for (Move m : moves) {
+//            if (m instanceof OthelloMove othelloMove) {
+//                ((OthelloGame) copy).getBoard().setField(othelloMove.getRow(), othelloMove.getCol(), Mark.VALID);
+//            }
+//        }
+//        return copy.toString();
+//    }
 
     /**
      * should take a move and flip all the pieces
@@ -280,7 +292,7 @@ public class OthelloGame implements Game {
      */
     public void doFlips(Move move) {
         if (move instanceof OthelloMove othelloMove) {
-            board.setField(othelloMove.getRow(), othelloMove.getRow(), othelloMove.getMark());
+            board.setField(othelloMove.getRow(), othelloMove.getCol(), othelloMove.getMark());
         }
     }
 
@@ -297,7 +309,14 @@ public class OthelloGame implements Game {
     }
 
     public String toString() {
-        return board.toString();
+        List<Move> moves = getValidMoves(getTurn().getMark());
+        Game copy = deepCopy();
+        for (Move m : moves) {
+            if (m instanceof OthelloMove othelloMove) {
+                copy.getBoard().setField(othelloMove.getRow(), othelloMove.getCol(), Mark.VALID);
+            }
+        }
+        return copy.getBoard().toString();
     }
 
     public OthelloGame deepCopy() {
@@ -308,17 +327,21 @@ public class OthelloGame implements Game {
         return game;
     }
 
-    public Score getScores() {
-        if (isGameOver()) {
-            Player winner = getWinner();
-            if (winner == player1) {
-                return new Score(player1, player2, 1, -2);
-            } else if (winner == player2) {
-                return new Score(player1, player2, -2, 1);
-            } else {
-                return new Score(player1, player2, 0, 0);
-            }
-        }
-        return null;
-    }
+    /**
+     * Maybe give this to AI because of modularity.
+     * @return
+     */
+//    public Score getScores() {
+//        if (isGameOver()) {
+//            Player winner = getWinner();
+//            if (winner == player1) {
+//                return new Score(player1, player2, 1, -2);
+//            } else if (winner == player2) {
+//                return new Score(player1, player2, -2, 1);
+//            } else {
+//                return new Score(player1, player2, 0, 0);
+//            }
+//        }
+//        return null;
+//    }
 }

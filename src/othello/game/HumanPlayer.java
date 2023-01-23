@@ -1,14 +1,11 @@
 package othello.game;
 
-import othello.game.AbstractPlayer;
-import othello.game.Mark;
-import tictactoe.model.*;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class HumanPlayer extends AbstractPlayer {
 
-    private Mark mark;
 
     /**
      * Creates a new Player object.
@@ -20,19 +17,32 @@ public class HumanPlayer extends AbstractPlayer {
     }
 
     @Override
-    public Move determineMove(Game game) {
+    public List<Move> determineMove(Game game) throws NoValidMoves {
         Scanner scan = new Scanner(System.in);
-        othello.prototypeGame.model.OthelloGame newGame = (othello.prototypeGame.model.OthelloGame) game;
-        Board board = newGame.getBoard();
         while (true) {
+            List<Move> playMoves = new ArrayList<>();
             System.out.print("Please enter a valid move: ");
             int index = scan.nextInt();
-            Move newMove = new OthelloMove(newGame.getMark(), index);
-            if (game.isValidMove(newMove)) {
-                return newMove;
+            int row = index / Board.DIM;
+            int col = index % Board.DIM;
+            List<Move> moves = game.getValidMoves(super.mark);
+            if (moves.isEmpty()) {
+                throw new NoValidMoves();
+            }
+            for (Move m : moves) {
+                if (m.getRow() == row && m.getCol() == col) {
+                    playMoves.add(m);
+                }
+            }
+            if (!playMoves.isEmpty()) {
+                return playMoves;
             } else {
-                System.out.println("Invalid move, try again");
+                System.out.println("Invalid move entered.");
             }
         }
+    }
+
+    public void setMark(Mark m) {
+        super.mark = m;
     }
 }
