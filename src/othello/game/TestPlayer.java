@@ -2,10 +2,15 @@ package othello.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class TestPlayer extends AbstractPlayer {
-    public TestPlayer(String name) {
-        super(name);
+/**
+ * Player created for using in tests
+ */
+public class TestPlayer extends ComputerPlayer {
+
+    public TestPlayer() {
+        super(new NaiveStrategy());
     }
 
     public List<Move> determineMove(Game game) throws NoValidMoves {

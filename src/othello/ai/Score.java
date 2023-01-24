@@ -14,7 +14,7 @@ public class Score {
 //
 //    }
 
-    public Score(Player player1, Player player2, int scorePlayer1, int scorePlayer2) { //Modular for certain number of players?
+    public Score(Player player1, Player player2, int scorePlayer1, int scorePlayer2) {
         scores.put(player1, scorePlayer1);
         scores.put(player2, scorePlayer2);
     }

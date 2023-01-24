@@ -24,6 +24,7 @@ public class OthelloGame implements Game {
         turn = player1;
     }
 
+
     public boolean isGameOver() {
         Map<Mark, Integer> scores = board.currentScore();
         return (getValidMoves(Mark.BLACK).isEmpty() && getValidMoves(Mark.WHITE).isEmpty()) || board.isFull() || scores.get(Mark.BLACK) == 0 || scores.get(Mark.WHITE) == 0;
@@ -43,13 +44,6 @@ public class OthelloGame implements Game {
         }
     }
 
-    /**
-     * has to check if a move is flippable
-     * check if there is a similar mark closeby
-     * check row, check column, check diagonal
-     *
-     * @return
-     */
     public List<Move> getValidMoves(Mark m) {
         List<Move> validMoves = new ArrayList<>();
 
@@ -88,10 +82,12 @@ public class OthelloGame implements Game {
     }
 
     /**
-     * requires that HasUpperDiagLeft is true and only run in that case
-     * checks next, next piece from the current location
+     * Finds all adjacent pieces in the north-western direction.
      *
-     * @return
+     * @param m   the mark of the position from which the scan is performed.
+     * @param row of the position from which the scan is performed.
+     * @param col of the position from which the scan is performed.
+     * @return a move which contains all the pieces that can be flipped.
      */
     public Move ScanUpperDiagLeft(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
@@ -115,14 +111,12 @@ public class OthelloGame implements Game {
     }
 
     /**
-     * Using setfield is supposed to take the location of a mark (from for loop)
-     * and then the new move (has the mark of the player) is linked to that move
-     * which allows the game to find where that mark is.
+     * Finds all adjacent pieces in the northern direction.
      *
-     * @param m
-     * @param row
-     * @param col
-     * @return
+     * @param m   the mark of the position from which the scan is performed.
+     * @param row of the position from which the scan is performed.
+     * @param col of the position from which the scan is performed.
+     * @return a move which contains all the pieces that can be flipped.
      */
     public Move ScanUpper(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
@@ -143,6 +137,14 @@ public class OthelloGame implements Game {
         return null;
     }
 
+    /**
+     * Finds all adjacent pieces in the north-eastern direction.
+     *
+     * @param m   the mark of the position from which the scan is performed.
+     * @param row of the position from which the scan is performed.
+     * @param col of the position from which the scan is performed.
+     * @return a move which contains all the pieces that can be flipped.
+     */
     public Move ScanUpperDiagRight(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
         toFlip.add(new OthelloMove(m, row - 1, col + 1));
@@ -164,6 +166,14 @@ public class OthelloGame implements Game {
         return null;
     }
 
+    /**
+     * Finds all adjacent pieces in the western direction.
+     *
+     * @param m   the mark of the position from which the scan is performed.
+     * @param row of the position from which the scan is performed.
+     * @param col of the position from which the scan is performed.
+     * @return a move which contains all the pieces that can be flipped.
+     */
     public Move ScanLeftPiece(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
         toFlip.add(new OthelloMove(m, row, col - 1));
@@ -183,7 +193,14 @@ public class OthelloGame implements Game {
         return null;
     }
 
-
+    /**
+     * Finds all adjacent pieces in the eastern direction.
+     *
+     * @param m   the mark of the position from which the scan is performed.
+     * @param row of the position from which the scan is performed.
+     * @param col of the position from which the scan is performed.
+     * @return a move which contains all the pieces that can be flipped.
+     */
     public Move ScanRightPiece(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
         toFlip.add(new OthelloMove(m, row, col + 1));
@@ -203,6 +220,14 @@ public class OthelloGame implements Game {
         return null;
     }
 
+    /**
+     * Finds all adjacent pieces in the south-western direction.
+     *
+     * @param m   the mark of the position from which the scan is performed.
+     * @param row of the position from which the scan is performed.
+     * @param col of the position from which the scan is performed.
+     * @return a move which contains all the pieces that can be flipped.
+     */
     public Move ScanLowerDiagLeft(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
         toFlip.add(new OthelloMove(m, row + 1, col - 1));
@@ -224,6 +249,14 @@ public class OthelloGame implements Game {
         return null;
     }
 
+    /**
+     * Finds all adjacent pieces in the south-eastern direction.
+     *
+     * @param m   the mark of the position from which the scan is performed.
+     * @param row of the position from which the scan is performed.
+     * @param col of the position from which the scan is performed.
+     * @return a move which contains all the pieces that can be flipped.
+     */
     public Move ScanLowerDiagRight(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
         toFlip.add(new OthelloMove(m, row + 1, col + 1));
@@ -245,6 +278,14 @@ public class OthelloGame implements Game {
         return null;
     }
 
+    /**
+     * Finds all adjacent pieces in the southern direction.
+     *
+     * @param m   the mark of the position from which the scan is performed.
+     * @param row of the position from which the scan is performed.
+     * @param col of the position from which the scan is performed.
+     * @return a move which contains all the pieces that can be flipped.
+     */
     public Move ScanLower(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
         toFlip.add(new OthelloMove(m, row + 1, col));
@@ -264,6 +305,7 @@ public class OthelloGame implements Game {
         return null;
     }
 
+
     public void doMove(List<Move> moves) {
         for (Move move : moves) {
             if (move instanceof OthelloMove othelloMove) {
@@ -275,6 +317,11 @@ public class OthelloGame implements Game {
         }
     }
 
+    /**
+     * Shows all the possible moves in a [row,column] format
+     *
+     * @return a list that only contains unique rows and columns.
+     */
     public List<int[]> showValids() {
         List<Move> moves = getValidMoves(getTurn().getMark());
         Game copy = deepCopy();
@@ -289,7 +336,7 @@ public class OthelloGame implements Game {
     }
 
     /**
-     * should take a move and flip all the pieces
+     * should take a move and set it on the field, used when flipping and setting pieces.
      *
      * @param move the move to play
      */
@@ -322,6 +369,11 @@ public class OthelloGame implements Game {
         return copy.getBoard().toString();
     }
 
+    /**
+     * Gives the scores for both players by their marks.
+     *
+     * @return a map with the scores for black and white.
+     */
     public Map<Mark, Integer> scores() {
         return board.currentScore();
     }
@@ -336,6 +388,7 @@ public class OthelloGame implements Game {
 
     /**
      * Maybe give this to AI because of modularity.
+     *
      * @return
      */
 //    public Score getScores() {
@@ -351,4 +404,11 @@ public class OthelloGame implements Game {
 //        }
 //        return null;
 //    }
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
 }

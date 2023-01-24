@@ -20,12 +20,33 @@ public class GameTest {
 
     }
 
+    /**
+     * Testing a game with random players ....
+     */
+    @Test
+    public void testFullRandomGame() {
+        while (!game.isGameOver()) {
+            TestPlayer player = (TestPlayer) game.getTurn();
+            List<Move> moves;
+            try {
+                moves = player.determineMove(game);
+                game.doMove(moves);
+            } catch (NoValidMoves ignored) {
+            }
+            game.nextTurn();
+        }
+    }
+
+
+    /**
+     * Tests all the valid moves for black at the start of the game.
+     */
     @Test
     public void testEarlyGameValidMovesBlack() {
         List<Move> moves = game.getValidMoves(game.getTurn().getMark());
         Game copy = game.deepCopy();
         for (Move m : moves) {
-            copy.getBoard().setField(m.getRow(), m.getCol(), Mark.VALID);
+            game.getBoard().setField(m.getRow(), m.getCol(), Mark.VALID);
         }
         assertEquals(Mark.VALID, copy.getBoard().getField(2, 3));
         assertEquals(Mark.VALID, copy.getBoard().getField(3, 2));
@@ -33,30 +54,54 @@ public class GameTest {
         assertEquals(Mark.VALID, copy.getBoard().getField(5, 4));
     }
 
+
+    /**
+     * Tests all the valid moves for black from a predefined state.
+     */
     @Test
     public void testNonAdjacentMoves() {
 
     }
 
+    /**
+     * Tests if there are any valid moves on a full board.
+     */
     @Test
-    public void testValidMoveNotOnPiece() {
-
+    public void testValidMovesOnFullBoard() {
+        // Fill in the board
+        for (int row = 0; row < Board.DIM; row++) {
+            for (int col = 0; col < Board.DIM; col++) {
+                game.getBoard().setField(row, col, Mark.BLACK);
+            }
+        }
+        // Check no valid moves for both players
+        assertTrue(game.getValidMoves(Mark.BLACK).isEmpty());
+        assertTrue(game.getValidMoves(Mark.WHITE).isEmpty());
     }
 
-    @Test
-    public void testMoveOnFullBoard() {
 
-    }
-
-
+    /**
+     * Tests the number of discs both players have after an invalid move and after black playing a move at index 19.
+     *
+     * @throws NoValidMoves exception for when the player has no valid moves to make
+     */
     @Test
     public void testScoreEarlyGame() throws NoValidMoves {
         assertTrue(player1.constructMove(game, 2).isEmpty());
+        // Test nothing changed
+        assertEquals(2, game.getBoard().currentScore().get(player1.getMark()));
+        assertEquals(2, game.getBoard().currentScore().get(player2.getMark()));
+        // Test with correct move
         game.doMove(player1.constructMove(game, 19));
         assertEquals(4, game.getBoard().currentScore().get(player1.getMark()));
         assertEquals(1, game.getBoard().currentScore().get(player2.getMark()));
     }
 
+    /**
+     * Tests if flipping a single piece and setting a piece in the northern direction works correctly.
+     *
+     * @throws NoValidMoves exception for when the player has no valid moves to make
+     */
     @Test
     public void testSingleUpperFlips() throws NoValidMoves {
         game.doMove(player1.constructMove(game, 19));
@@ -66,33 +111,123 @@ public class GameTest {
     }
 
     @Test
-    public void testSingleHorizontalFlips() throws NoValidMoves {
-        //Left + right
+    public void testSingleLeftFlips() throws NoValidMoves {
+        // Do the flip
+        game.doMove(player1.constructMove(game, 26));
+        // Check if they are flipped
+        assertEquals(Mark.BLACK, game.getBoard().getField(3, 3));
+        assertEquals(Mark.BLACK, game.getBoard().getField(3, 2));
     }
 
+    /**
+     * Tests if flipping a single piece and setting a piece in the eastern direction works correctly.
+     *
+     * @throws NoValidMoves exception for when the player has no valid moves to make
+     */
     @Test
-    public void testSingleVerticalFlips() throws NoValidMoves {
-        //up + down
+    public void testSingleRightFlips() throws NoValidMoves {
+        // Do the flip
+        game.doMove(player1.constructMove(game, 37));
+        // Check if they are flipped
+        assertEquals(Mark.BLACK, game.getBoard().getField(4, 4));
+        assertEquals(Mark.BLACK, game.getBoard().getField(4, 5));
     }
 
+    /**
+     * Tests if flipping a single piece and setting a piece in the north-western direction works correctly.
+     *
+     * @throws NoValidMoves exception for when the player has no valid moves to make
+     */
     @Test
-    public void testSingleUpperDiagonalFlips() throws NoValidMoves {
-        //diag left + right
+    public void testSingleUpperLeftDiagonalFlips() throws NoValidMoves {
+        // Create scenario for flip to be possible
+        game.doMove(player1.constructMove(game, 44));
+        game.doMove(player2.constructMove(game, 43));
+        // Do the flip
+        game.doMove(player1.constructMove(game, 18));
+        // Check if they are flipped
+        assertEquals(Mark.BLACK, game.getBoard().getField(2, 2));
+        assertEquals(Mark.BLACK, game.getBoard().getField(3, 3));
     }
 
+    /**
+     * Tests if flipping a single piece and setting a piece in the north-eastern direction works correctly.
+     *
+     * @throws NoValidMoves exception for when the player has no valid moves to make
+     */
+    @Test
+    public void testSingleUpperRightDiagonalFlips() throws NoValidMoves {
+        // Create scenario for flip to be possible
+        game.doMove(player1.constructMove(game, 19));
+        game.doMove(player2.constructMove(game, 20));
+        // Do the flip
+        game.doMove(player1.constructMove(game, 13));
+        // Check if they are flipped
+        assertEquals(Mark.BLACK, game.getBoard().getField(2, 4));
+        assertEquals(Mark.BLACK, game.getBoard().getField(1, 5));
+    }
+
+    /**
+     * Tests if flipping a single piece and setting a piece in the south-western direction works correctly.
+     *
+     * @throws NoValidMoves exception for when the player has no valid moves to make
+     */
     @Test
     public void testSingleLowerDiagonalFlips() throws NoValidMoves {
         //diag left + right
     }
 
     @Test
-    public void testMultiDirectionalSingleFlips() {
-
+    public void testMultiDirectionalSingleFlips() throws NoValidMoves {
+        // Create scenario where playing a move affects multiple directions.
+        game.getBoard().setField(2, 3, Mark.BLACK);
+        game.getBoard().setField(3, 3, Mark.BLACK);
+        game.getBoard().setField(4, 3, Mark.BLACK);
+        game.getBoard().setField(4, 5, Mark.BLACK);
+        game.getBoard().setField(2, 4, Mark.WHITE);
+        game.getBoard().setField(3, 4, Mark.WHITE);
+        game.getBoard().setField(4, 4, Mark.WHITE);
+        game.getBoard().setField(5, 4, Mark.WHITE);
+        // Do the flip
+        game.doMove(player1.constructMove(game, 21));
+        // Check if all pieces in the affected directions have been flipped.
+        assertEquals(Mark.BLACK, game.getBoard().getField(2, 5));
+        assertEquals(Mark.BLACK, game.getBoard().getField(2, 4));
+        assertEquals(Mark.BLACK, game.getBoard().getField(3, 4));
     }
 
+    /**
+     * Tests if playing a piece that affects multiple directions, correctly performs multiple piece flips in the affected direction.
+     *
+     * @throws NoValidMoves exception for when the player has no valid moves to make
+     */
     @Test
-    public void testMultiDirectionalLongFlips() {
+    public void testMultiDirectionalLongFlips() throws NoValidMoves {
+        game.getBoard().setField(3, 2, Mark.BLACK);
+        game.getBoard().setField(4, 2, Mark.BLACK);
+        game.getBoard().setField(5, 2, Mark.BLACK);
 
+        game.getBoard().setField(3, 3, Mark.BLACK);
+        game.getBoard().setField(4, 3, Mark.BLACK);
+        game.getBoard().setField(5, 3, Mark.BLACK);
+
+        game.getBoard().setField(2, 4, Mark.WHITE);
+        game.getBoard().setField(3, 4, Mark.BLACK);
+        game.getBoard().setField(4, 4, Mark.BLACK);
+        game.getBoard().setField(5, 4, Mark.BLACK);
+        game.getBoard().setField(6, 4, Mark.BLACK);
+
+        game.getBoard().setField(2, 5, Mark.BLACK);
+        game.getBoard().setField(5, 5, Mark.WHITE);
+
+        game.doMove(player2.constructMove(game, 41));
+        assertEquals(Mark.WHITE, game.getBoard().getField(5, 5));
+        assertEquals(Mark.WHITE, game.getBoard().getField(5, 4));
+        assertEquals(Mark.WHITE, game.getBoard().getField(5, 3));
+        assertEquals(Mark.WHITE, game.getBoard().getField(5, 2));
+        assertEquals(Mark.WHITE, game.getBoard().getField(5, 1));
+        assertEquals(Mark.WHITE, game.getBoard().getField(3, 3));
+        assertEquals(Mark.WHITE, game.getBoard().getField(4, 2));
     }
 
     @Test

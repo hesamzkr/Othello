@@ -70,15 +70,36 @@ public class BoardTest {
 
     }
 
+    /**
+     * Tests if a board is correctly reset to its initial state.
+     */
     @Test
     public void testReset() {
         board.setField(0, 0, Mark.BLACK);
         board.setField(Board.DIM - 1, Board.DIM - 1, Mark.WHITE);
         board.reset();
-        assertEquals(Mark.EMPTY, board.getField(0, 0));
-        assertEquals(Mark.EMPTY, board.getField(Board.DIM - 1, Board.DIM - 1));
+
+        for (int i = 0; i < Board.DIM * Board.DIM; i++) {
+            switch (i) {
+                // indices for initial state
+                case 27 -> assertEquals(Mark.WHITE, board.getField(3, 3));
+                case 28 -> assertEquals(Mark.BLACK, board.getField(3, 4));
+                case 35 -> assertEquals(Mark.BLACK, board.getField(4, 3));
+                case 36 -> assertEquals(Mark.WHITE, board.getField(4, 4));
+                // the rest must be empty
+                default -> {
+                    int row = i / Board.DIM;
+                    int col = i % Board.DIM;
+                    assertEquals(Mark.EMPTY, board.getField(row, col));
+                }
+            }
+        }
     }
 
+    /**
+     * Tests if a copy of the board can be created, where setting a field on one board
+     * does not affect the other.
+     */
     @Test
     public void testDeepCopy() {
         board.setField(0, 0, Mark.BLACK);
@@ -97,6 +118,9 @@ public class BoardTest {
         assertEquals(Mark.WHITE, deepCopyBoard.getField(0, 0));
     }
 
+    /**
+     * Tests if fields on the boards are empty by using their row and column.
+     */
     @Test
     public void testIsEmptyFieldRowCol() {
         board.setField(0, 0, Mark.BLACK);
@@ -105,6 +129,9 @@ public class BoardTest {
         assertTrue(board.isEmptyField(1, 0));
     }
 
+    /**
+     * Tests if a board is full when all possible fields have been filled.
+     */
     @Test
     public void testIsFull() {
         for (int i = 0; i < Board.DIM * Board.DIM - 1; i++) {

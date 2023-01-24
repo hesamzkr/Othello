@@ -2,7 +2,7 @@
 //
 //import othello.game.Game;
 //import othello.game.Move;
-//import othello.game.TicTacToeGame;
+//import othello.game;
 //
 //import java.util.List;
 //
