@@ -7,6 +7,7 @@ import java.util.Map;
  * Board for the Tic Tac Toe game.
  */
 public class Board {
+    //DELETE
     /**
      * Dimension of the board, i.e., if set to 3, the board has 3 rows and 3 columns.
      */
