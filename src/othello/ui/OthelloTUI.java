@@ -1,5 +1,6 @@
 package othello.ui;
 
+import othello.ai.NaiveStrategy;
 import othello.game.*;
 import othello.game.AbstractPlayer;
 import othello.game.Player;
@@ -17,11 +18,11 @@ public class OthelloTUI {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Player1 name: ");
-        Player p1 = new HumanPlayer(scanner.nextLine());
-        //AbstractPlayer player1 = createPlayer(scanner, Mark.BLACK);
+        //Player p1 = new HumanPlayer(scanner.nextLine());
+        Player p1 = createPlayer(scanner.nextLine());
         System.out.print("Player2 name: ");
-        Player p2 = new HumanPlayer(scanner.nextLine());
-        //AbstractPlayer player2 = createPlayer(scanner, Mark.WHITE);
+        //Player p2 = new HumanPlayer(scanner.nextLine());
+        Player p2 = createPlayer(scanner.nextLine());
 
         OthelloTUI tui = new OthelloTUI(new OthelloGame(p1, p2));
         tui.run();
@@ -46,7 +47,9 @@ public class OthelloTUI {
             System.out.printf("\n%s\n", game);
             Player winner = game.getWinner();
             if (winner != null) {
-                System.out.printf("The winner is: %s!\n", winner);
+                Mark win = winner.getMark();
+                Mark other = win.other();
+                System.out.printf("The winner is: %s(%s)!, final score: %s vs %s \n", winner, winner.getMark(), game.scores().get(win), game.scores().get(win.other()));
             } else {
                 System.out.println("The game is a draw!");
             }
@@ -69,17 +72,16 @@ public class OthelloTUI {
         }
     }
 
-    private static Player createPlayer(Scanner scanner, Mark mark) {
-        String playerName = scanner.nextLine();
-        switch (playerName) {
-//            case "-N":
-//                return new ComputerPlayer(mark, new NaiveStrategy());
+    private static Player createPlayer(String name) {
+        switch (name) {
+            case "-N":
+                return new ComputerPlayer(new NaiveStrategy());
 //            case "-S":
 //                return new ComputerPlayer(mark, new SmartStrategy());
 //            case "-M":
 //                return new ComputerPlayer(mark, new MonteCarloStrategy(selectDifficulty(scanner)));
             default:
-                return new HumanPlayer(playerName);
+                return new HumanPlayer(name);
         }
     }
 

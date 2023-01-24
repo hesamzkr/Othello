@@ -3,8 +3,8 @@ package othello.ai;
 import othello.game.Move;
 import othello.game.OthelloGame;
 import othello.game.Player;
-import othello.game.TicTacToeGame;
-import othello.game.TicTacToeMove;
+import othello.game.OthelloGame;
+import othello.game.OthelloMove;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class McNode implements Node {
         this.state = state;
         numSims = 0;
         childArray = new ArrayList<>();
-        score = new Score(((TicTacToeGame) state.getGame()).getPlayer1(), ((TicTacToeGame) state.getGame()).getPlayer2(), 0, 0);
+        score = new Score(((OthelloGame) state.getGame()).getPlayer1(), ((OthelloGame) state.getGame()).getPlayer2(), 0, 0);
     }
 
     public Node getParent() {

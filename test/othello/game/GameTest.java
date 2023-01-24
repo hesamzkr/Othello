@@ -54,6 +54,7 @@ public class GameTest {
         assertTrue(player1.constructMove(game, 2).isEmpty());
         game.doMove(player1.constructMove(game, 19));
         assertEquals(4, game.getBoard().currentScore().get(player1.getMark()));
+        assertEquals(1, game.getBoard().currentScore().get(player2.getMark()));
     }
 
     @Test

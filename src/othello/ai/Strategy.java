@@ -2,6 +2,9 @@ package othello.ai;
 
 import othello.game.Game;
 import othello.game.Move;
+import othello.game.NoValidMoves;
+
+import java.util.List;
 
 public interface Strategy {
 
@@ -22,5 +25,5 @@ public interface Strategy {
      */
     //@ requires game != null;
     //@ ensures game.isValidMove(\result);
-    public Move determineMove(Game game);
+    public List<Move> determineMove(Game game) throws NoValidMoves;
 }

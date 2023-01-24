@@ -224,12 +224,14 @@ public class Board {
         Map<Mark, Integer> score = new HashMap<>();
         int numBlack = 0;
         int numWhite = 0;
+        score.put(Mark.BLACK, numBlack);
+        score.put(Mark.WHITE, numWhite);
         for (int row = 0; row < DIM; row++) {
             for (int col = 0; col < DIM; col++) {
                 if (getField(row, col) == Mark.BLACK) {
                     numBlack += 1;
                     score.put(Mark.BLACK, numBlack);
-                } else {
+                } else if (getField(row, col) == Mark.WHITE) {
                     numWhite += 1;
                     score.put(Mark.WHITE, numWhite);
                 }

@@ -5,6 +5,7 @@ package othello.game;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class OthelloGame implements Game {
@@ -133,7 +134,7 @@ public class OthelloGame implements Game {
                 move.addToFlip(toFlip);
                 return move;
             } else if (board.getField(checkRow, col) == m.other()) {
-                toFlip.add(new OthelloMove(m, row, checkRow));
+                toFlip.add(new OthelloMove(m, checkRow, col));
                 checkRow -= 1;
             } else {
                 break;
@@ -274,16 +275,18 @@ public class OthelloGame implements Game {
         }
     }
 
-//    public String showValids() {
-//        List<Move> moves = getValidMoves(getTurn().getMark());
-//        Game copy = deepCopy();
-//        for (Move m : moves) {
-//            if (m instanceof OthelloMove othelloMove) {
-//                ((OthelloGame) copy).getBoard().setField(othelloMove.getRow(), othelloMove.getCol(), Mark.VALID);
-//            }
-//        }
-//        return copy.toString();
-//    }
+    public List<int[]> showValids() {
+        List<Move> moves = getValidMoves(getTurn().getMark());
+        Game copy = deepCopy();
+        List<int[]> valids = new ArrayList<>();
+        for (Move m : moves) {
+            int[] rowcol = new int[2];
+            rowcol[0] = m.getRow();
+            rowcol[1] = m.getCol();
+            valids.add(rowcol);
+        }
+        return valids.stream().distinct().collect(Collectors.toList());
+    }
 
     /**
      * should take a move and flip all the pieces
@@ -317,6 +320,10 @@ public class OthelloGame implements Game {
             }
         }
         return copy.getBoard().toString();
+    }
+
+    public Map<Mark, Integer> scores() {
+        return board.currentScore();
     }
 
     public OthelloGame deepCopy() {
