@@ -5,13 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class HumanPlayer extends AbstractPlayer {
-
-
-    /**
-     * Creates a new Player object.
-     *
-     * @param name
-     */
+    
     public HumanPlayer(String name) {
         super(name);
     }

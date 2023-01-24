@@ -7,6 +7,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test for the OthelloGame and it's logic and behaviour
+ */
 public class GameTest {
     private TestPlayer player1; // BLACK
     private TestPlayer player2; // WHITE
@@ -14,8 +17,8 @@ public class GameTest {
 
     @BeforeEach
     public void setUp() {
-        player1 = new TestPlayer("Noah");
-        player2 = new TestPlayer("Hesam");
+        player1 = new TestPlayer();
+        player2 = new TestPlayer();
         game = new OthelloGame(player1, player2);
 
     }
@@ -44,14 +47,16 @@ public class GameTest {
     @Test
     public void testEarlyGameValidMovesBlack() {
         List<Move> moves = game.getValidMoves(game.getTurn().getMark());
-        Game copy = game.deepCopy();
+
+        //Marking the location of all valid moves on the board for BLACK(first turn) with the 'Valid' marker.
         for (Move m : moves) {
             game.getBoard().setField(m.getRow(), m.getCol(), Mark.VALID);
         }
-        assertEquals(Mark.VALID, copy.getBoard().getField(2, 3));
-        assertEquals(Mark.VALID, copy.getBoard().getField(3, 2));
-        assertEquals(Mark.VALID, copy.getBoard().getField(4, 5));
-        assertEquals(Mark.VALID, copy.getBoard().getField(5, 4));
+        //Check if all these marked locations match up with a reference game of Othello.
+        assertEquals(Mark.VALID, game.getBoard().getField(2, 3));
+        assertEquals(Mark.VALID, game.getBoard().getField(3, 2));
+        assertEquals(Mark.VALID, game.getBoard().getField(4, 5));
+        assertEquals(Mark.VALID, game.getBoard().getField(5, 4));
     }
 
 
@@ -59,8 +64,36 @@ public class GameTest {
      * Tests all the valid moves for black from a predefined state.
      */
     @Test
-    public void testNonAdjacentMoves() {
+    public void testGetValidMoves() {
+        // Create scenario to check all the valid moves.
+        game.getBoard().setField(2, 3, Mark.BLACK);
+        game.getBoard().setField(3, 3, Mark.BLACK);
+        game.getBoard().setField(4, 3, Mark.BLACK);
 
+        game.getBoard().setField(4, 5, Mark.BLACK);
+
+        game.getBoard().setField(2, 4, Mark.WHITE);
+        game.getBoard().setField(3, 4, Mark.WHITE);
+        game.getBoard().setField(4, 4, Mark.WHITE);
+        game.getBoard().setField(5, 4, Mark.WHITE);
+
+        //Marking the location of all valid moves on the board for BLACK(first turn) with the 'Valid' marker.
+        List<Move> moves = game.getValidMoves(Mark.BLACK);
+        for (Move m : moves) {
+            game.getBoard().setField(m.getRow(), m.getCol(), Mark.VALID);
+        }
+
+        // getValidMoves makes a new move with a list of pieces to flip for each of the cardinal directions
+        // which means that for the same row and column, there might be multiple moves.
+        assertEquals(6 + 1, moves.size());
+
+        //Check if all these marked locations match up with a reference game of Othello.
+        assertEquals(Mark.VALID, game.getBoard().getField(1, 5));
+        assertEquals(Mark.VALID, game.getBoard().getField(2, 5));
+        assertEquals(Mark.VALID, game.getBoard().getField(3, 5));
+        assertEquals(Mark.VALID, game.getBoard().getField(5, 5));
+        assertEquals(Mark.VALID, game.getBoard().getField(6, 5));
+        assertEquals(Mark.VALID, game.getBoard().getField(6, 3));
     }
 
     /**
@@ -87,12 +120,14 @@ public class GameTest {
      */
     @Test
     public void testScoreEarlyGame() throws NoValidMoves {
+        // Test with wrong move
         assertTrue(player1.constructMove(game, 2).isEmpty());
         // Test nothing changed
         assertEquals(2, game.getBoard().currentScore().get(player1.getMark()));
         assertEquals(2, game.getBoard().currentScore().get(player2.getMark()));
         // Test with correct move
         game.doMove(player1.constructMove(game, 19));
+        // Test that changes are correct
         assertEquals(4, game.getBoard().currentScore().get(player1.getMark()));
         assertEquals(1, game.getBoard().currentScore().get(player2.getMark()));
     }
@@ -104,12 +139,32 @@ public class GameTest {
      */
     @Test
     public void testSingleUpperFlips() throws NoValidMoves {
+        // Do the flip
         game.doMove(player1.constructMove(game, 19));
+        // Check if they are flipped
         assertEquals(Mark.BLACK, game.getBoard().getField(2, 3));
         assertEquals(Mark.BLACK, game.getBoard().getField(3, 3));
-        assertEquals(Mark.BLACK, game.getBoard().getField(4, 3));
     }
 
+    /**
+     * Tests if flipping a single piece and setting a piece in the southern direction works correctly.
+     *
+     * @throws NoValidMoves exception for when the player has no valid moves to make
+     */
+    @Test
+    public void testSingleLowerFlips() throws NoValidMoves {
+        // Do the flip
+        game.doMove(player1.constructMove(game, 44));
+        // Check if they are flipped
+        assertEquals(Mark.BLACK, game.getBoard().getField(4, 4));
+        assertEquals(Mark.BLACK, game.getBoard().getField(5, 4));
+    }
+
+    /**
+     * Tests if flipping a single piece and setting a piece in the western direction works correctly.
+     *
+     * @throws NoValidMoves exception for when the player has no valid moves to make
+     */
     @Test
     public void testSingleLeftFlips() throws NoValidMoves {
         // Do the flip
@@ -173,10 +228,39 @@ public class GameTest {
      * @throws NoValidMoves exception for when the player has no valid moves to make
      */
     @Test
-    public void testSingleLowerDiagonalFlips() throws NoValidMoves {
-        //diag left + right
+    public void testSingleLowerLeftDiagonalFlips() throws NoValidMoves {
+        // Create scenario for flip to be possible
+        game.doMove(player1.constructMove(game, 44));
+        game.doMove(player2.constructMove(game, 43));
+        // Do the flip
+        game.doMove(player1.constructMove(game, 50));
+        // Check if they are flipped
+        assertEquals(Mark.BLACK, game.getBoard().getField(6, 2));
+        assertEquals(Mark.BLACK, game.getBoard().getField(5, 3));
     }
 
+    /**
+     * Tests if flipping a single piece and setting a piece in the south-eastern direction works correctly.
+     *
+     * @throws NoValidMoves exception for when the player has no valid moves to make
+     */
+    @Test
+    public void testSingleLowerRightDiagonalFlips() throws NoValidMoves {
+        // Create scenario for flip to be possible
+        game.doMove(player1.constructMove(game, 19));
+        game.doMove(player2.constructMove(game, 20));
+        // Do the flip
+        game.doMove(player1.constructMove(game, 45));
+        // Check if they are flipped
+        assertEquals(Mark.BLACK, game.getBoard().getField(4, 4));
+        assertEquals(Mark.BLACK, game.getBoard().getField(5, 5));
+    }
+
+    /**
+     * Tests if playing a piece that affects multiple directions, correctly performs a single piece flip in the affected direction.
+     *
+     * @throws NoValidMoves exception for when the player has no valid moves to make
+     */
     @Test
     public void testMultiDirectionalSingleFlips() throws NoValidMoves {
         // Create scenario where playing a move affects multiple directions.
@@ -230,19 +314,13 @@ public class GameTest {
         assertEquals(Mark.WHITE, game.getBoard().getField(4, 2));
     }
 
+    /**
+     * Testing the game is over when
+     * neither of the players can make a valid move
+     */
     @Test
-    public void testMostDiscsIsWinner() {
-
-    }
-
-    @Test
-    public void testSameDiscsIsDraw() {
-
-    }
-
-    @Test
-    public void testNoValidMovesForBothPlayers() {
-        // No valid moves for either player
+    public void testGameOverNoValidMovesBothPlayers() {
+        // Creating a scenario where neither players have a valid move to make
         for (int row = 0; row < Board.DIM; row++) {
             for (int col = 0; col < Board.DIM; col++) {
                 game.getBoard().setField(row, col, Mark.WHITE);
@@ -267,9 +345,12 @@ public class GameTest {
         assertTrue(game.isGameOver());
     }
 
+    /**
+     * Testing the game is over when there are no black pieces
+     */
     @Test
-    public void testNoBlacks() {
-        // No black pieces
+    public void testGameOverNoBlacks() {
+        // Removing all black pieces
         for (int row = 0; row < Board.DIM; row++) {
             for (int col = 0; col < Board.DIM; col++) {
                 if (game.getBoard().getField(row, col) == Mark.BLACK) {
@@ -280,9 +361,12 @@ public class GameTest {
         assertTrue(game.isGameOver());
     }
 
+    /**
+     * Testing the game is over when there are no white pieces
+     */
     @Test
-    public void testNoWhites() {
-        // No white pieces
+    public void testGameOverNoWhites() {
+        // Removing all white pieces
         for (int row = 0; row < Board.DIM; row++) {
             for (int col = 0; col < Board.DIM; col++) {
                 if (game.getBoard().getField(row, col) == Mark.WHITE) {
@@ -294,29 +378,17 @@ public class GameTest {
         assertTrue(game.isGameOver());
     }
 
+    /**
+     * Testing the game is over when the board is full
+     */
     @Test
-    public void testBoardFull() {
-        // Board is full
+    public void testGameOverBoardFull() {
+        // Filling the board
         for (int row = 0; row < Board.DIM; row++) {
             for (int col = 0; col < Board.DIM; col++) {
                 game.getBoard().setField(row, col, Mark.BLACK);
             }
         }
         assertTrue(game.isGameOver());
-    }
-
-    @Test
-    public void testScoring() {
-
-    }
-
-    @Test
-    public void testSkipIfNoValidMoves() {
-
-    }
-
-    @Test
-    public void testGameOverNoValidMovesBothPlayers() {
-
     }
 }

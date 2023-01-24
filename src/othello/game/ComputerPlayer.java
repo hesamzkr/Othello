@@ -6,13 +6,8 @@ import java.util.List;
 
 public class ComputerPlayer extends AbstractPlayer {
 
-    private Strategy strategy;
+    private final Strategy strategy;
 
-    /**
-     * Creates a new Player object.
-     *
-     * @param strategy
-     */
     public ComputerPlayer(Strategy strategy) {
         super(strategy.getName());
         this.strategy = strategy;

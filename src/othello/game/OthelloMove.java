@@ -25,10 +25,20 @@ public class OthelloMove implements Move {
         return col;
     }
 
+    /**
+     * Adds all the pieces that should be flipped to this move.
+     *
+     * @param moves a list of moves for the pieces that should be flipped.
+     */
     public void addToFlip(List<OthelloMove> moves) {
         toFlip.addAll(moves);
     }
 
+    /**
+     * Gets all the moves that flip certain pieces.
+     *
+     * @return a list of moves for the pieces that should be flipped.
+     */
     public List<OthelloMove> getToFlip() {
         return toFlip;
     }

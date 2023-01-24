@@ -6,16 +6,11 @@ import java.util.List;
  * A simple turn-based game.
  */
 public interface Game {
-    //@ public invariant !isGameOver() ==> getValidMoves(Mark.BLACK).size() > 0;
-    //@ public invariant !isGameOver() ==> getWinner() == null;
-    //@ public invariant !isGameOver() ==> getTurn() != null;
-
     /**
      * Check if the game is over, i.e., there is a winner or no more moves are available.
      *
      * @return whether the game is over
      */
-    //@ pure;
     boolean isGameOver();
 
     /**
@@ -23,7 +18,6 @@ public interface Game {
      *
      * @return the player whose turn it is
      */
-    //@ pure;
     Player getTurn();
 
     /**
@@ -31,7 +25,6 @@ public interface Game {
      *
      * @return the winner, or null if no player is the winner
      */
-    //@ pure;
     Player getWinner();
 
     /**
@@ -39,7 +32,6 @@ public interface Game {
      *
      * @return the list of currently valid moves
      */
-    //@ pure;
     List<Move> getValidMoves(Mark m);
 
     /**
@@ -47,10 +39,20 @@ public interface Game {
      *
      * @param move the move to play
      */
-    //@ pure;
     void doMove(List<Move> move);
 
+    /**
+     * Creates a new instance of game with
+     * same state and returns it
+     *
+     * @return
+     */
     Game deepCopy();
 
+    /**
+     * Getter for board
+     *
+     * @return game board
+     */
     Board getBoard();
 }

@@ -6,15 +6,17 @@ import othello.game.NoValidMoves;
 
 import java.util.List;
 
+/**
+ * Strategy of the way the player chooses
+ * the move to make
+ */
 public interface Strategy {
-
     /**
      * get the name of the strategy
      *
      * @return name of the strategy
      */
-    //@ ensures \result != null;
-    public String getName();
+    String getName();
 
     /**
      * Returns a legal move, given the current state
@@ -23,7 +25,5 @@ public interface Strategy {
      * @param game the game strategy is for
      * @return a legal move
      */
-    //@ requires game != null;
-    //@ ensures game.isValidMove(\result);
-    public List<Move> determineMove(Game game) throws NoValidMoves;
+    List<Move> determineMove(Game game) throws NoValidMoves;
 }

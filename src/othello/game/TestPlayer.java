@@ -1,5 +1,8 @@
 package othello.game;
 
+import othello.ai.NaiveStrategy;
+import othello.ai.Strategy;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -13,10 +16,15 @@ public class TestPlayer extends ComputerPlayer {
         super(new NaiveStrategy());
     }
 
-    public List<Move> determineMove(Game game) throws NoValidMoves {
-        return null;
-    }
-
+    /**
+     * Constructs a list of moves for testing when given
+     * an index on the board as a move to make
+     *
+     * @param game      the current game being tested
+     * @param moveIndex the move chosen by player
+     * @return list of moves to be applied to game
+     * @throws NoValidMoves Exception for when the player has no valid moves to make
+     */
     public List<Move> constructMove(Game game, int moveIndex) throws NoValidMoves {
         List<Move> playMoves = new ArrayList<>();
         int row = moveIndex / Board.DIM;

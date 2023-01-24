@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * A implementation of the Othello turn-based game.
+ */
 public class OthelloGame implements Game {
 
     private final Player player1;

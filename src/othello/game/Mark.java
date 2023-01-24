@@ -14,6 +14,7 @@ public enum Mark {
      *
      * @return the other mark if this mark is not EMPTY or EMPTY
      */
+    //@ requires this != VALID;
     //@ ensures this == BLACK ==> \result == WHITE && this == WHITE ==> \result == BLACK;
     public Mark other() {
         if (this == BLACK) {

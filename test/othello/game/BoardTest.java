@@ -7,6 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
+/**
+ * Test for the board for othello
+ */
 public class BoardTest {
     private Board board;
 
@@ -15,6 +18,10 @@ public class BoardTest {
         board = new Board();
     }
 
+    /**
+     * Test all indices are on the board as a field with the
+     * correct row and column
+     */
     @Test
     public void testIndex() {
         for (int index = 0; index < Board.DIM * Board.DIM; index++) {
@@ -24,6 +31,10 @@ public class BoardTest {
         }
     }
 
+    /**
+     * Test the edge cases of rows and columns and
+     * if they exist or not
+     */
     @Test
     public void testIsFieldRowCol() {
         assertFalse(board.isField(-1, 0));
@@ -35,6 +46,9 @@ public class BoardTest {
         assertFalse(board.isField(Board.DIM, Board.DIM + 1));
     }
 
+    /**
+     * Test if setting field works with rows and columns
+     */
     @Test
     public void testSetAndGetFieldRowCol() {
         board.setField(0, 0, Mark.BLACK);
@@ -44,30 +58,26 @@ public class BoardTest {
         assertEquals(Mark.EMPTY, board.getField(1, 1));
     }
 
+    /**
+     * Test the initial state of the board
+     */
     @Test
     public void testSetup() {
         for (int i = 0; i < Board.DIM * Board.DIM; i++) {
             switch (i) {
-                case 27:
-                    assertEquals(Mark.WHITE, board.getField(3, 3));
-                    break;
-                case 28:
-                    assertEquals(Mark.BLACK, board.getField(3, 4));
-                    break;
-                case 35:
-                    assertEquals(Mark.BLACK, board.getField(4, 3));
-                    break;
-                case 36:
-                    assertEquals(Mark.WHITE, board.getField(4, 4));
-                    break;
-                default:
+                // indices for initial state
+                case 27 -> assertEquals(Mark.WHITE, board.getField(3, 3));
+                case 28 -> assertEquals(Mark.BLACK, board.getField(3, 4));
+                case 35 -> assertEquals(Mark.BLACK, board.getField(4, 3));
+                case 36 -> assertEquals(Mark.WHITE, board.getField(4, 4));
+                // the rest must be empty
+                default -> {
                     int row = i / Board.DIM;
                     int col = i % Board.DIM;
                     assertEquals(Mark.EMPTY, board.getField(row, col));
+                }
             }
-
         }
-
     }
 
     /**

@@ -18,12 +18,7 @@ public abstract class AbstractPlayer implements Player {
     public AbstractPlayer(String name) {
         this.name = name;
     }
-
-    /**
-     * Returns the name of the player.
-     *
-     * @return the name of the player
-     */
+    
     public String getName() {
         return name;
     }
