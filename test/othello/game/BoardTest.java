@@ -153,4 +153,45 @@ public class BoardTest {
         board.setField(Board.DIM - 1, Board.DIM - 1, Mark.BLACK);
         assertTrue(board.isFull());
     }
+
+    @Test
+    public void testForUpperLeftPiece() {
+        assertFalse(board.HasLeftUpperDiagPiece(3, 4, board.getField(3, 4)));
+    }
+
+    @Test
+    public void testForUpperRightPiece() {
+        assertFalse(board.HasRightUpperDiagPiece(3, 4, board.getField(3, 4)));
+    }
+
+    @Test
+    public void testForUpperPiece() {
+        assertFalse(board.HasUpperPiece(3, 4, board.getField(3, 4)));
+    }
+
+    @Test
+    public void testForLeftPiece() {
+        assertTrue(board.HasLeftPiece(3, 4, board.getField(3, 4)));
+    }
+
+    @Test
+    public void testForRightPiece() {
+        assertFalse(board.HasRightPiece(3, 4, board.getField(3, 4)));
+    }
+
+    @Test
+    public void testForLowerLeftPiece() {
+        assertFalse(board.HasLeftLowerDiagPiece(3, 4, board.getField(3, 4)));
+    }
+
+    @Test
+    public void testForLowerRightPiece() {
+        assertFalse(board.HasRightLowerDiagPiece(3, 4, board.getField(3, 4)));
+    }
+
+    @Test
+    public void testForLowerPiece() {
+        assertTrue(board.HasLowerPiece(3, 4, board.getField(3, 4)));
+    }
+
 }

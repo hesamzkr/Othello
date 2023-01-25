@@ -24,20 +24,63 @@ public class GameTest {
     }
 
     /**
-     * Testing a game with random players ....
+     * Testing 100 random games.
      */
     @Test
     public void testFullRandomGame() {
-        while (!game.isGameOver()) {
-            TestPlayer player = (TestPlayer) game.getTurn();
-            List<Move> moves;
-            try {
-                moves = player.determineMove(game);
-                game.doMove(moves);
-            } catch (NoValidMoves ignored) {
+        for (int i = 0; i < 100; i++) {
+            setUp();
+            while (!game.isGameOver()) {
+                TestPlayer player = (TestPlayer) game.getTurn();
+                List<Move> moves;
+                int numberOfPieces = game.scores().get(Mark.BLACK) + game.scores().get(Mark.WHITE);
+                int playerScore = game.scores().get(player.getMark());
+                try {
+                    moves = player.determineMove(game);
+                    game.doMove(moves);
+                    assertEquals(numberOfPieces + 1, game.scores().get(Mark.BLACK) + game.scores().get(Mark.WHITE));
+                    assertTrue(game.scores().get(player.getMark()) >= playerScore + 2);
+                } catch (NoValidMoves ignored) {
+                    assertEquals(numberOfPieces, game.scores().get(Mark.BLACK) + game.scores().get(Mark.WHITE));
+                }
+                game.nextTurn();
             }
-            game.nextTurn();
+            if (game.scores().get(Mark.BLACK) > game.scores().get(Mark.WHITE)) {
+                assertEquals(player1, game.getWinner());
+            } else if (game.scores().get(Mark.BLACK) < game.scores().get(Mark.WHITE)) {
+                assertEquals(player2, game.getWinner());
+            } else {
+                assertNull(game.getWinner());
+            }
         }
+    }
+
+
+    /**
+     * Test if the winner is black when black has the most pieces at the end of the game.
+     */
+    @Test
+    public void testGetWinnerBlack() {
+        for (int row = 0; row < Board.DIM; row++) {
+            for (int col = 0; col < Board.DIM; col++) {
+                game.getBoard().setField(row, col, Mark.BLACK);
+            }
+        }
+
+        assertEquals(game.getWinner(), player1);
+    }
+
+    /**
+     * Test if the winner is white when white has the most pieces at the end of the game.
+     */
+    @Test
+    public void testGetWinnerWhite() {
+        for (int row = 0; row < Board.DIM; row++) {
+            for (int col = 0; col < Board.DIM; col++) {
+                game.getBoard().setField(row, col, Mark.WHITE);
+            }
+        }
+        assertEquals(game.getWinner(), player2);
     }
 
 
@@ -83,7 +126,7 @@ public class GameTest {
             game.getBoard().setField(m.getRow(), m.getCol(), Mark.VALID);
         }
 
-        // getValidMoves makes a new move with a list of pieces to flip for each of the cardinal directions
+        // getValidMoves makes a new move with a list of pieces to flip for each of the cardinal and ordinal directions
         // which means that for the same row and column, there might be multiple moves.
         assertEquals(6 + 1, moves.size());
 
