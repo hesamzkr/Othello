@@ -2,6 +2,8 @@ package othello.game;
 
 //import othello.ai.Score;
 
+import othello.ai.Score;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -350,7 +352,12 @@ public class OthelloGame implements Game {
     }
 
     public void nextTurn() {
-        turn = turn == player1 ? player2 : player1;
+        //turn = turn == player1 ? player2 : player1;
+        if (turn == player1) {
+            turn = player2;
+        } else {
+            turn = player1;
+        }
     }
 
     public Board getBoard() {
@@ -394,19 +401,27 @@ public class OthelloGame implements Game {
      *
      * @return
      */
-//    public Score getScores() {
-//        if (isGameOver()) {
-//            Player winner = getWinner();
-//            if (winner == player1) {
-//                return new Score(player1, player2, 1, -2);
-//            } else if (winner == player2) {
-//                return new Score(player1, player2, -2, 1);
-//            } else {
-//                return new Score(player1, player2, 0, 0);
-//            }
-//        }
-//        return null;
-//    }
+    public Score getScores() {
+        if (isGameOver()) {
+            Player winner = getWinner();
+            int bonus = 0;
+            if (board.isFull() && winner != null) {
+                if ((board.getField(0, 0) == winner.getMark()) && (board.getField(0, 7) == winner.getMark()) &&
+                        (board.getField(7, 0) == winner.getMark()) && (board.getField(7, 7) == winner.getMark())) {
+                    bonus += 0.75;
+                }
+            }
+            if (winner == player1) {
+                return new Score(player1, player2, 1 + bonus, -2);
+            } else if (winner == player2) {
+                return new Score(player1, player2, -2, 1 + bonus);
+            } else {
+                return new Score(player1, player2, 0, 0);
+            }
+        }
+        return null;
+    }
+
     public Player getPlayer1() {
         return player1;
     }

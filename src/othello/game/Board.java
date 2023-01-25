@@ -246,6 +246,36 @@ public class Board {
      *
      * @return the game situation as String
      */
+//    public String toString() {
+//        String s = "";
+//        for (int i = 0; i < DIM; i++) {
+//            String row = "";
+//            for (int j = 0; j < DIM; j++) {
+//                switch (getField(i, j)) {
+//                    case VALID:
+//                        int index = (DIM * i) + j;
+//                        row += " " + getField(i, j).toString().substring(0, 1).replace("V", RED + Integer.toString(index)) + " " + RESET + GREEN_BACKGROUND;
+//                        break;
+//                    case BLACK:
+//                        row += " " + getField(i, j).toString().substring(0, 1).replace("B", BLACK + "()" + RESET + GREEN_BACKGROUND) + " ";
+//                        break;
+//                    case WHITE:
+//                        row += " " + getField(i, j).toString().substring(0, 1).replace("W", "()") + " ";
+//                        break;
+//                    default:
+//                        row += " " + getField(i, j).toString().substring(0, 1).replace("E", "  ") + " ";
+//                }
+//                if (j < DIM - 1) {
+//                    row = GREEN_BACKGROUND + row + "|";
+//                }
+//            }
+//            s = GREEN_BACKGROUND + s + row + RESET + DELIM;
+//            if (i < DIM - 1) {
+//                s = s + "\n" + LINE + DELIM + "\n";
+//            }
+//        }
+//        return s;
+//    }
     public String toString() {
         String s = "";
         for (int i = 0; i < DIM; i++) {
@@ -254,28 +284,22 @@ public class Board {
                 switch (getField(i, j)) {
                     case VALID:
                         int index = (DIM * i) + j;
-                        row += " " + getField(i, j).toString().substring(0, 1).replace("V", RED + Integer.toString(index)) + " " + RESET + GREEN_BACKGROUND;
+                        row += " " + getField(i, j).toString().substring(0, 1).replace("V", Integer.toString(index)) + " ";
                         break;
                     case BLACK:
-                        row += " " + getField(i, j).toString().substring(0, 1).replace("B", BLACK + "()" + RESET + GREEN_BACKGROUND) + " ";
+                        row += " " + getField(i, j).toString().substring(0, 1).replace("B", "BB") + " ";
                         break;
                     case WHITE:
-                        row += " " + getField(i, j).toString().substring(0, 1).replace("W", "()") + " ";
+                        row += " " + getField(i, j).toString().substring(0, 1).replace("W", "WW") + " ";
                         break;
                     default:
                         row += " " + getField(i, j).toString().substring(0, 1).replace("E", "  ") + " ";
                 }
-//                if (getField(i, j) == Mark.VALID) {
-//                    int index = (DIM * i) + j;
-//                    row += " " + getField(i, j).toString().substring(0, 1).replace("V", Integer.toString(index)) + " ";
-//                } else {
-//                    row += " " + getField(i, j).toString().substring(0, 1).replace("E", " ") + " ";
-//                }
                 if (j < DIM - 1) {
-                    row = GREEN_BACKGROUND + row + "|";
+                    row = row + "|";
                 }
             }
-            s = GREEN_BACKGROUND + s + row + RESET + DELIM;
+            s = s + row;
             if (i < DIM - 1) {
                 s = s + "\n" + LINE + DELIM + "\n";
             }

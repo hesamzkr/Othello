@@ -1,5 +1,7 @@
 package othello.ui;
 
+import othello.ai.Difficulty;
+import othello.ai.MonteCarloStrategy;
 import othello.ai.NaiveStrategy;
 import othello.game.*;
 import othello.game.AbstractPlayer;
@@ -37,6 +39,9 @@ public class OthelloTUI {
                 System.out.printf("\n%s (%s)%n", game.getTurn().toString(), game.getTurn().getMark());
                 List<Move> moves = null;
                 try {
+                    if (game.getValidMoves(player.getMark()).isEmpty()) {
+                        throw new NoValidMoves();
+                    }
                     moves = player.determineMove(game);
                     game.doMove(moves);
                 } catch (NoValidMoves e) {
@@ -78,28 +83,28 @@ public class OthelloTUI {
                 return new ComputerPlayer(new NaiveStrategy());
 //            case "-S":
 //                return new ComputerPlayer(mark, new SmartStrategy());
-//            case "-M":
-//                return new ComputerPlayer(mark, new MonteCarloStrategy(selectDifficulty(scanner)));
+            case "-M":
+                return new ComputerPlayer(new MonteCarloStrategy(selectDifficulty(new Scanner(System.in))));
             default:
                 return new HumanPlayer(name);
         }
     }
 
-//    private static Difficulty selectDifficulty(Scanner scanner) {
-//        System.out.println("Select a difficulty: easy, mid (medium), hard");
-//        String setting = scanner.nextLine();
-//        while (true) {
-//            switch (setting) {
-//                case "easy":
-//                    return Difficulty.EASY;
-//                case "mid":
-//                    return Difficulty.MEDIUM;
-//                case "hard":
-//                    return Difficulty.HARD;
-//                default:
-//                    System.out.println("Select a valid difficulty.");
-//            }
-//        }
-//    }
+    private static Difficulty selectDifficulty(Scanner scanner) {
+        System.out.println("Select a difficulty: easy, mid (medium), hard");
+        String setting = scanner.nextLine();
+        while (true) {
+            switch (setting) {
+                case "easy":
+                    return Difficulty.EASY;
+                case "mid":
+                    return Difficulty.MEDIUM;
+                case "hard":
+                    return Difficulty.HARD;
+                default:
+                    System.out.println("Select a valid difficulty.");
+            }
+        }
+    }
 
 }
