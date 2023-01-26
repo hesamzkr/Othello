@@ -322,6 +322,23 @@ public class OthelloGame implements Game {
         }
     }
 
+    public void doMove(int moveIndex) throws NoValidMoves {
+        List<Move> playMoves = new ArrayList<>();
+        int row = moveIndex / Board.DIM;
+        int col = moveIndex % Board.DIM;
+        List<Move> moves = getValidMoves(turn.getMark());
+        if (moves.isEmpty()) {
+            throw new NoValidMoves();
+        }
+        for (Move m : moves) {
+            if (m.getRow() == row && m.getCol() == col) {
+                playMoves.add(m);
+            }
+        }
+
+        doMove(playMoves);
+    }
+
     public Boolean isValidLocation(int row, int col) {
         return board.isEmptyField(row, col);
     }
@@ -399,6 +416,19 @@ public class OthelloGame implements Game {
         game.setBoard(board.deepCopy());
         return game;
     }
+
+    public boolean isValidMove(int moveIndex) {
+        int row = moveIndex / Board.DIM;
+        int col = moveIndex % Board.DIM;
+        List<Move> moves = getValidMoves(turn.getMark());
+        for (Move m : moves) {
+            if (m.getRow() == row && m.getCol() == col) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Maybe give this to AI because of modularity.

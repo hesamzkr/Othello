@@ -23,10 +23,6 @@ public final class Protocol {
     public static final String RANK = "RANK";
     public static final String CHAT = "CHAT";
 
-    public Protocol() {
-
-    }
-
     /**
      * When provided with illegal inputs, the server or client can respond with an error.
      *
@@ -64,7 +60,7 @@ public final class Protocol {
      * @return
      */
     public static String sendHelloServer() {
-        return HELLO + SEPARATOR + "Server" + SEPARATOR;
+        return HELLO + SEPARATOR + "Server";
     }
 
     /**
@@ -95,11 +91,11 @@ public final class Protocol {
      * @return
      */
     public static String sendList(List<String> list) {
-        String msg = LIST;
+        StringBuilder msg = new StringBuilder(LIST);
         for (String i : list) {
-            msg += SEPARATOR + i;
+            msg.append(SEPARATOR).append(i);
         }
-        return msg;
+        return msg.toString();
     }
 
     /**
