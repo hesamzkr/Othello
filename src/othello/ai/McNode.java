@@ -12,8 +12,6 @@ public class McNode implements Node {
     private State state;
     private Node parent;
 
-    private int visitCount;
-
     private List<Node> childArray;
 
     private Node currentNode;
@@ -42,14 +40,6 @@ public class McNode implements Node {
 
     public List<Node> getChildArray() {
         return childArray;
-    }
-
-    public void incrementVisit() {
-        visitCount += 1;
-    }
-
-    public int getVisitCount() {
-        return visitCount;
     }
 
     public Score getScore() {

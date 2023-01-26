@@ -87,12 +87,12 @@ public class MonteCarloStrategy implements Strategy {
         //boolean condition1 = ((McNode) node).canExpandNode();
         // condition2 = newGame.isGameOver();
         while (!((McNode) node).canExpandNode() && !newGame.isGameOver()) {
-            Node newNode = ((McNode) node).selectNode();
-            List<Move> move = ((McNode) newNode).getState().moveToParent;
+            node = ((McNode) node).selectNode();
+            List<Move> move = ((McNode) node).getState().moveToParent;
             if (move != null && move.size() > 0) { //was first != null
-                if (((OthelloGame) newGame).isValidLocation(move.get(0).getRow(), move.get(0).getCol())) {
-                    return node;
-                }
+//                if (!((OthelloGame) newGame).isValidLocation(move.get(0).getRow(), move.get(0).getCol())) {
+//                    return node;
+//                }
                 newGame.doMove(move);
                 ((OthelloGame) newGame).nextTurn();
             }
