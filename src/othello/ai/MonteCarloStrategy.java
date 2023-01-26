@@ -10,7 +10,7 @@ public class MonteCarloStrategy implements Strategy {
 
     public MonteCarloStrategy(Difficulty difficulty) {
         switch (difficulty) {
-            case EASY -> numIterations = 100;
+            case EASY -> numIterations = 10;
             case MEDIUM -> numIterations = 1600;
             case HARD -> numIterations = 30000;
         }
@@ -33,6 +33,10 @@ public class MonteCarloStrategy implements Strategy {
         }
 
         Node childWithMostVisits = ((McNode) root).getNodeWithMostVisits();
+        if (childWithMostVisits.getState().moveToParent.isEmpty() || childWithMostVisits.getState().moveToParent == null) {
+            System.out.println("Something very wrong is going on.");
+            throw new RuntimeException("Something very wrong is going on.");
+        }
         return childWithMostVisits.getState().moveToParent;
     }
 
@@ -43,23 +47,24 @@ public class MonteCarloStrategy implements Strategy {
      * @return
      */
     private Score simulate(Game newGame) {
-        while (!newGame.isGameOver()) {
+        OthelloGame copy = ((OthelloGame) newGame).deepCopy();
+        while (!copy.isGameOver()) {
 //            try {
 //                newGame.doMove(new NaiveStrategy().determineMove(newGame));
 //            } catch (NoValidMoves ignored) {
 //            }
 //            ((OthelloGame) newGame).nextTurn();
             try {
-                Mark current = newGame.getTurn().getMark();
-                if (newGame.getValidMoves(current).isEmpty()) {
+                Mark current = copy.getTurn().getMark();
+                if (copy.getValidMoves(current).isEmpty()) {
                     throw new NoValidMoves();
                 }
-                newGame.doMove(new NaiveStrategy().determineMove(newGame));
+                copy.doMove(new NaiveStrategy().determineMove(copy));
             } catch (NoValidMoves ignored) {
             }
-            ((OthelloGame) newGame).nextTurn();
+            copy.nextTurn();
         }
-        return ((OthelloGame) newGame).getScores();
+        return copy.getScores();
     }
 
     /**
@@ -79,12 +84,15 @@ public class MonteCarloStrategy implements Strategy {
      * @return
      */
     private Node select(Node node, Game newGame) {
-        boolean condition1 = ((McNode) node).canExpandNode();
-        boolean condition2 = newGame.isGameOver();
+        //boolean condition1 = ((McNode) node).canExpandNode();
+        // condition2 = newGame.isGameOver();
         while (!((McNode) node).canExpandNode() && !newGame.isGameOver()) {
-            node = ((McNode) node).selectNode();
-            List<Move> move = ((McNode) node).getState().moveToParent;
+            Node newNode = ((McNode) node).selectNode();
+            List<Move> move = ((McNode) newNode).getState().moveToParent;
             if (move != null && move.size() > 0) { //was first != null
+                if (((OthelloGame) newGame).isValidLocation(move.get(0).getRow(), move.get(0).getCol())) {
+                    return node;
+                }
                 newGame.doMove(move);
                 ((OthelloGame) newGame).nextTurn();
             }

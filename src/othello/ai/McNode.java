@@ -117,9 +117,9 @@ public class McNode implements Node {
             state.getUnexploredMoves().remove(m); //Remove all those moves from that state's unexplored moves.
         }
         game.doMove(randomMoves);
-        McNode child = new McNode(this, new State(game, randomMoves));
         game.nextTurn();
 
+        McNode child = new McNode(this, new State(game, randomMoves));
         childArray.add(child);
         return child;
     }

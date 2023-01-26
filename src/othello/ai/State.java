@@ -26,6 +26,9 @@ public class State {
     public State(Game game, List<Move> moveToParent) {
         this.moveToParent = moveToParent;
         this.game = game; //deepcopy?
+//        this.unexploredMoves = game.getValidMoves(game.getTurn().getMark());
+//        this.validIndices = ((OthelloGame) game).showValids();
+//        this.player = game.getTurn(); //change later
         if (game != null) {
             this.unexploredMoves = game.getValidMoves(game.getTurn().getMark());
             this.validIndices = ((OthelloGame) game).showValids();

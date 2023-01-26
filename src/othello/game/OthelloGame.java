@@ -322,6 +322,10 @@ public class OthelloGame implements Game {
         }
     }
 
+    public Boolean isValidLocation(int row, int col) {
+        return board.isEmptyField(row, col);
+    }
+
     /**
      * Shows all the possible moves in a [row,column] format
      *
