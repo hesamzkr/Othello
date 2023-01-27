@@ -9,8 +9,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/test/tictactoe" />
-      <excludeFolder url="file://$MODULE_DIR$/src/othello/server" />
-      <excludeFolder url="file://$MODULE_DIR$/src/othello/client" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

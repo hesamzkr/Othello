@@ -7,6 +7,8 @@ import othello.game.*;
 import othello.game.AbstractPlayer;
 import othello.game.Player;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Scanner;
 

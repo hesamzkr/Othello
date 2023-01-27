@@ -77,7 +77,7 @@ public class McNode implements Node {
     }
 
     public Node expandNode(OthelloGame game) {
-        if (!canExpandNode()) {
+        if (!canExpandNode() && game.isGameOver()) {
             return this;
         }
         Random random = new Random();
@@ -106,7 +106,9 @@ public class McNode implements Node {
         for (Move m : randomMoves) {
             state.getUnexploredMoves().remove(m); //Remove all those moves from that state's unexplored moves.
         }
-        game.doMove(randomMoves);
+        if (!randomMoves.isEmpty()) { //why would random moves be empty: on a pass turn?
+            game.doMove(randomMoves);
+        }
         game.nextTurn();
 
         McNode child = new McNode(this, new State(game, randomMoves));

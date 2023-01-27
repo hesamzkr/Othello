@@ -127,7 +127,7 @@ public final class Protocol {
      * @return
      */
     public static String sendWin(String username) {
-        return GAMEOVER + "VICTORY" + username;
+        return GAMEOVER + VICTORY + username;
     }
 
     /**
@@ -137,7 +137,7 @@ public final class Protocol {
      * @return
      */
     public static String sendWinDisconnect(String username) {
-        return GAMEOVER + "DISCONNECT" + username;
+        return GAMEOVER + DISCONNECT + username;
     }
 
     /**
@@ -146,6 +146,6 @@ public final class Protocol {
      * @return
      */
     public static String sendDraw() {
-        return GAMEOVER + "DRAW";
+        return GAMEOVER + DRAW;
     }
 }

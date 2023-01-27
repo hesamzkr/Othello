@@ -34,6 +34,9 @@ public class MonteCarloStrategy implements Strategy {
 
         Node childWithMostVisits = ((McNode) root).getNodeWithMostVisits();
         if (childWithMostVisits.getState().moveToParent.isEmpty() || childWithMostVisits.getState().moveToParent == null) {
+            System.out.println(childWithMostVisits.getState().getPlayer().getMark());
+            System.out.println(childWithMostVisits.getChildArray().size());
+            ((McNode) childWithMostVisits).printTree();
             System.out.println("Something very wrong is going on.");
             throw new RuntimeException("Something very wrong is going on.");
         }
