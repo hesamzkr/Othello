@@ -18,13 +18,6 @@ public interface Client {
      */
     void close();
 
-    /**
-     * sends username to a client handler on the server.
-     *
-     * @param username of the chat
-     * @return whether it was successful or not
-     */
-    boolean sendUsername(String username);
 
     /**
      * Sends a message to a client handler on the server.
@@ -32,19 +25,6 @@ public interface Client {
      * @param message
      * @return whether it was successful or not
      */
-    boolean sendMessage(String message);
+    boolean send(String message);
 
-    /**
-     * adds a chat listener to the client.
-     *
-     * @param listener
-     */
-    void addChatListener(Listener listener);
-
-    /**
-     * removes a chat listener from the client.
-     *
-     * @param listener
-     */
-    void removeChatListener(Listener listener);
 }

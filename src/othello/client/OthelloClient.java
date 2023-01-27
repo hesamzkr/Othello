@@ -1,5 +1,7 @@
 package othello.client;
 
+import othello.game.*;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -10,8 +12,12 @@ public class OthelloClient implements Client, Runnable {
 
     private Socket socket;
     private Thread thread;
-    private List<Listener> listeners = new ArrayList<>();
+    private OthelloListener listener = new OthelloListener();
     private BufferedWriter bw;
+    private String username;
+    private Player player;
+    private OthelloGame game;
+    private boolean hasLoggedIn = false;
 
     public boolean connect(InetAddress address, int port) {
         try {
@@ -25,31 +31,64 @@ public class OthelloClient implements Client, Runnable {
         }
     }
 
+    public void run() {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+            while (!socket.isClosed()) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] protocolSplit = line.split(Protocol.SEPARATOR);
+                    switch (protocolSplit[0]) {
+                        case Protocol.HELLO -> listener.printHello(protocolSplit[1]);
+                        case Protocol.LOGIN -> hasLoggedIn = true;
+
+                        case Protocol.LIST -> listener.printList(protocolSplit);
+
+                        case Protocol.NEWGAME -> {
+                            if (protocolSplit[1].equals(player.getName())) {
+                                game = new OthelloGame(player, new HumanPlayer(protocolSplit[2]));
+                            } else {
+                                game = new OthelloGame(new HumanPlayer(protocolSplit[2]), player);
+                            }
+                        }
+                        case Protocol.MOVE -> {
+                            try {
+                                int moveIndex = Integer.parseInt(protocolSplit[1]);
+                                if (moveIndex == 64) {
+                                    listener.printOpponentSkipped();
+                                } else {
+                                    game.doMove(moveIndex);
+                                }
+                                game.nextTurn();
+                                listener.printGame();
+                            } catch (NoValidMoves ignored) {
+                            }
+                        }
+                        case Protocol.GAMEOVER -> {
+                            switch (protocolSplit[1]) {
+                                case Protocol.DRAW -> listener.printGameOverDraw();
+                                case Protocol.DISCONNECT -> listener.printGameOverDisconnected(protocolSplit[2]);
+                                case Protocol.VICTORY -> listener.printGameOverVictory(protocolSplit[2]);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            close();
+        }
+    }
+
     public void close() {
         try {
             socket.close();
-            //thread.join(); // maybe not
-        } catch (IOException | /*InterruptedException | */ NullPointerException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public boolean sendUsername(String username) {
+    public boolean send(String msg) {
         try {
-            bw.write(Protocol.printMessage(username));
-            bw.newLine();
-            bw.flush();
-            //sendMessage("connected");
-            return true;
-        } catch (IOException | NullPointerException e) {
-            close();
-            return false;
-        }
-    }
-
-    public boolean sendMessage(String message) {
-        try {
-            bw.write(Protocol.printMessage(message));
+            bw.write(msg);
             bw.newLine();
             bw.flush();
             return true;
@@ -65,5 +104,13 @@ public class OthelloClient implements Client, Runnable {
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public OthelloGame getGame() {
+        return game;
     }
 }

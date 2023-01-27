@@ -350,7 +350,6 @@ public class OthelloGame implements Game {
      */
     public List<int[]> showValids() {
         List<Move> moves = getValidMoves(getTurn().getMark());
-        Game copy = deepCopy();
         List<int[]> valids = new ArrayList<>();
         for (Move m : moves) {
             int[] rowcol = new int[2];

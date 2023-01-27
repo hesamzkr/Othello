@@ -3,8 +3,9 @@ package othello.ui;
 import othello.ai.Difficulty;
 import othello.ai.MonteCarloStrategy;
 import othello.ai.NaiveStrategy;
+import othello.client.OthelloClient;
+import othello.client.Protocol;
 import othello.game.*;
-import othello.game.AbstractPlayer;
 import othello.game.Player;
 
 import java.net.InetAddress;
@@ -13,26 +14,89 @@ import java.util.List;
 import java.util.Scanner;
 
 public class OthelloTUI {
-    private OthelloGame game;
+    private OthelloClient client;
+    private Scanner scanner;
 
-    public OthelloTUI(OthelloGame game) {
-        this.game = game;
+    private static final String MAIN_MENU = "quit"; // QUEUE LIST QUIT
+    private static final String IN_QUEUE = ""; // CANCEL-QUEUE LIST QUIT
+    private static final String IN_GAME = "queue"; // CHOOSE-MOVES LIST QUIT
+    private static final String CHOOSE_PLAYER = "list"; // CHOOSE BETWEEN AI AND HUMAN LIST
+
+
+    public OthelloTUI(OthelloClient client) {
+        this.client = client;
+        scanner = new Scanner(System.in);
     }
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Player1 name: ");
-        //Player p1 = new HumanPlayer(scanner.nextLine());
-        Player p1 = createPlayer(scanner.nextLine());
-        System.out.print("Player2 name: ");
-        //Player p2 = new HumanPlayer(scanner.nextLine());
-        Player p2 = createPlayer(scanner.nextLine());
-
-        OthelloTUI tui = new OthelloTUI(new OthelloGame(p1, p2));
+        OthelloTUI tui = new OthelloTUI(new OthelloClient());
         tui.run();
     }
 
     public void run() {
+        String username = connectClient();
+        login(username);
+
+        print(MAIN_MENU);
+        boolean inMainMenu = true;
+        while (inMainMenu) {
+            Integer choice = readNextInt();
+            switch (choice) {
+                case 1 -> {
+                    queue();
+                    inMainMenu = false;
+                }
+                case 2 -> list();
+                case 3 -> quit();
+            }
+        }
+
+        print(IN_QUEUE);
+        boolean inQueueMenu = true;
+        while (inQueueMenu) {
+            Integer choice = readNextInt();
+            switch (choice) {
+                case 1 -> {
+                    queue();
+                    inQueueMenu = false;
+                }
+                case 2 -> list();
+                case 3 -> quit();
+            }
+        }
+
+        print(client.getGame().toString());
+        List<Moves> moves = printMoves();
+        print(IN_GAME);
+        boolean inGameMenu = true;
+        while (inGameMenu) {
+            String choice = readNextLine();
+            switch (choice) {
+                case "a" -> list();
+                case "b" -> quit();
+                default -> {
+                    try {
+                        Integer moveIndex = Integer.parseInt(choice);
+
+
+                        client.sendMove(moveIndex);
+
+                        inGameMenu = false;
+                    } catch (NumberFormatException ignored) {
+                        print("Enter a valid choice from the menu");
+                    }
+                }
+            }
+        }
+
+
+
+        while (true) {
+            String command = readNextLine();
+            switch (command) {
+                case
+            }
+
         boolean loop = true;
         while (loop) {
             while (!game.isGameOver()) {
@@ -78,6 +142,7 @@ public class OthelloTUI {
             }
         }
     }
+    }
 
     private static Player createPlayer(String name) {
         switch (name) {
@@ -109,4 +174,65 @@ public class OthelloTUI {
         }
     }
 
+    private String connectClient() {
+        while (true) {
+            try {
+                print("Enter the server's address:");
+                String address = readNextLine();
+                print("Enter the port to connect to:");
+                Integer port = readNextInt();
+                client.connect(InetAddress.getByName(address), port);
+                print("Connected to the server");
+                print("Enter your username");
+                String username = readNextLine();
+                client.send(Protocol.sendHelloClient(username));
+                return username;
+            } catch (UnknownHostException ignored) {
+                print("Cannot connect to the server with specified port");
+            }
+        }
+    }
+
+    private void login(String username) {
+        while (true) {
+            client.send(Protocol.sendLogin(username));
+            if (client.getLoggedIn()) {
+                client.setUsername(username);
+                break;
+            }
+            print("Choose a different username");
+            username = readNextLine();
+        }
+
+    }
+
+    private void print(String msg) {
+        System.out.printf("%s%n", msg);
+    }
+
+    public void printMoves() {
+
+    }
+
+    public String readNextLine() {
+        while (true) {
+            String text = scanner.nextLine();
+            if (!text.isEmpty()) {
+                return text;
+            }
+        }
+    }
+
+    public Integer readNextInt() {
+        while (true) {
+            try {
+                String text = scanner.nextLine();
+                if (text.isEmpty()) {
+                    continue;
+                }
+                return Integer.parseInt(text);
+            } catch (NumberFormatException ignored) {
+            }
+        }
+    }
 }

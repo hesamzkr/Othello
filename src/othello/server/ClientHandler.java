@@ -3,6 +3,7 @@ package othello.server;
 import othello.client.Protocol;
 import othello.game.NoValidMoves;
 import othello.game.OthelloGame;
+import othello.game.Player;
 
 import java.io.*;
 import java.net.Socket;
@@ -14,6 +15,8 @@ public class ClientHandler implements Runnable {
     private final BufferedWriter bw;
     private ClientHandler opponent;
     private OthelloGame game;
+    private boolean hasGreeted = false;
+    private boolean hasLoggedIn = false;
 
 
     public ClientHandler(Socket socket, OthelloServer server) throws IOException {
@@ -32,41 +35,94 @@ public class ClientHandler implements Runnable {
                     switch (protocolSplit[0]) {
                         case Protocol.HELLO -> {
                             if (protocolSplit.length > 1) {
+                                hasGreeted = true;
                                 send(Protocol.sendHelloServer());
                             } else {
                                 sendError("No description");
                             }
                         }
                         case Protocol.LOGIN -> {
+                            if (!hasGreeted) {
+                                sendError("Has not established a connection");
+                                continue;
+                            }
                             if (protocolSplit.length > 1) {
                                 if (server.usernameExists(protocolSplit[1])) {
                                     send(Protocol.ALREADYLOGGEDIN);
+                                } else if (protocolSplit[1].isEmpty()) {
+                                    sendError("Username can't be empty");
                                 } else {
                                     username = protocolSplit[1];
+                                    hasLoggedIn = true;
                                     send(Protocol.LOGIN);
                                 }
                             } else {
                                 sendError("No username");
                             }
                         }
-                        case Protocol.LIST -> send(Protocol.sendList(server.getUsernames()));
-                        case Protocol.QUEUE -> server.handleQueue(this);
+                        case Protocol.LIST -> {
+                            if (!hasGreeted || !hasLoggedIn) {
+                                sendError("Has not established a connection");
+                                continue;
+                            }
+                            send(Protocol.sendList(server.getUsernames()));
+                        }
+                        case Protocol.QUEUE -> {
+                            if (!hasGreeted || !hasLoggedIn) {
+                                sendError("Has not established a connection");
+                                continue;
+                            }
+                            if (game != null || opponent != null) {
+                                sendError("Currently in a game");
+                                continue;
+                            }
+                            server.handleQueue(this);
+                        }
                         case Protocol.MOVE -> {
+                            if (!hasGreeted || !hasLoggedIn) {
+                                sendError("Has not established a connection");
+                                continue;
+                            }
+                            if (game == null || opponent == null) {
+                                sendError("Not in a game");
+                                continue;
+                            }
+                            if (!username.equals(game.getTurn().getName())) {
+                                sendError("Not your turn");
+                                continue;
+                            }
                             if (protocolSplit.length > 1) {
-                                int moveIndex = Integer.parseInt(protocolSplit[1]);
-                                if (game.isValidMove(moveIndex)) {
-                                    try {
-                                        game.doMove(moveIndex);
-                                        opponent.sendOpponentsMove(moveIndex);
-                                    } catch (NoValidMoves ignored) {
-                                        opponent.sendOpponentsMove(64);
+                                try {
+                                    int moveIndex = Integer.parseInt(protocolSplit[1]);
+                                    if (game.isValidMove(moveIndex)) {
+                                        try {
+                                            game.doMove(moveIndex);
+                                            opponent.sendOpponentsMove(moveIndex);
+                                        } catch (NoValidMoves ignored) {
+                                            opponent.sendOpponentsMove(64);
+                                        }
+                                        game.nextTurn();
+                                        if (game.isGameOver()) {
+                                            if (game.getWinner() != null) {
+                                                send(Protocol.sendWin(game.getWinner().getName()));
+                                                opponent.send(Protocol.sendWin(game.getWinner().getName()));
+                                            } else {
+                                                send(Protocol.sendDraw());
+                                                opponent.send(Protocol.sendDraw());
+                                            }
+                                            opponent.reset();
+                                            reset();
+                                        }
+
                                     }
-                                    game.nextTurn();
+                                } catch (NumberFormatException ignored) {
+                                    sendError("Move index is not a number");
                                 }
                             } else {
                                 sendError("No move index");
                             }
                         }
+                        default -> sendError("Unknown command");
                     }
                 }
             }
@@ -109,6 +165,10 @@ public class ClientHandler implements Runnable {
 
     public void close() {
         try {
+            if (game != null) {
+                send(Protocol.sendWinDisconnect(opponent.getUsername()));
+                opponent.reset();
+            }
             server.removeClient(this);
             socket.close();
         } catch (IOException e) {
@@ -130,5 +190,10 @@ public class ClientHandler implements Runnable {
 
     public void setGame(OthelloGame game) {
         this.game = game;
+    }
+
+    public void reset() {
+        opponent = null;
+        game = null;
     }
 }

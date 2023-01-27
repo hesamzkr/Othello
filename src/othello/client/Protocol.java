@@ -23,6 +23,10 @@ public final class Protocol {
     public static final String RANK = "RANK";
     public static final String CHAT = "CHAT";
 
+    public static final String DISCONNECT = "DISCONNECT";
+    public static final String VICTORY = "VICTORY";
+    public static final String DRAW = "DRAW";
+
     /**
      * When provided with illegal inputs, the server or client can respond with an error.
      *
