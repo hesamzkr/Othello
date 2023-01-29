@@ -25,6 +25,10 @@ public class OthelloMove implements Move {
         return col;
     }
 
+    public int getIndex() {
+        return row * Board.DIM + col;
+    }
+
     /**
      * Adds all the pieces that should be flipped to this move.
      *

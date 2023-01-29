@@ -24,4 +24,6 @@ public interface Move {
      * @return mark of the move
      */
     Mark getMark();
+
+    int getIndex();
 }

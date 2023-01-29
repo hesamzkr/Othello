@@ -14,11 +14,13 @@ public class OthelloApp {
     private final OthelloClient client;
     private final Scanner scanner;
 
-    private static final String MAIN_MENU = "quit"; // QUEUE LIST QUIT
-    private static final String IN_QUEUE = ""; // CANCEL-QUEUE LIST QUIT
-    private static final String IN_GAME = "queue"; // CHOOSE-MOVES LIST QUIT
-    private static final String CHOOSE_PLAYER = "list"; // HUMAN,RANDOM-AI,SMART-AI
-    private static final String CHOOSE_DIFFICULY = ""; //
+    private static boolean newGameFound = false;
+
+    private static final String MAIN_MENU = "1) Queue\n2) List\n3) Quit"; // QUEUE LIST QUIT
+    private static final String IN_QUEUE = "1) Cancel Queue\n2) List\n3) Quit"; // CANCEL-QUEUE LIST QUIT
+    private static final String IN_GAME = "a) List\nb) Quit"; // CHOOSE-MOVES LIST QUIT
+    private static final String CHOOSE_PLAYER = "1) Human\n2) Random-AI\n3) Smart-AI"; // HUMAN,RANDOM-AI,SMART-AI
+    private static final String CHOOSE_DIFFICULY = "1) Easy\n2) Medium\n3) Hard";
 
     public OthelloApp(OthelloClient client) {
         this.client = client;
@@ -34,29 +36,7 @@ public class OthelloApp {
         String username = connectClient();
         login(username);
 
-
-        print(client.getGame().toString());
-        List<Move> moves = printMoves();
-        print(IN_GAME);
-        boolean inGameMenu = true;
-        while (inGameMenu) {
-            String choice = readNextLine();
-            switch (choice) {
-                case "a" -> list();
-                case "b" -> quit();
-                default -> {
-                    try {
-                        int moveIndex = Integer.parseInt(choice) - 1;
-                        if (moveIndex >= 0 && moveIndex < moves.size()) {
-                            client.send(Protocol.sendMove(moveIndex));
-                            inGameMenu = false;
-                        }
-                    } catch (NumberFormatException ignored) {
-                        print("Enter a valid choice from the menu");
-                    }
-                }
-            }
-        }
+        runMainMenu();
     }
 
     private String connectClient() {
@@ -81,6 +61,12 @@ public class OthelloApp {
     private void login(String username) {
         while (true) {
             client.send(Protocol.sendLogin(username));
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                print(e.getMessage());
+            }
+
             if (client.getLoggedIn()) {
                 client.setUsername(username);
                 break;
@@ -95,7 +81,11 @@ public class OthelloApp {
     }
 
     private List<Move> printMoves() {
-        return null;
+        List<Move> moves = client.getGame().combineMoves();
+        for (int i = 0; i < moves.size(); i++) {
+            print(String.format("%s) %s", i + 1, moves.get(i).getIndex()));
+        }
+        return moves;
     }
 
     private void queue() {
@@ -143,6 +133,9 @@ public class OthelloApp {
         while (true) {
             try {
                 String text = scanner.nextLine();
+                if (newGameFound) {
+                    return -1;
+                }
                 if (text.isEmpty()) {
                     continue;
                 }
@@ -170,6 +163,7 @@ public class OthelloApp {
 
     private void runQueueMenu() {
         queue();
+        client.send(Protocol.QUEUE);
         print(IN_QUEUE);
         while (true) {
             int choice = readNextInt();
@@ -181,16 +175,43 @@ public class OthelloApp {
                 }
                 case 2 -> list();
                 case 3 -> quit();
+                case -1 -> {
+                    newGameFound = false;
+                    runGameMenu();
+                    return;
+                }
             }
         }
     }
 
     private void runGameMenu() {
         print(client.getGame().toString());
+        System.out.printf("\n%s (%s)%n", client.getGame().getTurn().toString(), client.getGame().getTurn().getMark());
+        List<Move> moves = printMoves();
+        print(IN_GAME);
+        boolean inGameMenu = true;
+        while (inGameMenu) {
+            String choice = readNextLine();
+            switch (choice) {
+                case "a" -> list();
+                case "b" -> quit();
+                default -> {
+                    try {
+                        int choiceIndex = Integer.parseInt(choice) - 1;
+                        if (choiceIndex >= 0 && choiceIndex < moves.size()) {
+                            client.sendMove(moves.get(choiceIndex).getIndex());
+
+                        }
+                    } catch (NumberFormatException ignored) {
+                        print("Enter a valid choice from the menu");
+                    }
+                }
+            }
+        }
     }
 
     private Difficulty runDifficultyMenu() {
-        print("Select a difficulty: easy, mid (medium), hard");
+        print(CHOOSE_DIFFICULY);
         String setting = readNextLine();
         while (true) {
             switch (setting) {
@@ -204,5 +225,10 @@ public class OthelloApp {
                     print("Select a valid difficulty.");
             }
         }
+    }
+
+    public static void newGameFound() {
+        System.out.println("New game found. Press ENTER to proceed");
+        newGameFound = true;
     }
 }

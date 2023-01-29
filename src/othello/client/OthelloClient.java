@@ -5,8 +5,6 @@ import othello.game.*;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 public class OthelloClient implements Client, Runnable {
 
@@ -47,8 +45,9 @@ public class OthelloClient implements Client, Runnable {
                             if (protocolSplit[1].equals(player.getName())) {
                                 game = new OthelloGame(player, new HumanPlayer(protocolSplit[2]));
                             } else {
-                                game = new OthelloGame(new HumanPlayer(protocolSplit[2]), player);
+                                game = new OthelloGame(new HumanPlayer(protocolSplit[1]), player);
                             }
+                            OthelloApp.newGameFound();
                         }
                         case Protocol.MOVE -> {
                             try {
@@ -70,6 +69,7 @@ public class OthelloClient implements Client, Runnable {
                                 case Protocol.VICTORY -> listener.printGameOverVictory(protocolSplit[2]);
                             }
                         }
+                        case Protocol.ERROR -> System.out.println(line);
                     }
                 }
             }
@@ -96,6 +96,17 @@ public class OthelloClient implements Client, Runnable {
             close();
             return false;
         }
+    }
+
+    public void sendMove(int moveIndex) {
+        try {
+            game.doMove(moveIndex);
+            game.nextTurn();
+            send(Protocol.sendMove(moveIndex));
+        } catch (NoValidMoves ignored) {
+            send(Protocol.sendMove(64));
+        }
+
     }
 
     public boolean getLoggedIn() {

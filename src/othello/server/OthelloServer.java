@@ -73,6 +73,7 @@ public class OthelloServer implements Server, Runnable {
             }
             serverSocket.close();
             connectionThread.join();
+            matchMakingThread.interrupt();
         } catch (IOException | InterruptedException ignored) {
         }
     }
@@ -81,11 +82,13 @@ public class OthelloServer implements Server, Runnable {
         return connectionThread != null && connectionThread.isAlive();
     }
 
-    public synchronized void handleQueue(ClientHandler from) {
-        if (queue.contains(from)) {
-            queue.remove(from);
-        } else {
-            queue.add(from);
+    public void handleQueue(ClientHandler from) {
+        synchronized (queue) {
+            if (queue.contains(from)) {
+                queue.remove(from);
+            } else {
+                queue.add(from);
+            }
         }
     }
 

@@ -159,14 +159,14 @@ public class ClientHandler implements Runnable {
             bw.newLine();
             bw.flush();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            close();
         }
     }
 
     public void close() {
         try {
             if (game != null) {
-                send(Protocol.sendWinDisconnect(opponent.getUsername()));
+                opponent.send(Protocol.sendWinDisconnect(opponent.getUsername()));
                 opponent.reset();
             }
             server.removeClient(this);
