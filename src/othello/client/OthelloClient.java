@@ -106,6 +106,10 @@ public class OthelloClient implements Client, Runnable {
         this.player = player;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
