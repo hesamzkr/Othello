@@ -31,7 +31,7 @@ public class State {
 //        this.player = game.getTurn(); //change later
         if (game != null) {
             this.unexploredMoves = game.getValidMoves(game.getTurn().getMark());
-            this.validIndices = ((OthelloGame) game).showValids();
+            this.validIndices = ((OthelloGame) game).showValids(unexploredMoves);
             this.player = game.getTurn(); //change later
         }
     }

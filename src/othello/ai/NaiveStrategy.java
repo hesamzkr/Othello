@@ -16,7 +16,27 @@ public class NaiveStrategy implements Strategy {
         return "Naive Strategy";
     }
 
-    @Override
+//    @Override
+//    public List<Move> determineMove(Game game) throws NoValidMoves {
+//        List<Move> moves = game.getValidMoves(game.getTurn().getMark());
+//        Random random = new Random();
+//
+//        if (moves.isEmpty()) {
+//            throw new NoValidMoves();
+//        }
+//        List<int[]> validIndices = ((OthelloGame) game).showValids(moves);
+//        int index = random.nextInt(validIndices.size());
+//        int row = validIndices.get(index)[0];
+//        int col = validIndices.get(index)[1];
+//        List<Move> playMoves = new ArrayList<>();
+//        for (Move m : moves) {
+//            if (m.getRow() == row && m.getCol() == col) {
+//                playMoves.add(m);
+//            }
+//        }
+//        return playMoves;
+//    }
+
     public List<Move> determineMove(Game game) throws NoValidMoves {
         List<Move> moves = game.getValidMoves(game.getTurn().getMark());
         Random random = new Random();
@@ -24,10 +44,21 @@ public class NaiveStrategy implements Strategy {
         if (moves.isEmpty()) {
             throw new NoValidMoves();
         }
-        List<int[]> validIndices = ((OthelloGame) game).showValids();
+        List<int[]> validIndices = ((OthelloGame) game).showValids(moves);
+        int row;
+        int col;
+
         int index = random.nextInt(validIndices.size());
-        int row = validIndices.get(index)[0];
-        int col = validIndices.get(index)[1];
+        row = validIndices.get(index)[0];
+        col = validIndices.get(index)[1];
+
+        for (int[] i : validIndices) {
+            if ((i[0] == 0 && i[1] == 0) || (i[0] == 0 && i[1] == 7) || (i[0] == 7 && i[1] == 0) || (i[0] == 7 && i[1] == 7)) {
+                row = i[0];
+                col = i[1];
+            }
+        }
+
         List<Move> playMoves = new ArrayList<>();
         for (Move m : moves) {
             if (m.getRow() == row && m.getCol() == col) {

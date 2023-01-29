@@ -4,10 +4,7 @@ package othello.game;
 
 import othello.ai.Score;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -82,8 +79,38 @@ public class OthelloGame implements Game {
                 }
             }
         }
-
         return validMoves.stream().filter(move -> move != null).collect(Collectors.toList());
+    }
+
+    /**
+     * Should take a list of valid moves and filter out any duplicates by adding their toFlips together.
+     *
+     * @return
+     */
+    public List<Move> combineMoves() {
+        List<Move> combinedMoves = new ArrayList<>();
+        List<Move> moves = getValidMoves(turn.getMark());
+        List<int[]> ints = showValids(moves);
+        int size = showValids(moves).size();
+        for (int[] rc : showValids(moves)) { // go through all row/col pairs
+            List<Move> combine = new ArrayList<>(); //For moves with the same row/col
+            for (Move m : moves) {
+                if (m.getRow() == rc[0] && m.getCol() == rc[1]) { //this could be multiple moves, or a single move.
+                    combine.add(m);
+                }
+            }
+            if (combine.size() > 1) {
+                Move main = combine.get(0); //Add all the toFlips to this 'main' move.
+                for (int i = 1; i < combine.size(); i++) {
+                    OthelloMove toAdd = (OthelloMove) combine.get(i);
+                    ((OthelloMove) main).addToFlip(toAdd.getToFlip());
+                }
+                combinedMoves.add(main);
+                continue;
+            }
+            combinedMoves.add(combine.get(0));
+        }
+        return combinedMoves; //should be a filtered list of moves.
     }
 
     /**
@@ -348,16 +375,26 @@ public class OthelloGame implements Game {
      *
      * @return a list that only contains unique rows and columns.
      */
-    public List<int[]> showValids() {
-        List<Move> moves = getValidMoves(getTurn().getMark());
+    public List<int[]> showValids(List<Move> moves) {
+        //List<Move> moves = getValidMoves(getTurn().getMark());
+        //Set<int[]> cache = new HashSet<>();
         List<int[]> valids = new ArrayList<>();
         for (Move m : moves) {
             int[] rowcol = new int[2];
             rowcol[0] = m.getRow();
             rowcol[1] = m.getCol();
-            valids.add(rowcol);
+            boolean contains = false;
+            for (int[] l : valids) {
+                if (l[0] == rowcol[0] && l[1] == rowcol[1]) {
+                    contains = true;
+                    break;
+                }
+            }
+            if (!contains) {
+                valids.add(rowcol);
+            }
         }
-        return valids.stream().distinct().collect(Collectors.toList());
+        return valids; // NOT DOING THIS CORRECTLY
     }
 
     /**
@@ -441,15 +478,15 @@ public class OthelloGame implements Game {
             if (board.isFull() && winner != null) {
                 if ((board.getField(0, 0) == winner.getMark()) && (board.getField(0, 7) == winner.getMark()) &&
                         (board.getField(7, 0) == winner.getMark()) && (board.getField(7, 7) == winner.getMark())) {
-                    bonus += 0.75;
+                    bonus += 0.0005;
                 }
             }
             if (winner == player1) {
-                return new Score(player1, player2, 1 + bonus, -2);
+                return new Score(player1, player2, -1 + bonus, 1);
             } else if (winner == player2) {
-                return new Score(player1, player2, -2, 1 + bonus);
+                return new Score(player1, player2, 1, -1 + bonus);
             } else {
-                return new Score(player1, player2, 0, 0);
+                return new Score(player1, player2, -0.5, -0.5);
             }
         }
         return null;

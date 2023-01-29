@@ -2,6 +2,7 @@ package othello.server;
 
 import othello.server.InvalidPortException;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class OthelloServerApp {
@@ -26,7 +27,7 @@ public class OthelloServerApp {
                 server.start();
                 System.out.printf("Created a server at: %s%n", port);
                 break;
-            } catch (InvalidPortException e) {
+            } catch (InvalidPortException | InputMismatchException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -46,6 +47,9 @@ public class OthelloServerApp {
                 }
                 case "address" -> {
                     System.out.println(server.getAddress());
+                }
+                case "queue" -> {
+                    System.out.println(server.getQueue());
                 }
                 default -> {
                     System.out.println("invalid command");

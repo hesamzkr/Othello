@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Score {
-    Map scores = new HashMap<Player, Integer>();
+    Map scores = new HashMap<Player, Double>();
 
 //    public Score(int scorePlayer1, int scorePlayer2) {
 //        scores.put("Player1", scorePlayer1);
@@ -14,7 +14,7 @@ public class Score {
 //
 //    }
 
-    public Score(Player player1, Player player2, int scorePlayer1, int scorePlayer2) {
+    public Score(Player player1, Player player2, double scorePlayer1, double scorePlayer2) {
         scores.put(player1, scorePlayer1);
         scores.put(player2, scorePlayer2);
     }
@@ -23,8 +23,8 @@ public class Score {
         return scores;
     }
 
-    public int getScorePlayer(Player player) {
-        return (int) scores.get(player);
+    public double getScorePlayer(Player player) {
+        return (double) scores.get(player);
     }
 
 //    public int getRewardPlayer1() {
@@ -41,7 +41,7 @@ public class Score {
 
     public void incScore(Score score) {
         for (var keys : score.getScores().keySet()) {
-            scores.put(keys, (int) scores.get(keys) + score.getScorePlayer((Player) keys));
+            scores.put(keys, (double) scores.get(keys) + score.getScorePlayer((Player) keys));
         }
     }
 }

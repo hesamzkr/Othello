@@ -50,7 +50,7 @@ public class McNode implements Node {
         return numSims;
     }
 
-    public Node selectNode() {
+    public Node selectNode() { //UCB1 is a selection policy
         currentNode = this;
         double max = Integer.MIN_VALUE;
         for (Node child : childArray) {
@@ -69,15 +69,13 @@ public class McNode implements Node {
             uctValue = 1;
         } else {
             uctValue = (child.getRewardForPlayer(child.getState().getPlayer())) / (((McNode) child).getNumSims() * 1.0)
-                    + (Math.sqrt(2 * (Math.log(getNumSims() * 1.0) / ((McNode) child).getNumSims())));
+                    + (Math.sqrt(0.7 * (Math.log(getNumSims() * 1.0) / ((McNode) child).getNumSims())));
         }
-        Random r = new Random();
-        uctValue += (r.nextDouble() / 10000000); //randomness c?
         return uctValue;
     }
 
     public Node expandNode(OthelloGame game) {
-        if (!canExpandNode() && game.isGameOver()) {
+        if (!canExpandNode()) {
             return this;
         }
         Random random = new Random();
@@ -109,10 +107,16 @@ public class McNode implements Node {
         if (!randomMoves.isEmpty()) { //why would random moves be empty: on a pass turn?
             game.doMove(randomMoves);
         }
-        game.nextTurn();
+        game.nextTurn(); //go to next turn to create new nodes.
 
-        McNode child = new McNode(this, new State(game, randomMoves));
-        childArray.add(child);
+        if (game.getValidMoves(game.getTurn().getMark()).isEmpty()) {
+            game.nextTurn();
+        }
+        McNode child = new McNode(this, new State(game, randomMoves)); //goes to next turn and checks for valid moves
+
+        //TODO: if this leads to a turn with no valid moves, do another next turn and create that node.
+
+        childArray.add(child); //requires child to not be null.
         return child;
     }
 
@@ -120,7 +124,7 @@ public class McNode implements Node {
         return state.getUnexploredMoves().size() > 0;
     }
 
-    public void backPropagation(Score score) {
+    public void backPropagation(Score score) { //TODO: give backpropagation the average of the scores.
         this.getScore().incScore(score);
         this.numSims++;
         if (getParent() != null) {

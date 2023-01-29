@@ -41,7 +41,7 @@ public class OthelloServer implements Server, Runnable {
         matchMakingThread = new Thread(() -> {
             while (true) {
                 synchronized (queue) {
-                    if (queue.size() % 2 == 0) {
+                    if (!queue.isEmpty() && queue.size() % 2 == 0) {
                         ClientHandler clientHandler1 = queue.remove();
                         ClientHandler clientHandler2 = queue.remove();
                         clientHandler1.setOpponent(clientHandler2);
@@ -53,7 +53,6 @@ public class OthelloServer implements Server, Runnable {
                         clientHandler2.sendNewGame(clientHandler1.getUsername(), clientHandler2.getUsername());
                     }
                 }
-
             }
         });
         matchMakingThread.start();
@@ -61,6 +60,10 @@ public class OthelloServer implements Server, Runnable {
 
     public int getPort() {
         return port;
+    }
+
+    public int getQueue() {
+        return queue.size();
     }
 
     public void stop() {

@@ -2,6 +2,8 @@ package othello.game;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import othello.ai.Difficulty;
+import othello.ai.MonteCarloStrategy;
 
 import java.util.List;
 
@@ -14,6 +16,7 @@ public class GameTest {
     private TestPlayer player1; // BLACK
     private TestPlayer player2; // WHITE
     private OthelloGame game;
+
 
     @BeforeEach
     public void setUp() {
@@ -129,6 +132,7 @@ public class GameTest {
         // getValidMoves makes a new move with a list of pieces to flip for each of the cardinal and ordinal directions
         // which means that for the same row and column, there might be multiple moves.
         assertEquals(6 + 1, moves.size());
+        assertEquals(6, game.combineMoves(moves).size());
 
         //Check if all these marked locations match up with a reference game of Othello.
         assertEquals(Mark.VALID, game.getBoard().getField(1, 5));
