@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class HumanPlayer extends AbstractPlayer {
-    
+
     public HumanPlayer(String name) {
         super(name);
     }
@@ -36,7 +36,7 @@ public class HumanPlayer extends AbstractPlayer {
         }
     }
 
-    public void setMark(Mark m) {
+    public void setMark(Mark m) { //Clean: is this useless?
         super.mark = m;
     }
 }

@@ -141,7 +141,7 @@ public final class Protocol {
      * @return
      */
     public static String sendWinDisconnect(String username) {
-        return GAMEOVER + DISCONNECT + username;
+        return GAMEOVER + SEPARATOR + DISCONNECT + SEPARATOR + username;
     }
 
     /**
@@ -150,6 +150,6 @@ public final class Protocol {
      * @return
      */
     public static String sendDraw() {
-        return GAMEOVER + DRAW;
+        return GAMEOVER + SEPARATOR + DRAW;
     }
 }

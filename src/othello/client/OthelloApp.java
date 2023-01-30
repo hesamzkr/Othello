@@ -52,7 +52,7 @@ public class OthelloApp {
                 String username = readNextLine();
                 client.send(Protocol.sendHelloClient(username));
                 return username;
-            } catch (UnknownHostException ignored) {
+            } catch (UnknownHostException | IllegalArgumentException ignored) {
                 print("Cannot connect to the server with specified port");
             }
         }
@@ -169,7 +169,7 @@ public class OthelloApp {
             int choice = readNextInt();
             switch (choice) {
                 case 1 -> {
-                    client.send(Protocol.QUEUE);
+                    client.send(Protocol.QUEUE); //TODO: create a new menu for AI players?
                     runMainMenu();
                     return;
                 }

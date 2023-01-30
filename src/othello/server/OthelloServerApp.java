@@ -40,7 +40,7 @@ public class OthelloServerApp {
             switch (arg) {
                 case "quit" -> {
                     server.stop();
-                    return;
+                    System.exit(0);
                 }
                 case "port" -> {
                     System.out.println(server.getPort());

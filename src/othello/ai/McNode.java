@@ -57,7 +57,7 @@ public class McNode implements Node {
             double uctValue = getUctValue(child);
             if (uctValue > max) {
                 max = uctValue;
-                currentNode = child;
+                currentNode = child; //Why the current node?
             }
         }
         return currentNode;

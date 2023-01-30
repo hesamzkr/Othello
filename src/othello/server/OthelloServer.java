@@ -74,6 +74,7 @@ public class OthelloServer implements Server, Runnable {
             serverSocket.close();
             connectionThread.join();
             matchMakingThread.interrupt();
+            System.out.println("Closing server.");
         } catch (IOException | InterruptedException ignored) {
         }
     }
