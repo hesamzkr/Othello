@@ -17,7 +17,7 @@ public class OthelloClient implements Client, Runnable {
     private OthelloGame game;
     private boolean hasLoggedIn = false;
 
-    public boolean pressEnter = false;
+    public volatile boolean pressEnter = false;
 
     public boolean connect(InetAddress address, int port) {
         try {
@@ -54,17 +54,28 @@ public class OthelloClient implements Client, Runnable {
                         }
                         case Protocol.MOVE -> {
                             try {
+                                while (pressEnter) {
+                                    Thread.onSpinWait();
+                                }
                                 int moveIndex = Integer.parseInt(protocolSplit[1]);
-                                if (moveIndex == 64 && game.getTurn() != player) {
-                                    listener.printOpponentSkipped();
+                                if (moveIndex == 64) {
+                                    if (game.getTurn() != player) {
+                                        listener.printOpponentSkipped();
+                                    }
                                 } else {
                                     game.doMove(moveIndex);
                                 }
                                 game.nextTurn();
                                 listener.printGame();
-                                if (player instanceof ComputerPlayer) {
-                                    sendAIMove();
+                                if (game.getTurn() == player) {
+                                    printMoves();
+                                    if (player instanceof ComputerPlayer) {
+                                        sendAIMove();
+                                    }
+                                } else {
+                                    listener.print("Waiting for the opponent");
                                 }
+
                             } catch (NoValidMoves ignored) {
                             }
                         }
@@ -128,8 +139,8 @@ public class OthelloClient implements Client, Runnable {
 
     }
 
-    public List<Move> printMoves() {
-        return listener.printMoves();
+    public void printMoves() {
+        listener.printMoves();
     }
 
     public boolean getLoggedIn() {

@@ -97,13 +97,14 @@ public class ClientHandler implements Runnable {
                                     if (game.isValidMove(moveIndex) || moveIndex == 64) {
                                         try {
                                             game.doMove(moveIndex);
+                                            game.nextTurn();
                                             send(Protocol.sendMove(moveIndex));
                                             opponent.send(Protocol.sendMove(moveIndex));
                                         } catch (NoValidMoves ignored) {
+                                            game.nextTurn();
                                             send(Protocol.sendMove(64));
                                             opponent.send(Protocol.sendMove(64));
                                         }
-                                        game.nextTurn();
                                         if (game.isGameOver()) {
                                             if (game.getWinner() != null) {
                                                 send(Protocol.sendWin(game.getWinner().getName()));
@@ -157,7 +158,7 @@ public class ClientHandler implements Runnable {
 
     public void close() {
         try {
-            if (game != null) {
+            if (game != null && opponent.socket.isConnected()) {
                 opponent.send(Protocol.sendWinDisconnect(opponent.getUsername()));
                 opponent.reset();
             }

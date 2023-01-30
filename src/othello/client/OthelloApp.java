@@ -170,7 +170,7 @@ public class OthelloApp {
             int choice = readNextInt();
             switch (choice) {
                 case 1 -> {
-                    client.send(Protocol.QUEUE); //TODO: create a new menu for AI players?
+                    client.send(Protocol.QUEUE);
                     runMainMenu();
                     return;
                 }
@@ -225,7 +225,6 @@ public class OthelloApp {
                         int choiceIndex = Integer.parseInt(choice) - 1;
                         if (choiceIndex >= 0 && choiceIndex < moves.size()) {
                             client.sendMove(moves.get(choiceIndex).getIndex());
-                            print("Waiting for the opponent");
                         } else {
                             print("Enter a valid choice from the menu");
                         }

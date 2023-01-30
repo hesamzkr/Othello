@@ -35,7 +35,6 @@ public class OthelloListener implements Listener {
     public void printGame() {
         printBoard();
         print(OthelloApp.IN_GAME);
-        printMoves();
     }
 
     public void printBoard() {
@@ -43,7 +42,7 @@ public class OthelloListener implements Listener {
     }
 
     public void printGameOverDraw() {
-        print("Game is a draw");
+        print("Game is a draw!");
         print("Press ENTER to go to the main menu");
     }
 
@@ -53,7 +52,7 @@ public class OthelloListener implements Listener {
     }
 
     public void printGameOverVictory(String name) {
-        print(String.format("Game Over. %s Won", name));
+        print(String.format("Game over! %s Won", name));
         print("Press ENTER to go to the main menu");
     }
 
