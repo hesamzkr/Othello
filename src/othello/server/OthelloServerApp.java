@@ -1,7 +1,5 @@
 package othello.server;
 
-import othello.server.InvalidPortException;
-
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -42,18 +40,10 @@ public class OthelloServerApp {
                     server.stop();
                     System.exit(0);
                 }
-                case "port" -> {
-                    System.out.println(server.getPort());
-                }
-                case "address" -> {
-                    System.out.println(server.getAddress());
-                }
-                case "queue" -> {
-                    System.out.println(server.getQueue());
-                }
-                default -> {
-                    System.out.println("invalid command");
-                }
+                case "port" -> System.out.println(server.getPort());
+                case "address" -> System.out.println(server.getAddress());
+                case "queue" -> System.out.println(server.getQueue());
+                default -> System.out.println("invalid command");
             }
         }
     }

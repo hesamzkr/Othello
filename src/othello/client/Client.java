@@ -9,9 +9,8 @@ public interface Client {
      *
      * @param address
      * @param port
-     * @return whether it was successful or not
      */
-    boolean connect(InetAddress address, int port);
+    void connect(InetAddress address, int port);
 
     /**
      * closes the chat client
@@ -23,8 +22,7 @@ public interface Client {
      * Sends a message to a client handler on the server.
      *
      * @param message
-     * @return whether it was successful or not
      */
-    boolean send(String message);
+    void send(String message);
 
 }

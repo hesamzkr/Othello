@@ -3,7 +3,6 @@ package othello.server;
 import othello.client.Protocol;
 import othello.game.NoValidMoves;
 import othello.game.OthelloGame;
-import othello.game.Player;
 
 import java.io.*;
 import java.net.Socket;
@@ -171,10 +170,6 @@ public class ClientHandler implements Runnable {
 
     public String getUsername() {
         return username;
-    }
-
-    public ClientHandler getOpponent() {
-        return opponent;
     }
 
     public void setOpponent(ClientHandler opponent) {

@@ -33,7 +33,6 @@ public class OthelloApp {
     private void run() {
         String username = connectClient();
         login(username);
-
         runMainMenu();
     }
 
@@ -76,14 +75,6 @@ public class OthelloApp {
 
     private void print(String msg) {
         System.out.printf("%s%n", msg);
-    }
-
-    private List<Move> printMoves() {
-        List<Move> moves = client.getGame().combineMoves();
-        for (int i = 0; i < moves.size(); i++) {
-            print(String.format("%s) %s", i + 1, moves.get(i).getIndex()));
-        }
-        return moves;
     }
 
     private void queue() {

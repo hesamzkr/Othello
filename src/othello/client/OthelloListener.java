@@ -7,7 +7,7 @@ import java.util.List;
 
 public class OthelloListener implements Listener {
 
-    private OthelloClient client;
+    private final OthelloClient client;
 
     public OthelloListener(OthelloClient client) {
         this.client = client;
@@ -18,7 +18,7 @@ public class OthelloListener implements Listener {
     }
 
     public void printHello(String msg) {
-        print("Server responded with Hello");
+        print("Server responded with Hello " + msg);
     }
 
     public void printList(String[] names) {
@@ -56,7 +56,7 @@ public class OthelloListener implements Listener {
         print("Press ENTER to go to the main menu");
     }
 
-    public List<Move> printMoves() {
+    public void printMoves() {
         List<Move> moves = client.getGame().combineMoves();
         for (int i = 0; i < moves.size(); i++) {
             print(String.format("%s) %s", i + 1, moves.get(i).getIndex()));
@@ -66,7 +66,6 @@ public class OthelloListener implements Listener {
             print("You don't have any valid moves");
             print("Press ENTER to pass your turn");
         }
-        return moves;
     }
 
     public void printNewGameFound(String opponentName) {

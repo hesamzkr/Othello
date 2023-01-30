@@ -19,15 +19,13 @@ public class OthelloClient implements Client, Runnable {
 
     public volatile boolean pressEnter = false;
 
-    public boolean connect(InetAddress address, int port) {
+    public void connect(InetAddress address, int port) {
         try {
             socket = new Socket(address, port);
             bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             Thread thread = new Thread(this);
             thread.start();
-            return true;
-        } catch (IOException e) {
-            return false;
+        } catch (IOException ignored) {
         }
     }
 
@@ -106,15 +104,13 @@ public class OthelloClient implements Client, Runnable {
         }
     }
 
-    public boolean send(String msg) {
+    public void send(String msg) {
         try {
             bw.write(msg);
             bw.newLine();
             bw.flush();
-            return true;
         } catch (IOException e) {
             close();
-            return false;
         }
     }
 
