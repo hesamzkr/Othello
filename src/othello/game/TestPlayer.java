@@ -13,7 +13,7 @@ import java.util.Random;
 public class TestPlayer extends ComputerPlayer {
 
     public TestPlayer() {
-        super(new NaiveStrategy());
+        super("TEST PLAYER", new NaiveStrategy());
     }
 
     /**

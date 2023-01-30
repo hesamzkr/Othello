@@ -94,12 +94,14 @@ public class ClientHandler implements Runnable {
                             if (protocolSplit.length > 1) {
                                 try {
                                     int moveIndex = Integer.parseInt(protocolSplit[1]);
-                                    if (game.isValidMove(moveIndex)) {
+                                    if (game.isValidMove(moveIndex) || moveIndex == 64) {
                                         try {
                                             game.doMove(moveIndex);
-                                            opponent.sendOpponentsMove(moveIndex);
+                                            send(Protocol.sendMove(moveIndex));
+                                            opponent.send(Protocol.sendMove(moveIndex));
                                         } catch (NoValidMoves ignored) {
-                                            opponent.sendOpponentsMove(64);
+                                            send(Protocol.sendMove(64));
+                                            opponent.send(Protocol.sendMove(64));
                                         }
                                         game.nextTurn();
                                         if (game.isGameOver()) {
@@ -113,7 +115,6 @@ public class ClientHandler implements Runnable {
                                             opponent.reset();
                                             reset();
                                         }
-
                                     }
                                 } catch (NumberFormatException ignored) {
                                     sendError("Move index is not a number");
@@ -129,15 +130,6 @@ public class ClientHandler implements Runnable {
         } catch (IOException e) {
             close();
         }
-    }
-
-    /**
-     * Send the move the opponent made to the client
-     *
-     * @param moveIndex
-     */
-    public void sendOpponentsMove(int moveIndex) {
-        send(Protocol.sendMove(moveIndex));
     }
 
     public void sendError(String msg) {

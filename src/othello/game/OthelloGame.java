@@ -79,7 +79,7 @@ public class OthelloGame implements Game {
                 }
             }
         }
-        return validMoves.stream().filter(move -> move != null).collect(Collectors.toList());
+        return validMoves.stream().filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     /**
@@ -110,7 +110,7 @@ public class OthelloGame implements Game {
             }
             combinedMoves.add(combine.get(0));
         }
-        return combinedMoves; //should be a filtered list of moves.
+        return combinedMoves.stream().sorted(Comparator.comparingInt(Move::getIndex)).collect(Collectors.toList());
     }
 
     /**
@@ -409,7 +409,6 @@ public class OthelloGame implements Game {
     }
 
     public void nextTurn() {
-        //turn = turn == player1 ? player2 : player1;
         if (turn == player1) {
             turn = player2;
         } else {

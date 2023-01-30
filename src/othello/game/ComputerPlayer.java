@@ -8,8 +8,8 @@ public class ComputerPlayer extends AbstractPlayer {
 
     private final Strategy strategy;
 
-    public ComputerPlayer(Strategy strategy) {
-        super(strategy.getName());
+    public ComputerPlayer(String name, Strategy strategy) {
+        super(name);
         this.strategy = strategy;
     }
 

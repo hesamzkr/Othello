@@ -14,13 +14,11 @@ public class OthelloApp {
     private final OthelloClient client;
     private final Scanner scanner;
 
-    private static boolean newGameFound = false;
-
-    private static final String MAIN_MENU = "1) Queue\n2) List\n3) Quit"; // QUEUE LIST QUIT
-    private static final String IN_QUEUE = "1) Cancel Queue\n2) List\n3) Quit"; // CANCEL-QUEUE LIST QUIT
-    private static final String IN_GAME = "a) List\nb) Quit"; // CHOOSE-MOVES LIST QUIT
-    private static final String CHOOSE_PLAYER = "1) Human\n2) Random-AI\n3) Smart-AI"; // HUMAN,RANDOM-AI,SMART-AI
-    private static final String CHOOSE_DIFFICULY = "1) Easy\n2) Medium\n3) Hard";
+    private static final String MAIN_MENU = "1) Queue\n2) List\n3) Quit";
+    private static final String IN_QUEUE = "1) Cancel Queue\n2) List\n3) Quit";
+    public static final String IN_GAME = "a) List\nb) Quit";
+    private static final String CHOOSE_PLAYER = "1) Human\n2) Random-AI\n3) Smart-AI";
+    private static final String CHOOSE_DIFFICULTY = "1) Easy\n2) Medium\n3) Hard";
 
     public OthelloApp(OthelloClient client) {
         this.client = client;
@@ -98,11 +96,11 @@ public class OthelloApp {
                     return;
                 }
                 case 2 -> {
-                    client.setPlayer(new ComputerPlayer(new NaiveStrategy()));
+                    client.setPlayer(new ComputerPlayer(client.getUsername(), new NaiveStrategy()));
                     return;
                 }
                 case 3 -> {
-                    client.setPlayer(new ComputerPlayer(new MonteCarloStrategy(runDifficultyMenu())));
+                    client.setPlayer(new ComputerPlayer(client.getUsername(), new MonteCarloStrategy(runDifficultyMenu())));
                     return;
                 }
                 case 4 -> list();
@@ -117,12 +115,15 @@ public class OthelloApp {
     }
 
     private void list() {
-
+        client.send(Protocol.LIST);
     }
 
     private String readNextLine() {
         while (true) {
             String text = scanner.nextLine();
+            if (client.pressEnter) {
+                return "";
+            }
             if (!text.isEmpty()) {
                 return text;
             }
@@ -133,7 +134,7 @@ public class OthelloApp {
         while (true) {
             try {
                 String text = scanner.nextLine();
-                if (newGameFound) {
+                if (client.pressEnter) {
                     return -1;
                 }
                 if (text.isEmpty()) {
@@ -176,8 +177,15 @@ public class OthelloApp {
                 case 2 -> list();
                 case 3 -> quit();
                 case -1 -> {
-                    newGameFound = false;
-                    runGameMenu();
+                    client.pressEnter = false;
+                    if (client.getGame() == null) {
+                        return;
+                    }
+                    if (client.getPlayer() instanceof HumanPlayer) {
+                        runGameMenu();
+                    } else {
+                        runAIGameMenu();
+                    }
                     return;
                 }
             }
@@ -186,21 +194,40 @@ public class OthelloApp {
 
     private void runGameMenu() {
         print(client.getGame().toString());
-        System.out.printf("\n%s (%s)%n", client.getGame().getTurn().toString(), client.getGame().getTurn().getMark());
-        List<Move> moves = printMoves();
         print(IN_GAME);
-        boolean inGameMenu = true;
-        while (inGameMenu) {
+        if (client.getGame().getTurn() != client.getPlayer()) {
+            print("Opponents turn");
+        } else {
+            client.printMoves();
+        }
+        while (true) {
             String choice = readNextLine();
             switch (choice) {
                 case "a" -> list();
                 case "b" -> quit();
                 default -> {
                     try {
+                        if (client.getGame() == null) {
+                            client.pressEnter = false;
+                            runMainMenu();
+                            return;
+                        }
+                        if (client.getGame().getTurn() != client.getPlayer()) {
+                            print("Wait for your turn");
+                            continue;
+                        }
+                        List<Move> moves = client.getGame().combineMoves();
+                        if (moves.isEmpty()) {
+                            client.pressEnter = false;
+                            client.sendMove(64);
+                            continue;
+                        }
                         int choiceIndex = Integer.parseInt(choice) - 1;
                         if (choiceIndex >= 0 && choiceIndex < moves.size()) {
                             client.sendMove(moves.get(choiceIndex).getIndex());
-
+                            print("Waiting for the opponent");
+                        } else {
+                            print("Enter a valid choice from the menu");
                         }
                     } catch (NumberFormatException ignored) {
                         print("Enter a valid choice from the menu");
@@ -210,25 +237,45 @@ public class OthelloApp {
         }
     }
 
-    private Difficulty runDifficultyMenu() {
-        print(CHOOSE_DIFFICULY);
-        String setting = readNextLine();
+    private void runAIGameMenu() {
+        print(client.getGame().toString());
+        print(IN_GAME);
+        if (client.getGame().getTurn() != client.getPlayer()) {
+            print("Opponents turn");
+        } else {
+            client.printMoves();
+            client.sendAIMove();
+        }
         while (true) {
+            String choice = readNextLine();
+            switch (choice) {
+                case "a" -> list();
+                case "b" -> quit();
+                default -> {
+                    if (client.getGame() == null) {
+                        client.pressEnter = false;
+                        runMainMenu();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    private Difficulty runDifficultyMenu() {
+        print(CHOOSE_DIFFICULTY);
+        while (true) {
+            int setting = readNextInt();
             switch (setting) {
-                case "easy":
+                case 1:
                     return Difficulty.EASY;
-                case "mid":
+                case 2:
                     return Difficulty.MEDIUM;
-                case "hard":
+                case 3:
                     return Difficulty.HARD;
                 default:
                     print("Select a valid difficulty.");
             }
         }
-    }
-
-    public static void newGameFound() {
-        System.out.println("New game found. Press ENTER to proceed");
-        newGameFound = true;
     }
 }

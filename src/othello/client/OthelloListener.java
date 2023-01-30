@@ -6,6 +6,13 @@ import othello.game.Move;
 import java.util.List;
 
 public class OthelloListener implements Listener {
+
+    private OthelloClient client;
+
+    public OthelloListener(OthelloClient client) {
+        this.client = client;
+    }
+
     public void print(String msg) {
         System.out.printf("%s%n", msg);
     }
@@ -26,18 +33,45 @@ public class OthelloListener implements Listener {
     }
 
     public void printGame() {
+        printBoard();
+        print(OthelloApp.IN_GAME);
+        printMoves();
+    }
 
+    public void printBoard() {
+        print(client.getGame().toString());
     }
 
     public void printGameOverDraw() {
-
+        print("Game is a draw");
+        print("Press ENTER to go to the main menu");
     }
 
-    public void printGameOverDisconnected(String msg) {
-
+    public void printGameOverDisconnected(String name) {
+        print(String.format("%s won the game. opponent disconnected", name));
+        print("Press ENTER to go to the main menu");
     }
 
-    public void printGameOverVictory(String msg) {
+    public void printGameOverVictory(String name) {
+        print(String.format("Game Over. %s Won", name));
+        print("Press ENTER to go to the main menu");
+    }
 
+    public List<Move> printMoves() {
+        List<Move> moves = client.getGame().combineMoves();
+        for (int i = 0; i < moves.size(); i++) {
+            print(String.format("%s) %s", i + 1, moves.get(i).getIndex()));
+        }
+        if (moves.isEmpty() && client.getPlayer() instanceof HumanPlayer) {
+            client.pressEnter = true;
+            print("You don't have any valid moves");
+            print("Press ENTER to pass your turn");
+        }
+        return moves;
+    }
+
+    public void printNewGameFound(String opponentName) {
+        client.pressEnter = true;
+        print(String.format("Found new game with %s\nPress ENTER to proceed", opponentName));
     }
 }

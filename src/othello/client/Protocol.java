@@ -131,7 +131,7 @@ public final class Protocol {
      * @return
      */
     public static String sendWin(String username) {
-        return GAMEOVER + VICTORY + username;
+        return GAMEOVER + SEPARATOR + VICTORY + SEPARATOR + username;
     }
 
     /**

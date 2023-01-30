@@ -5,23 +5,25 @@ import othello.game.*;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.List;
 
 public class OthelloClient implements Client, Runnable {
 
     private Socket socket;
-    private Thread thread;
-    private OthelloListener listener = new OthelloListener();
+    private final OthelloListener listener = new OthelloListener(this);
     private BufferedWriter bw;
     private String username;
     private Player player;
     private OthelloGame game;
     private boolean hasLoggedIn = false;
 
+    public boolean pressEnter = false;
+
     public boolean connect(InetAddress address, int port) {
         try {
             socket = new Socket(address, port);
             bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            thread = new Thread(this);
+            Thread thread = new Thread(this);
             thread.start();
             return true;
         } catch (IOException e) {
@@ -44,21 +46,25 @@ public class OthelloClient implements Client, Runnable {
                         case Protocol.NEWGAME -> {
                             if (protocolSplit[1].equals(player.getName())) {
                                 game = new OthelloGame(player, new HumanPlayer(protocolSplit[2]));
+                                listener.printNewGameFound(protocolSplit[2]);
                             } else {
                                 game = new OthelloGame(new HumanPlayer(protocolSplit[1]), player);
+                                listener.printNewGameFound(protocolSplit[1]);
                             }
-                            OthelloApp.newGameFound();
                         }
                         case Protocol.MOVE -> {
                             try {
                                 int moveIndex = Integer.parseInt(protocolSplit[1]);
-                                if (moveIndex == 64) {
+                                if (moveIndex == 64 && game.getTurn() != player) {
                                     listener.printOpponentSkipped();
                                 } else {
                                     game.doMove(moveIndex);
                                 }
                                 game.nextTurn();
                                 listener.printGame();
+                                if (player instanceof ComputerPlayer) {
+                                    sendAIMove();
+                                }
                             } catch (NoValidMoves ignored) {
                             }
                         }
@@ -68,6 +74,9 @@ public class OthelloClient implements Client, Runnable {
                                 case Protocol.DISCONNECT -> listener.printGameOverDisconnected(protocolSplit[2]);
                                 case Protocol.VICTORY -> listener.printGameOverVictory(protocolSplit[2]);
                             }
+                            pressEnter = true;
+                            game = null;
+                            player = null;
                         }
                         case Protocol.ERROR -> System.out.println(line);
                     }
@@ -99,18 +108,36 @@ public class OthelloClient implements Client, Runnable {
     }
 
     public void sendMove(int moveIndex) {
+        if (game.isGameOver()) {
+            return;
+        }
+        send(Protocol.sendMove(moveIndex));
+    }
+
+    public void sendAIMove() {
         try {
-            game.doMove(moveIndex);
-            game.nextTurn();
-            send(Protocol.sendMove(moveIndex));
+            if (game.isGameOver()) {
+                return;
+            }
+            List<Move> moves = player.determineMove(game);
+            int aiMoveIndex = moves.get(0).getIndex();
+            sendMove(aiMoveIndex);
         } catch (NoValidMoves ignored) {
-            send(Protocol.sendMove(64));
+            sendMove(64);
         }
 
     }
 
+    public List<Move> printMoves() {
+        return listener.printMoves();
+    }
+
     public boolean getLoggedIn() {
         return hasLoggedIn;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     public void setPlayer(Player player) {
