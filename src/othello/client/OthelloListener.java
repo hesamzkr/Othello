@@ -72,8 +72,8 @@ public class OthelloListener implements Listener {
         }
     }
 
-    public void printNewGameFound(String opponentName) {
+    public void printNewGameFound(String opponentName, Mark mark) {
         client.pressEnter = true;
-        print(String.format("Found new game with %s\nPress ENTER to proceed", opponentName));
+        print(String.format("Found new game with %s as %s\nPress ENTER to proceed", opponentName, mark));
     }
 }

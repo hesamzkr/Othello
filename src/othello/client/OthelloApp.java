@@ -237,13 +237,13 @@ public class OthelloApp {
     }
 
     private void runAIGameMenu() {
-        print(client.getGame().toString());
-        print(IN_GAME);
-        if (client.getGame().getTurn() != client.getPlayer()) {
-            print("Opponents turn");
-        } else {
+        if (client.getPlayer().getMark() == Mark.BLACK) {
+            print(client.getGame().toString());
+            print(IN_GAME);
             client.printMoves();
             client.sendAIMove();
+        } else {
+            print("Waiting for the opponent");
         }
         while (true) {
             String choice = readNextLine();

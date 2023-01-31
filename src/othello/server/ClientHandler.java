@@ -146,9 +146,9 @@ public class ClientHandler implements Runnable {
 
     public void close() {
         try {
-            if (game != null && opponent.socket.isConnected()) {
-                opponent.send(Protocol.sendWinDisconnect(opponent.getUsername()));
+            if (game != null && !opponent.socket.isClosed()) {
                 opponent.reset();
+                opponent.send(Protocol.sendWinDisconnect(opponent.getUsername()));
             }
             server.removeClient(this);
             socket.close();

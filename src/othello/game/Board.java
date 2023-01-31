@@ -10,13 +10,11 @@ public class Board {
     /**
      * Dimension of the board, i.e., if set to 3, the board has 3 rows and 3 columns.
      */
-    public static final String BLACK = "\u001B[30m";
 
     public static final String RESET = "\u001B[0m";
 
     public static final String GREEN_BACKGROUND = "\u001B[41;1m";
 
-    public static final String RED = "\u001B[31m";
     public static final int DIM = 8;
     private static final String DELIM = "    ";
     private static final String[] NUMBERING = {" 00 | 01 | 02 | 03 | 04 | 05 | 06 | 07 ", "----+----+----+----+----+----+----+----",
