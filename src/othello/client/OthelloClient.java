@@ -99,6 +99,8 @@ public class OthelloClient implements Client, Runnable {
     public void close() {
         try {
             socket.close();
+            System.out.println("Exiting client cuz u crashed.");
+            System.exit(0);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -125,6 +127,9 @@ public class OthelloClient implements Client, Runnable {
         try {
             if (game.isGameOver()) {
                 return;
+            }
+            if (game.getValidMoves(player.getMark()).isEmpty()) {
+                throw new NoValidMoves();
             }
             List<Move> moves = player.determineMove(game);
             int aiMoveIndex = moves.get(0).getIndex();

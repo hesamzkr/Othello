@@ -104,17 +104,6 @@ public class ClientHandler implements Runnable {
                                             send(Protocol.sendMove(64));
                                             opponent.send(Protocol.sendMove(64));
                                         }
-                                        if (game.isGameOver()) {
-                                            if (game.getWinner() != null) {
-                                                send(Protocol.sendWin(game.getWinner().getName()));
-                                                opponent.send(Protocol.sendWin(game.getWinner().getName()));
-                                            } else {
-                                                send(Protocol.sendDraw());
-                                                opponent.send(Protocol.sendDraw());
-                                            }
-                                            opponent.reset();
-                                            reset();
-                                        }
                                     }
                                 } catch (NumberFormatException ignored) {
                                     sendError("Move index is not a number");

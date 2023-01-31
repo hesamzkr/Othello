@@ -213,6 +213,15 @@ public class OthelloApp {
                             client.sendMove(64);
                             continue;
                         }
+                        if (choice.equals("hint")) {
+                            Player bot = new ComputerPlayer("bot", new MonteCarloStrategy(Difficulty.MEDIUM));
+                            try {
+                                List<Move> hints = bot.determineMove(client.getGame());
+                                print("You could play: " + hints.get(0).getIndex());
+                            } catch (NoValidMoves e) {
+                                print("You have no valid moves.");
+                            }
+                        }
                         int choiceIndex = Integer.parseInt(choice) - 1;
                         if (choiceIndex >= 0 && choiceIndex < moves.size()) {
                             client.sendMove(moves.get(choiceIndex).getIndex());

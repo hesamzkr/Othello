@@ -1,6 +1,7 @@
 package othello.client;
 
 import othello.game.HumanPlayer;
+import othello.game.Mark;
 import othello.game.Move;
 
 import java.util.List;
@@ -65,6 +66,9 @@ public class OthelloListener implements Listener {
             client.pressEnter = true;
             print("You don't have any valid moves");
             print("Press ENTER to pass your turn");
+        }
+        if (client.getPlayer() instanceof HumanPlayer) {
+            print("> hint");
         }
     }
 

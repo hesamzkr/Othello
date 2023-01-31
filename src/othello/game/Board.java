@@ -14,13 +14,13 @@ public class Board {
 
     public static final String RESET = "\u001B[0m";
 
-    public static final String GREEN_BACKGROUND = "\u001B[42m";
+    public static final String GREEN_BACKGROUND = "\u001B[41;1m";
 
     public static final String RED = "\u001B[31m";
     public static final int DIM = 8;
     private static final String DELIM = "    ";
-    private static final String[] NUMBERING = {" 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 ", "----+----+----+----+----+----+----+----",
-            " 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15", "----+----+----+----+----+----+----+----", " 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 ", "----+----+----+----+----+----+----+----",
+    private static final String[] NUMBERING = {" 00 | 01 | 02 | 03 | 04 | 05 | 06 | 07 ", "----+----+----+----+----+----+----+----",
+            " 08 | 09 | 10 | 11 | 12 | 13 | 14 | 15", "----+----+----+----+----+----+----+----", " 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 ", "----+----+----+----+----+----+----+----",
             " 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 ", "----+----+----+----+----+----+----+----", " 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39", "----+----+----+----+----+----+----+----",
             " 40 | 41 | 42 | 43 | 44 | 45 | 46 | 47 ", "----+----+----+----+----+----+----+----", " 48 | 49 | 50 | 51 | 52 | 53 | 54 | 55 ", "----+----+----+----+----+----+----+----",
             " 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63 "};
@@ -249,19 +249,23 @@ public class Board {
                 switch (field) {
                     case VALID -> {
                         int index = (DIM * i) + j;
-                        row.append(String.format(" %s ", index));
+                        if (index < 10) {
+                            row.append(String.format(" 0%s ", index));
+                        } else {
+                            row.append(String.format(" %s ", index));
+                        }
                     }
-                    case BLACK -> row.append(" ⚫ ");
-                    case WHITE -> row.append(" ⚪ ");
-                    default -> row.append("    ");
+                    case BLACK -> row.append(" ⚫ " + GREEN_BACKGROUND);
+                    case WHITE -> row.append(" ⚪ " + GREEN_BACKGROUND);
+                    default -> row.append(DELIM + GREEN_BACKGROUND);
                 }
                 if (j < DIM - 1) {
-                    row.append("|");
+                    row.append("|" + GREEN_BACKGROUND);
                 }
             }
-            s.append(row);
+            s.append(GREEN_BACKGROUND).append(row).append(RESET);
             if (i < DIM - 1) {
-                s.append("\n").append(LINE).append(DELIM).append("\n");
+                s.append("\n" + GREEN_BACKGROUND).append(LINE).append(RESET).append(DELIM).append("\n");
             }
         }
         return s.toString();
