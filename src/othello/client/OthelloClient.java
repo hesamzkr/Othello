@@ -44,10 +44,10 @@ public class OthelloClient implements Client, Runnable {
                         case Protocol.NEWGAME -> {
                             if (protocolSplit[1].equals(player.getName())) {
                                 game = new OthelloGame(player, new HumanPlayer(protocolSplit[2]));
-                                listener.printNewGameFound(protocolSplit[2], Mark.BLACK);
+                                listener.printNewGameFound(protocolSplit[2]);
                             } else {
                                 game = new OthelloGame(new HumanPlayer(protocolSplit[1]), player);
-                                listener.printNewGameFound(protocolSplit[1], Mark.WHITE);
+                                listener.printNewGameFound(protocolSplit[1]);
                             }
                         }
                         case Protocol.MOVE -> {
@@ -99,8 +99,7 @@ public class OthelloClient implements Client, Runnable {
     public void close() {
         try {
             socket.close();
-            System.out.println("Exiting client cuz u crashed.");
-            System.exit(0);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -127,9 +126,6 @@ public class OthelloClient implements Client, Runnable {
         try {
             if (game.isGameOver()) {
                 return;
-            }
-            if (game.getValidMoves(player.getMark()).isEmpty()) {
-                throw new NoValidMoves();
             }
             List<Move> moves = player.determineMove(game);
             int aiMoveIndex = moves.get(0).getIndex();

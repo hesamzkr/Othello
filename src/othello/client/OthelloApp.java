@@ -13,7 +13,6 @@ import java.util.Scanner;
 public class OthelloApp {
     private final OthelloClient client;
     private final Scanner scanner;
-
     private static final String MAIN_MENU = "1) Queue\n2) List\n3) Quit";
     private static final String IN_QUEUE = "1) Cancel Queue\n2) List\n3) Quit";
     public static final String IN_GAME = "a) List\nb) Quit";

@@ -96,29 +96,53 @@ public class ClientHandler implements Runnable {
                                     if (game.isValidMove(moveIndex) || moveIndex == 64) {
                                         try {
                                             game.doMove(moveIndex);
-                                            game.nextTurn();
-                                            send(Protocol.sendMove(moveIndex));
-                                            opponent.send(Protocol.sendMove(moveIndex));
                                         } catch (NoValidMoves ignored) {
-                                            game.nextTurn();
-                                            send(Protocol.sendMove(64));
-                                            opponent.send(Protocol.sendMove(64));
                                         }
+                                        game.nextTurn();
+                                        send(Protocol.sendMove(moveIndex));
+                                        opponent.send(Protocol.sendMove(moveIndex));
                                     }
+
+                                    Thread.sleep(150);
+
+                                    try {
+
+                                        if (game.isGameOver()) {
+                                            Thread.sleep(150);
+                                            if (game.getWinner() != null) {
+                                                send(Protocol.sendWin(game.getWinner().getName()));
+                                                opponent.send(Protocol.sendWin(game.getWinner().getName()));
+                                            } else {
+                                                send(Protocol.sendDraw());
+                                                opponent.send(Protocol.sendDraw());
+                                            }
+                                            opponent.reset();
+                                            reset();
+                                        }
+
+
+                                    } catch (NullPointerException e) {
+                                        System.out.println(e.getMessage());
+                                        System.out.println(username);
+                                    }
+
                                 } catch (NumberFormatException ignored) {
                                     sendError("Move index is not a number");
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
                                 }
                             } else {
                                 sendError("No move index");
                             }
                         }
-                        default -> sendError("Unknown command");
+                        default -> sendError(line);
                     }
                 }
             }
         } catch (IOException e) {
             close();
         }
+        close();
     }
 
     public void sendError(String msg) {
@@ -169,7 +193,7 @@ public class ClientHandler implements Runnable {
         this.game = game;
     }
 
-    public void reset() {
+    public synchronized void reset() {
         opponent = null;
         game = null;
     }
