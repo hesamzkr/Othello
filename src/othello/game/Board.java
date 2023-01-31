@@ -240,71 +240,31 @@ public class Board {
         return score;
     }
 
-    /**
-     * Returns a String representation of this board. In addition to the current
-     * situation, the String also shows the numbering of the fields.
-     *
-     * @return the game situation as String
-     */
-//    public String toString() {
-//        String s = "";
-//        for (int i = 0; i < DIM; i++) {
-//            String row = "";
-//            for (int j = 0; j < DIM; j++) {
-//                switch (getField(i, j)) {
-//                    case VALID:
-//                        int index = (DIM * i) + j;
-//                        row += " " + getField(i, j).toString().substring(0, 1).replace("V", RED + Integer.toString(index)) + " " + RESET + GREEN_BACKGROUND;
-//                        break;
-//                    case BLACK:
-//                        row += " " + getField(i, j).toString().substring(0, 1).replace("B", BLACK + "()" + RESET + GREEN_BACKGROUND) + " ";
-//                        break;
-//                    case WHITE:
-//                        row += " " + getField(i, j).toString().substring(0, 1).replace("W", "()") + " ";
-//                        break;
-//                    default:
-//                        row += " " + getField(i, j).toString().substring(0, 1).replace("E", "  ") + " ";
-//                }
-//                if (j < DIM - 1) {
-//                    row = GREEN_BACKGROUND + row + "|";
-//                }
-//            }
-//            s = GREEN_BACKGROUND + s + row + RESET + DELIM;
-//            if (i < DIM - 1) {
-//                s = s + "\n" + LINE + DELIM + "\n";
-//            }
-//        }
-//        return s;
-//    }
     public String toString() {
-        String s = "";
+        StringBuilder s = new StringBuilder();
         for (int i = 0; i < DIM; i++) {
-            String row = "";
+            StringBuilder row = new StringBuilder();
             for (int j = 0; j < DIM; j++) {
-                switch (getField(i, j)) {
-                    case VALID:
+                Mark field = getField(i, j);
+                switch (field) {
+                    case VALID -> {
                         int index = (DIM * i) + j;
-                        row += " " + getField(i, j).toString().substring(0, 1).replace("V", Integer.toString(index)) + " ";
-                        break;
-                    case BLACK:
-                        row += " " + getField(i, j).toString().substring(0, 1).replace("B", "BB") + " ";
-                        break;
-                    case WHITE:
-                        row += " " + getField(i, j).toString().substring(0, 1).replace("W", "WW") + " ";
-                        break;
-                    default:
-                        row += " " + getField(i, j).toString().substring(0, 1).replace("E", "  ") + " ";
+                        row.append(String.format(" %s ", index));
+                    }
+                    case BLACK -> row.append(" ⚫ ");
+                    case WHITE -> row.append(" ⚪ ");
+                    default -> row.append("    ");
                 }
                 if (j < DIM - 1) {
-                    row = row + "|";
+                    row.append("|");
                 }
             }
-            s = s + row;
+            s.append(row);
             if (i < DIM - 1) {
-                s = s + "\n" + LINE + DELIM + "\n";
+                s.append("\n").append(LINE).append(DELIM).append("\n");
             }
         }
-        return s;
+        return s.toString();
     }
 
 

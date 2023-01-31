@@ -132,7 +132,7 @@ public class GameTest {
         // getValidMoves makes a new move with a list of pieces to flip for each of the cardinal and ordinal directions
         // which means that for the same row and column, there might be multiple moves.
         assertEquals(6 + 1, moves.size());
-        assertEquals(6, game.combineMoves(moves).size());
+        assertEquals(6, game.combineMoves().size());
 
         //Check if all these marked locations match up with a reference game of Othello.
         assertEquals(Mark.VALID, game.getBoard().getField(1, 5));
