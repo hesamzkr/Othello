@@ -74,6 +74,9 @@ public class OthelloClient implements Client, Runnable {
                                 while (pressEnter) {
                                     Thread.onSpinWait();
                                 }
+                                if (game == null) {
+                                    continue;
+                                }
                                 int moveIndex = Integer.parseInt(protocolSplit[1]);
                                 if (moveIndex == 64) {
                                     if (game.getTurn() != player) {
