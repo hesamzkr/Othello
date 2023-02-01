@@ -93,7 +93,7 @@ public class OthelloClient implements Client, Runnable {
                                     listener.print("Waiting for the opponent");
                                 }
 
-                            } catch (NoValidMoves ignored) {
+                            } catch (NoValidMovesException ignored) {
                             }
                         }
                         case Protocol.GAMEOVER -> {
@@ -167,7 +167,7 @@ public class OthelloClient implements Client, Runnable {
             List<Move> moves = player.determineMove(game);
             int aiMoveIndex = moves.get(0).getIndex();
             sendMove(aiMoveIndex);
-        } catch (NoValidMoves ignored) {
+        } catch (NoValidMovesException ignored) {
             sendMove(64);
         }
 

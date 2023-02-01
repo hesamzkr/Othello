@@ -33,7 +33,7 @@ public interface Player {
      *
      * @param game player is playing in
      * @return list of moves that the player has chosen to make
-     * @throws NoValidMoves Exception for when the player has no valid moves to make
+     * @throws NoValidMovesException Exception for when the player has no valid moves to make
      */
-    List<Move> determineMove(Game game) throws NoValidMoves;
+    List<Move> determineMove(Game game) throws NoValidMovesException;
 }

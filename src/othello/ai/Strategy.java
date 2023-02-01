@@ -2,7 +2,7 @@ package othello.ai;
 
 import othello.game.Game;
 import othello.game.Move;
-import othello.game.NoValidMoves;
+import othello.game.NoValidMovesException;
 
 import java.util.List;
 
@@ -25,5 +25,5 @@ public interface Strategy {
      * @param game the game strategy is for
      * @return a legal move
      */
-    List<Move> determineMove(Game game) throws NoValidMoves;
+    List<Move> determineMove(Game game) throws NoValidMovesException;
 }

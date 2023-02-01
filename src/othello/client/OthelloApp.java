@@ -265,7 +265,7 @@ public class OthelloApp {
                     try {
                         List<Move> hints = bot.determineMove(client.getGame());
                         print("You could play: " + hints.get(0).getIndex());
-                    } catch (NoValidMoves e) {
+                    } catch (NoValidMovesException e) {
                         print("You have no valid moves.");
                     }
                 }

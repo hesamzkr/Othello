@@ -42,7 +42,7 @@ public abstract class AbstractPlayer implements Player {
      */
     //@ requires !game.isGameover();
     //@ ensures game.isValidMove(\result);
-    public abstract List<Move> determineMove(Game game) throws NoValidMoves;
+    public abstract List<Move> determineMove(Game game) throws NoValidMovesException;
 
     /**
      * Returns a representation of a player, i.e., their name

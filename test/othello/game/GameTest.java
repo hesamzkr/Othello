@@ -2,8 +2,6 @@ package othello.game;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import othello.ai.Difficulty;
-import othello.ai.MonteCarloStrategy;
 
 import java.util.List;
 
@@ -43,7 +41,7 @@ public class GameTest {
                     game.doMove(moves);
                     assertEquals(numberOfPieces + 1, game.scores().get(Mark.BLACK) + game.scores().get(Mark.WHITE));
                     assertTrue(game.scores().get(player.getMark()) >= playerScore + 2);
-                } catch (NoValidMoves ignored) {
+                } catch (NoValidMovesException ignored) {
                     assertEquals(numberOfPieces, game.scores().get(Mark.BLACK) + game.scores().get(Mark.WHITE));
                 }
                 game.nextTurn();
@@ -163,10 +161,10 @@ public class GameTest {
     /**
      * Tests the number of discs both players have after an invalid move and after black playing a move at index 19.
      *
-     * @throws NoValidMoves exception for when the player has no valid moves to make
+     * @throws NoValidMovesException exception for when the player has no valid moves to make
      */
     @Test
-    public void testScoreEarlyGame() throws NoValidMoves {
+    public void testScoreEarlyGame() throws NoValidMovesException {
         // Test with wrong move
         assertTrue(player1.constructMove(game, 2).isEmpty());
         // Test nothing changed
@@ -182,10 +180,10 @@ public class GameTest {
     /**
      * Tests if flipping a single piece and setting a piece in the northern direction works correctly.
      *
-     * @throws NoValidMoves exception for when the player has no valid moves to make
+     * @throws NoValidMovesException exception for when the player has no valid moves to make
      */
     @Test
-    public void testSingleUpperFlips() throws NoValidMoves {
+    public void testSingleUpperFlips() throws NoValidMovesException {
         // Do the flip
         game.doMove(player1.constructMove(game, 19));
         // Check if they are flipped
@@ -196,10 +194,10 @@ public class GameTest {
     /**
      * Tests if flipping a single piece and setting a piece in the southern direction works correctly.
      *
-     * @throws NoValidMoves exception for when the player has no valid moves to make
+     * @throws NoValidMovesException exception for when the player has no valid moves to make
      */
     @Test
-    public void testSingleLowerFlips() throws NoValidMoves {
+    public void testSingleLowerFlips() throws NoValidMovesException {
         // Do the flip
         game.doMove(player1.constructMove(game, 44));
         // Check if they are flipped
@@ -210,10 +208,10 @@ public class GameTest {
     /**
      * Tests if flipping a single piece and setting a piece in the western direction works correctly.
      *
-     * @throws NoValidMoves exception for when the player has no valid moves to make
+     * @throws NoValidMovesException exception for when the player has no valid moves to make
      */
     @Test
-    public void testSingleLeftFlips() throws NoValidMoves {
+    public void testSingleLeftFlips() throws NoValidMovesException {
         // Do the flip
         game.doMove(player1.constructMove(game, 26));
         // Check if they are flipped
@@ -224,10 +222,10 @@ public class GameTest {
     /**
      * Tests if flipping a single piece and setting a piece in the eastern direction works correctly.
      *
-     * @throws NoValidMoves exception for when the player has no valid moves to make
+     * @throws NoValidMovesException exception for when the player has no valid moves to make
      */
     @Test
-    public void testSingleRightFlips() throws NoValidMoves {
+    public void testSingleRightFlips() throws NoValidMovesException {
         // Do the flip
         game.doMove(player1.constructMove(game, 37));
         // Check if they are flipped
@@ -238,10 +236,10 @@ public class GameTest {
     /**
      * Tests if flipping a single piece and setting a piece in the north-western direction works correctly.
      *
-     * @throws NoValidMoves exception for when the player has no valid moves to make
+     * @throws NoValidMovesException exception for when the player has no valid moves to make
      */
     @Test
-    public void testSingleUpperLeftDiagonalFlips() throws NoValidMoves {
+    public void testSingleUpperLeftDiagonalFlips() throws NoValidMovesException {
         // Create scenario for flip to be possible
         game.doMove(player1.constructMove(game, 44));
         game.doMove(player2.constructMove(game, 43));
@@ -255,10 +253,10 @@ public class GameTest {
     /**
      * Tests if flipping a single piece and setting a piece in the north-eastern direction works correctly.
      *
-     * @throws NoValidMoves exception for when the player has no valid moves to make
+     * @throws NoValidMovesException exception for when the player has no valid moves to make
      */
     @Test
-    public void testSingleUpperRightDiagonalFlips() throws NoValidMoves {
+    public void testSingleUpperRightDiagonalFlips() throws NoValidMovesException {
         // Create scenario for flip to be possible
         game.doMove(player1.constructMove(game, 19));
         game.doMove(player2.constructMove(game, 20));
@@ -272,10 +270,10 @@ public class GameTest {
     /**
      * Tests if flipping a single piece and setting a piece in the south-western direction works correctly.
      *
-     * @throws NoValidMoves exception for when the player has no valid moves to make
+     * @throws NoValidMovesException exception for when the player has no valid moves to make
      */
     @Test
-    public void testSingleLowerLeftDiagonalFlips() throws NoValidMoves {
+    public void testSingleLowerLeftDiagonalFlips() throws NoValidMovesException {
         // Create scenario for flip to be possible
         game.doMove(player1.constructMove(game, 44));
         game.doMove(player2.constructMove(game, 43));
@@ -289,10 +287,10 @@ public class GameTest {
     /**
      * Tests if flipping a single piece and setting a piece in the south-eastern direction works correctly.
      *
-     * @throws NoValidMoves exception for when the player has no valid moves to make
+     * @throws NoValidMovesException exception for when the player has no valid moves to make
      */
     @Test
-    public void testSingleLowerRightDiagonalFlips() throws NoValidMoves {
+    public void testSingleLowerRightDiagonalFlips() throws NoValidMovesException {
         // Create scenario for flip to be possible
         game.doMove(player1.constructMove(game, 19));
         game.doMove(player2.constructMove(game, 20));
@@ -306,10 +304,10 @@ public class GameTest {
     /**
      * Tests if playing a piece that affects multiple directions, correctly performs a single piece flip in the affected direction.
      *
-     * @throws NoValidMoves exception for when the player has no valid moves to make
+     * @throws NoValidMovesException exception for when the player has no valid moves to make
      */
     @Test
-    public void testMultiDirectionalSingleFlips() throws NoValidMoves {
+    public void testMultiDirectionalSingleFlips() throws NoValidMovesException {
         // Create scenario where playing a move affects multiple directions.
         game.getBoard().setField(2, 3, Mark.BLACK);
         game.getBoard().setField(3, 3, Mark.BLACK);
@@ -330,10 +328,10 @@ public class GameTest {
     /**
      * Tests if playing a piece that affects multiple directions, correctly performs multiple piece flips in the affected direction.
      *
-     * @throws NoValidMoves exception for when the player has no valid moves to make
+     * @throws NoValidMovesException exception for when the player has no valid moves to make
      */
     @Test
-    public void testMultiDirectionalLongFlips() throws NoValidMoves {
+    public void testMultiDirectionalLongFlips() throws NoValidMovesException {
         game.getBoard().setField(3, 2, Mark.BLACK);
         game.getBoard().setField(4, 2, Mark.BLACK);
         game.getBoard().setField(5, 2, Mark.BLACK);

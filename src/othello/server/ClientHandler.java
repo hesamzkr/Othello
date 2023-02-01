@@ -1,7 +1,7 @@
 package othello.server;
 
 import othello.client.Protocol;
-import othello.game.NoValidMoves;
+import othello.game.NoValidMovesException;
 import othello.game.OthelloGame;
 
 import java.io.*;
@@ -110,7 +110,7 @@ public class ClientHandler implements Runnable {
                                     if (game.isValidMove(moveIndex) || moveIndex == 64) {
                                         try {
                                             game.doMove(moveIndex);
-                                        } catch (NoValidMoves ignored) {
+                                        } catch (NoValidMovesException ignored) {
                                         }
                                         game.nextTurn();
                                         send(Protocol.sendMove(moveIndex));

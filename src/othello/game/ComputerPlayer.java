@@ -27,10 +27,10 @@ public class ComputerPlayer extends AbstractPlayer {
      *
      * @param game the current game
      * @return the move the player has chosen
-     * @throws NoValidMoves if there are no valid moves player can make
+     * @throws NoValidMovesException if there are no valid moves player can make
      */
     @Override
-    public List<Move> determineMove(Game game) throws NoValidMoves {
+    public List<Move> determineMove(Game game) throws NoValidMovesException {
         return strategy.determineMove(game);
     }
 

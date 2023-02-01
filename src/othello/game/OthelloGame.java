@@ -385,15 +385,15 @@ public class OthelloGame implements Game {
      * Given an index as a move it compiles a List<Move> equivalent to the index and executes it on the game.
      *
      * @param moveIndex the move's index
-     * @throws NoValidMoves If the mark doesn't have any valid moves
+     * @throws NoValidMovesException If the mark doesn't have any valid moves
      */
-    public void doMove(int moveIndex) throws NoValidMoves {
+    public void doMove(int moveIndex) throws NoValidMovesException {
         List<Move> playMoves = new ArrayList<>();
         int row = moveIndex / Board.DIM;
         int col = moveIndex % Board.DIM;
         List<Move> moves = getValidMoves(turn.getMark());
         if (moves.isEmpty()) {
-            throw new NoValidMoves();
+            throw new NoValidMovesException();
         }
         for (Move m : moves) {
             if (m.getRow() == row && m.getCol() == col) {

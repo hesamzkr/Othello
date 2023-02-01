@@ -1,8 +1,6 @@
 package othello.game;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Player for a game which chooses the moves through user input
@@ -23,7 +21,7 @@ public class HumanPlayer extends AbstractPlayer {
      * This function is simply here so it can be an AbstractPlayer
      */
     @Override
-    public List<Move> determineMove(Game game) throws NoValidMoves {
+    public List<Move> determineMove(Game game) throws NoValidMovesException {
         return null;
     }
 
