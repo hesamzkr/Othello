@@ -66,10 +66,10 @@ public class MonteCarloStrategy implements Strategy {
             try {
                 Mark current = copy.getTurn().getMark();
                 if (copy.getValidMoves(current).isEmpty()) { //If the current player has no valid moves, go to the next turn.
-                    throw new NoValidMoves();
+                    throw new NoValidMovesException();
                 }
                 copy.doMove(new NaiveStrategy().determineMove(copy));
-            } catch (NoValidMoves ignored) {
+            } catch (NoValidMovesException ignored) {
             }
             copy.nextTurn();
         }
