@@ -24,7 +24,7 @@ public class NaiveStrategy implements Strategy {
      *
      * @param game the game for which a move should be selected.
      * @return a randomly selected move or a corner move.
-     * @throws NoValidMovesException
+     * @throws NoValidMovesException when there are no valid moves to play.
      */
     public List<Move> determineMove(Game game) throws NoValidMovesException {
         List<Move> moves = game.getValidMoves(game.getTurn().getMark());

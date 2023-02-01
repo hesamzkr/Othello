@@ -10,8 +10,8 @@ public interface Client {
     /**
      * connects to the server
      *
-     * @param address
-     * @param port
+     * @param address to connect to.
+     * @param port    to connect to.
      */
     void connect(InetAddress address, int port);
 

@@ -19,7 +19,7 @@ public class Score {
     /**
      * Gets the scores.
      *
-     * @return
+     * @return a map of scores for both players.
      */
     public Map<Player, Double> getScores() {
         return scores;
