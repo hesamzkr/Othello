@@ -11,6 +11,7 @@
       <excludeFolder url="file://$MODULE_DIR$/test/tictactoe" />
       <excludeFolder url="file://$MODULE_DIR$/src/othello/ui" />
     </content>
+    <content url="file://$MODULE_DIR$/out" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="junit.jupiter" level="project" />

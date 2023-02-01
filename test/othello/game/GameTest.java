@@ -121,6 +121,7 @@ public class GameTest {
         game.getBoard().setField(4, 4, Mark.WHITE);
         game.getBoard().setField(5, 4, Mark.WHITE);
 
+        OthelloGame copy = game.deepCopy();
         //Marking the location of all valid moves on the board for BLACK(first turn) with the 'Valid' marker.
         List<Move> moves = game.getValidMoves(Mark.BLACK);
         for (Move m : moves) {
@@ -130,7 +131,7 @@ public class GameTest {
         // getValidMoves makes a new move with a list of pieces to flip for each of the cardinal and ordinal directions
         // which means that for the same row and column, there might be multiple moves.
         assertEquals(6 + 1, moves.size());
-        assertEquals(6, game.combineMoves().size());
+        assertEquals(6, copy.combineMoves().size());
 
         //Check if all these marked locations match up with a reference game of Othello.
         assertEquals(Mark.VALID, game.getBoard().getField(1, 5));
