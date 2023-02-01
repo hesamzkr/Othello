@@ -1,7 +1,7 @@
 package othello.server;
 
 /**
- * A chat server that runs in a separate thread.
+ * A server that runs in a separate thread.
  * The start method is only called once and the stop method is only called once after start.
  */
 public interface Server {

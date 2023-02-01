@@ -7,6 +7,10 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.List;
 
+/**
+ * Client which handles connection to the server and reading the server's messages and handling them.
+ * Handling game and players to as both Human an AI can use this client.
+ */
 public class OthelloClient implements Client, Runnable {
 
     private Socket socket;
@@ -17,8 +21,20 @@ public class OthelloClient implements Client, Runnable {
     private OthelloGame game;
     private boolean hasLoggedIn = false;
 
+    /**
+     * When boolean field is set to true the readers of user input in TUI take nothing as a value, and pass it on.
+     * In other words they ignore the user input. This is used when the TUI thread is waiting for user input
+     * but the current menu is no longer valid and by pressing enter the new menu is presented to the user.
+     */
     public volatile boolean pressEnter = false;
 
+    /**
+     * Create a socket connection to the server with given IP address and port.
+     * Then run the client on a separate thread to read and handle the server's messages.
+     *
+     * @param address IP address of the server
+     * @param port    server's port
+     */
     public void connect(InetAddress address, int port) {
         try {
             socket = new Socket(address, port);
@@ -29,6 +45,9 @@ public class OthelloClient implements Client, Runnable {
         }
     }
 
+    /**
+     * As long as socket isn't closed read from the sockets input stream and process server's messages.
+     */
     public void run() {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
             while (!socket.isClosed()) {
@@ -96,15 +115,24 @@ public class OthelloClient implements Client, Runnable {
         }
     }
 
+    /**
+     * closes the socket
+     */
     public void close() {
         try {
             socket.close();
-
+            System.out.println("Closing client");
+            System.exit(0);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Send the message to the server
+     *
+     * @param msg the message
+     */
     public void send(String msg) {
         try {
             bw.write(msg);
@@ -115,6 +143,11 @@ public class OthelloClient implements Client, Runnable {
         }
     }
 
+    /**
+     * If game isn't over send the move to server using Protocol.
+     *
+     * @param moveIndex the move's index
+     */
     public void sendMove(int moveIndex) {
         if (game.isGameOver()) {
             return;
@@ -122,6 +155,10 @@ public class OthelloClient implements Client, Runnable {
         send(Protocol.sendMove(moveIndex));
     }
 
+    /**
+     * Should only be called if the player is a ComputerPlayer.
+     * Player determines the move depending on its strategy and sends the move to server
+     */
     public void sendAIMove() {
         try {
             if (game.isGameOver()) {
@@ -136,30 +173,61 @@ public class OthelloClient implements Client, Runnable {
 
     }
 
+    /**
+     * Calls the listener print moves to output the valid moves to the UI
+     */
     public void printMoves() {
         listener.printMoves();
     }
 
+    /**
+     * Returns if the client is logged in on the server
+     *
+     * @return whether client is logged in
+     */
     public boolean getLoggedIn() {
         return hasLoggedIn;
     }
 
+    /**
+     * Returns the player chosen to play the game
+     *
+     * @return the player playing the game
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * Sets the player to play the game. This could be both a ComputerPlayer or a HumanPlayer
+     *
+     * @param player to play the game
+     */
     public void setPlayer(Player player) {
         this.player = player;
     }
 
+    /**
+     * Return the username of the client
+     *
+     * @return client's username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Sets the username that the server must validate to be available
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Returns the current game client is playing
+     *
+     * @return the game
+     */
     public OthelloGame getGame() {
         return game;
     }

@@ -12,6 +12,9 @@ import java.util.Random;
  */
 public class TestPlayer extends ComputerPlayer {
 
+    /**
+     * Constructor which sets the name and a strategy however neither of these are important for the TestPlayer
+     */
     public TestPlayer() {
         super("TEST PLAYER", new NaiveStrategy());
     }

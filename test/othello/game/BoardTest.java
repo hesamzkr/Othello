@@ -154,41 +154,73 @@ public class BoardTest {
         assertTrue(board.isFull());
     }
 
+    /**
+     * Tests if the board correctly identifies whether the left-upper diagonal side of a piece is possible
+     * if there is an opposite mark there
+     */
     @Test
     public void testForUpperLeftPiece() {
         assertFalse(board.HasLeftUpperDiagPiece(3, 4, board.getField(3, 4)));
     }
 
+    /**
+     * Tests if the board correctly identifies whether the right-upper diagonal side of a piece is possible
+     * if there is an opposite mark there
+     */
     @Test
     public void testForUpperRightPiece() {
         assertFalse(board.HasRightUpperDiagPiece(3, 4, board.getField(3, 4)));
     }
 
+    /**
+     * Tests if the board correctly identifies whether the upper side of a piece is possible
+     * if there is an opposite mark there
+     */
     @Test
     public void testForUpperPiece() {
         assertFalse(board.HasUpperPiece(3, 4, board.getField(3, 4)));
     }
 
+    /**
+     * Tests if the board correctly identifies whether the left side of a piece is possible
+     * if there is an opposite mark there
+     */
     @Test
     public void testForLeftPiece() {
         assertTrue(board.HasLeftPiece(3, 4, board.getField(3, 4)));
     }
 
+    /**
+     * Tests if the board correctly identifies whether the right side of a piece is possible
+     * if there is an opposite mark there
+     */
     @Test
     public void testForRightPiece() {
         assertFalse(board.HasRightPiece(3, 4, board.getField(3, 4)));
     }
 
+    /**
+     * Tests if the board correctly identifies whether the lower-left diagonal side of a piece is possible
+     * if there is an opposite mark there
+     */
     @Test
     public void testForLowerLeftPiece() {
         assertFalse(board.HasLeftLowerDiagPiece(3, 4, board.getField(3, 4)));
     }
 
+    /**
+     * Tests if the board correctly identifies whether the lower-right diagonal side of a piece is possible
+     * if there is an opposite mark there
+     */
     @Test
     public void testForLowerRightPiece() {
         assertFalse(board.HasRightLowerDiagPiece(3, 4, board.getField(3, 4)));
     }
 
+    /**
+     * Tests if the board correctly identifies whether the lower side of a piece is possible
+     * if there is an opposite mark there
+     */
     @Test
     public void testForLowerPiece() {
         assertTrue(board.HasLowerPiece(3, 4, board.getField(3, 4)));

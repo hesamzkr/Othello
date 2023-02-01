@@ -18,7 +18,10 @@ public abstract class AbstractPlayer implements Player {
     public AbstractPlayer(String name) {
         this.name = name;
     }
-    
+
+    /**
+     * @return
+     */
     public String getName() {
         return name;
     }

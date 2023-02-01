@@ -1,15 +1,15 @@
 package othello.server;
 
+/**
+ * Exception for invalid port for the server
+ */
 public class InvalidPortException extends Exception {
 
-    private final String msg;
-
-    public InvalidPortException(String msg) {
-        this.msg = msg;
+    /**
+     * Create instance of exception and pass message to parent
+     */
+    public InvalidPortException() {
+        super("Invalid port entered");
     }
 
-    @Override
-    public String getMessage() {
-        return msg;
-    }
 }

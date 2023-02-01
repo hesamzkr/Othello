@@ -7,6 +7,10 @@ import othello.game.OthelloGame;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * Handler class for each client and their connection to the server
+ * Running on a separate reads the client's messages using sockets
+ */
 public class ClientHandler implements Runnable {
     private final Socket socket;
     private final OthelloServer server;
@@ -18,6 +22,13 @@ public class ClientHandler implements Runnable {
     private boolean hasLoggedIn = false;
 
 
+    /**
+     * Constructor that sets the socket, server, and writers. It starts a separate thread to read clients messages
+     *
+     * @param socket connected to the server
+     * @param server which it is connected to
+     * @throws IOException if output stream of socket is unavailable
+     */
     public ClientHandler(Socket socket, OthelloServer server) throws IOException {
         this.socket = socket;
         this.server = server;
@@ -25,6 +36,9 @@ public class ClientHandler implements Runnable {
         new Thread(this).start();
     }
 
+    /**
+     * As long as socket isn't closed read from the sockets stream and process clients messages
+     */
     public void run() {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
             while (!socket.isClosed()) {
@@ -100,6 +114,10 @@ public class ClientHandler implements Runnable {
                                         }
                                         game.nextTurn();
                                         send(Protocol.sendMove(moveIndex));
+                                        /*
+                                        need to make sure the move is sent to this client first if there's a gameOver
+                                        condition as otherwise sometimes opponent.send(Move) is sent after the gameOver
+                                        */
                                         Thread.sleep(100);
                                         opponent.send(Protocol.sendMove(moveIndex));
 
@@ -139,10 +157,21 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Sends error message to client using Protocol
+     *
+     * @param msg error message
+     */
     public void sendError(String msg) {
         send(Protocol.sendError(msg));
     }
 
+    /**
+     * Send new game message with player names
+     *
+     * @param p1 player1 username
+     * @param p2 player2 username
+     */
     public void sendNewGame(String p1, String p2) {
         send(Protocol.sendNewGame(p1, p2));
     }
@@ -162,6 +191,10 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Close the socket and remove from the list of clients.
+     * If user was in a game make the opponent win and send the disconnect message
+     */
     public void close() {
         try {
             if (game != null && !opponent.socket.isClosed()) {
@@ -175,18 +208,36 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    /**
+     * Returns the clients username
+     *
+     * @return username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Set opponent as a clientHandler when a game is found to send messages to opponent client
+     *
+     * @param opponent the opponent clientHandler
+     */
     public void setOpponent(ClientHandler opponent) {
         this.opponent = opponent;
     }
 
+    /**
+     * Set new game shared between both clientHandlers
+     *
+     * @param game the game
+     */
     public void setGame(OthelloGame game) {
         this.game = game;
     }
 
+    /**
+     * Set game and opponent to null when client is no longer in a game
+     */
     public void reset() {
         opponent = null;
         game = null;

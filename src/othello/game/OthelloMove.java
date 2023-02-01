@@ -10,6 +10,14 @@ public class OthelloMove implements Move {
 
     private final List<OthelloMove> toFlip;
 
+    /**
+     * Constructor for a move of Othello with the row, column and mark specified.
+     * It initializes toFlip
+     *
+     * @param mark of the move
+     * @param row  of the move
+     * @param col  column of the move
+     */
     public OthelloMove(Mark mark, int row, int col) {
         this.row = row;
         this.col = col;
@@ -17,14 +25,29 @@ public class OthelloMove implements Move {
         toFlip = new ArrayList<>();
     }
 
+    /**
+     * Returns the row of the move
+     *
+     * @return move's row
+     */
     public int getRow() {
         return row;
     }
 
+    /**
+     * Returns the column of the move
+     *
+     * @return move's column
+     */
     public int getCol() {
         return col;
     }
 
+    /**
+     * Calculates and returns the index of move
+     *
+     * @return move's index
+     */
     public int getIndex() {
         return row * Board.DIM + col;
     }
@@ -47,6 +70,11 @@ public class OthelloMove implements Move {
         return toFlip;
     }
 
+    /**
+     * Returns the mark of the move
+     *
+     * @return move's mark
+     */
     public Mark getMark() {
         return mark;
     }

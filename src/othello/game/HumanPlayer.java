@@ -4,38 +4,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Player for a game which chooses the moves through user input
+ */
 public class HumanPlayer extends AbstractPlayer {
 
+    /**
+     * Constructor which takes in user's name
+     *
+     * @param name player's name
+     */
     public HumanPlayer(String name) {
         super(name);
     }
 
+    /**
+     * Not used for HumanPlayer as the TUI is complex and is being handled on its own through the use of menus.
+     * This function is simply here so it can be an AbstractPlayer
+     */
     @Override
     public List<Move> determineMove(Game game) throws NoValidMoves {
-        Scanner scan = new Scanner(System.in);
-        while (true) {
-            List<Move> playMoves = new ArrayList<>();
-            System.out.print("Please enter a valid move: ");
-            int index = scan.nextInt();
-            int row = index / Board.DIM;
-            int col = index % Board.DIM;
-            List<Move> moves = game.getValidMoves(super.mark);
-            if (moves.isEmpty()) {
-                throw new NoValidMoves();
-            }
-            for (Move m : moves) {
-                if (m.getRow() == row && m.getCol() == col) {
-                    playMoves.add(m);
-                }
-            }
-            if (!playMoves.isEmpty()) {
-                return playMoves;
-            } else {
-                System.out.println("Invalid move entered.");
-            }
-        }
+        return null;
     }
 
+    /**
+     * Set the mark of player
+     *
+     * @param m to be set for player
+     */
     public void setMark(Mark m) { //Clean: is this useless?
         super.mark = m;
     }

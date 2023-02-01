@@ -4,19 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Board for the Tic Tac Toe game.
+ * Board for the Othello game.
  */
 public class Board {
-    /**
-     * Dimension of the board, i.e., if set to 3, the board has 3 rows and 3 columns.
-     */
-
     public static final String RESET = "\u001B[0m";
 
-    public static final String GREEN_BACKGROUND = "\u001B[41;1m";
+    public static final String BACKGROUND = "\u001B[41;1m";
 
     public static final int DIM = 8;
-    private static final String DELIM = "    ";
+    private static final String DELIMITER = "    ";
     private static final String[] NUMBERING = {" 00 | 01 | 02 | 03 | 04 | 05 | 06 | 07 ", "----+----+----+----+----+----+----+----",
             " 08 | 09 | 10 | 11 | 12 | 13 | 14 | 15", "----+----+----+----+----+----+----+----", " 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 ", "----+----+----+----+----+----+----+----",
             " 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31 ", "----+----+----+----+----+----+----+----", " 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39", "----+----+----+----+----+----+----+----",
@@ -24,13 +20,7 @@ public class Board {
             " 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63 "};
     private static final String LINE = NUMBERING[1];
 
-    /**
-     * The DIM by DIM fields of the Tic Tac Toe board. See NUMBERING for the
-     * coding of the fields.
-     */
     private final Mark[][] fields;
-
-    // -- Constructors -----------------------------------------------
 
     /**
      * Creates an empty board.
@@ -120,83 +110,105 @@ public class Board {
     }
 
     /**
-     * checks left diagonal of a piece is possible
-     * if there is an opposite mark there continue scanning
-     * else return null
+     * Checks if the piece has a upper-left piece
      *
-     * @param row,col,m
-     * @return
+     * @param row the pieces row
+     * @param col the pieces column
+     * @param m   the pieces mark
+     * @return if the upper-left piece exists
      */
     public boolean HasLeftUpperDiagPiece(int row, int col, Mark m) {
         return getField(row - 1, col - 1) == m.other();
     }
 
     /**
-     * @param row
-     * @param col
-     * @param m
-     * @return
+     * Checks if the piece has a upper-right piece
+     *
+     * @param row the pieces row
+     * @param col the pieces column
+     * @param m   the pieces mark
+     * @return if the upper-right piece exists
      */
     public boolean HasRightUpperDiagPiece(int row, int col, Mark m) {
         return getField(row - 1, col + 1) == m.other();
     }
 
     /**
-     * @param row
-     * @param col
-     * @param m
-     * @return
+     * Checks if the piece has a upper piece
+     *
+     * @param row the pieces row
+     * @param col the pieces column
+     * @param m   the pieces mark
+     * @return if the upper piece exists
      */
     public boolean HasUpperPiece(int row, int col, Mark m) {
         return getField(row - 1, col) == m.other();
     }
 
     /**
-     * @param row
-     * @param col
-     * @param m
-     * @return
+     * Checks if the piece has a left piece
+     *
+     * @param row the pieces row
+     * @param col the pieces column
+     * @param m   the pieces mark
+     * @return if the left piece exists
      */
     public boolean HasLeftPiece(int row, int col, Mark m) {
         return getField(row, col - 1) == m.other();
     }
 
     /**
-     * @param row
-     * @param col
-     * @param m
-     * @return
+     * Checks if the piece has a right piece
+     *
+     * @param row the pieces row
+     * @param col the pieces column
+     * @param m   the pieces mark
+     * @return if the right piece exists
      */
     public boolean HasRightPiece(int row, int col, Mark m) {
         return getField(row, col + 1) == m.other();
     }
 
     /**
-     * @param row
-     * @param col
-     * @param m
-     * @return
+     * Checks if the piece has a lower-left piece
+     *
+     * @param row the pieces row
+     * @param col the pieces column
+     * @param m   the pieces mark
+     * @return if the lower-left piece exists
      */
     public boolean HasLeftLowerDiagPiece(int row, int col, Mark m) {
         return getField(row + 1, col - 1) == m.other();
     }
 
     /**
-     * @param row
-     * @param col
-     * @param m
-     * @return
+     * Checks if the piece has a lower-right piece
+     *
+     * @param row the pieces row
+     * @param col the pieces column
+     * @param m   the pieces mark
+     * @return if the lower-right piece exists
      */
     public boolean HasRightLowerDiagPiece(int row, int col, Mark m) {
         return getField(row + 1, col + 1) == m.other();
     }
 
+    /**
+     * Checks if the piece has a lower piece
+     *
+     * @param row the pieces row
+     * @param col the pieces column
+     * @param m   the pieces mark
+     * @return if the lower piece exists
+     */
     public boolean HasLowerPiece(int row, int col, Mark m) {
         return getField(row + 1, col) == m.other();
     }
 
     /**
-     * @return
+     * Check if there's a winner and return it and if not return null
+     *
+     * @return the winner
      */
     public Mark getWinner() {
         Map<Mark, Integer> scores = currentScore();
@@ -238,6 +250,11 @@ public class Board {
         return score;
     }
 
+    /**
+     * Compile and represent the board as a String with formatting and coloring
+     *
+     * @return board as a String
+     */
     public String toString() {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < DIM; i++) {
@@ -253,23 +270,26 @@ public class Board {
                             row.append(String.format(" %s ", index));
                         }
                     }
-                    case BLACK -> row.append(" ⚫ " + GREEN_BACKGROUND);
-                    case WHITE -> row.append(" ⚪ " + GREEN_BACKGROUND);
-                    default -> row.append(DELIM + GREEN_BACKGROUND);
+                    case BLACK -> row.append(" ⚫ " + BACKGROUND);
+                    case WHITE -> row.append(" ⚪ " + BACKGROUND);
+                    default -> row.append(DELIMITER + BACKGROUND);
                 }
                 if (j < DIM - 1) {
-                    row.append("|" + GREEN_BACKGROUND);
+                    row.append("|" + BACKGROUND);
                 }
             }
-            s.append(GREEN_BACKGROUND).append(row).append(RESET);
+            s.append(BACKGROUND).append(row).append(RESET);
             if (i < DIM - 1) {
-                s.append("\n" + GREEN_BACKGROUND).append(LINE).append(RESET).append(DELIM).append("\n");
+                s.append("\n" + BACKGROUND).append(LINE).append(RESET).append(DELIMITER).append("\n");
             }
         }
         return s.toString();
     }
 
 
+    /**
+     * Resets the board to its original state
+     */
     public void reset() {
         for (int i = 0; i < DIM; i++) {
             for (int j = 0; j < DIM; j++) {
@@ -296,10 +316,5 @@ public class Board {
         if (isField(row, col)) {
             fields[row][col] = m;
         }
-    }
-
-    public static void main(String[] args) {
-        Board b = new Board();
-        System.out.println(b.toString());
     }
 }

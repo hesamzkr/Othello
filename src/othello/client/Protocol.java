@@ -47,16 +47,6 @@ public final class Protocol {
         return HELLO + SEPARATOR + "Client" + username;
     }
 
-    /**
-     * The initial message sent by the client once a connection has been established. Includes extensions.
-     * !!!!!!!!! Should a server be able to handle different clients using the game? > If there client sends chat + rank what would happen.
-     *
-     * @param username
-     * @return
-     */
-    public static String sendHelloExClient(String username) {
-        return HELLO + SEPARATOR + "Client" + username + CHAT + RANK;
-    }
 
     /**
      * Response to the initial HELLO by the client.

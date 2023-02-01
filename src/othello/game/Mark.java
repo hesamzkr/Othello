@@ -1,9 +1,7 @@
 package othello.game;
 
 /**
- * Represents a mark in the Tic Tac Toe game. There three possible values:
- * Mark.BB, Mark.WW and Mark.EMPTY.
- * Module 2 lab assignment
+ * Represents a mark in the Othello game
  */
 public enum Mark {
 

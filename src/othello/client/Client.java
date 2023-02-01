@@ -2,6 +2,9 @@ package othello.client;
 
 import java.net.InetAddress;
 
+/**
+ * A client to be connected to a server with an address and port and handle sending messages
+ */
 public interface Client {
 
     /**

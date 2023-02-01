@@ -10,6 +10,9 @@ import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * The main TUI which handles user inputs, states of the TUI app and interacts with the client.
+ */
 public class OthelloApp {
     private final OthelloClient client;
     private final Scanner scanner;
@@ -19,22 +22,42 @@ public class OthelloApp {
     private static final String CHOOSE_PLAYER = "1) Human\n2) Random-AI\n3) Smart-AI";
     private static final String CHOOSE_DIFFICULTY = "1) Easy\n2) Medium\n3) Hard";
 
+    /**
+     * Constructor for app which sets client and scanner
+     *
+     * @param client for this app to interact with the server
+     */
     public OthelloApp(OthelloClient client) {
         this.client = client;
         scanner = new Scanner(System.in);
     }
 
+    /**
+     * Create instance of app and start the TUI
+     *
+     * @param args system args
+     */
     public static void main(String[] args) {
         OthelloApp tui = new OthelloApp(new OthelloClient());
         tui.run();
     }
 
+    /**
+     * Must be run at the beginning of the TUI to connect and do initialization stages with the server.
+     * starts the mainMenu right after.
+     */
     private void run() {
         String username = connectClient();
         login(username);
         runMainMenu();
     }
 
+    /**
+     * Handles user inputs for server connection and asking for username.
+     * won't stop until connection is happened.
+     *
+     * @return username given by user
+     */
     private String connectClient() {
         while (true) {
             try {
@@ -54,11 +77,16 @@ public class OthelloApp {
         }
     }
 
+    /**
+     * Takes in the username and tries to log in. won't stop until successful.
+     *
+     * @param username given by user
+     */
     private void login(String username) {
         while (true) {
             client.send(Protocol.sendLogin(username));
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1500);
             } catch (InterruptedException e) {
                 print(e.getMessage());
             }
@@ -72,10 +100,19 @@ public class OthelloApp {
         }
     }
 
+    /**
+     * Shorthand print function for formatting and cleaner code
+     *
+     * @param msg to be printed
+     */
     private void print(String msg) {
         System.out.printf("%s%n", msg);
     }
 
+    /**
+     * Asks the user for who will be playing the game an AI or Human, and sets the chosen player on the client.
+     * won't stop until a valid player is chosen.
+     */
     private void queue() {
         print(CHOOSE_PLAYER);
         while (true) {
@@ -99,15 +136,27 @@ public class OthelloApp {
         }
     }
 
+    /**
+     * Quits the application entirely
+     */
     private void quit() {
         print("Exiting the Othello client. thank you for playing :)");
         System.exit(0);
     }
 
+    /**
+     * Asks the client to ask server for list of connected users.
+     */
     private void list() {
         client.send(Protocol.LIST);
     }
 
+    /**
+     * Reads a String from the scanner and won't stop until the user input is not empty.
+     * This is not true if client.pressEnter is true, refer to its documentation for more details.
+     *
+     * @return user's input
+     */
     private String readNextLine() {
         while (true) {
             String text = scanner.nextLine();
@@ -120,6 +169,12 @@ public class OthelloApp {
         }
     }
 
+    /**
+     * Reads a number from the scanner and won't stop until the user input is a valid number.
+     * This is not true if client.pressEnter is true, refer to its documentation for more details.
+     *
+     * @return user's input
+     */
     private int readNextInt() {
         while (true) {
             try {
@@ -137,6 +192,9 @@ public class OthelloApp {
         }
     }
 
+    /**
+     * Handles user inputs for the main menu and if appropriate switches to the queue menu.
+     */
     private void runMainMenu() {
         print(MAIN_MENU);
         while (true) {
@@ -152,6 +210,10 @@ public class OthelloApp {
         }
     }
 
+    /**
+     * Handles user inputs for the queue menu if appropriate starts the game and runs the game menu based on player.
+     * If user cancels queue the main menu will be called again.
+     */
     private void runQueueMenu() {
         queue();
         client.send(Protocol.QUEUE);
@@ -182,6 +244,9 @@ public class OthelloApp {
         }
     }
 
+    /**
+     * Handles user input and interactions with client for game menu if the player is a HumanPlayer.
+     */
     private void runGameMenu() {
         print(client.getGame().toString());
         print(IN_GAME);
@@ -195,6 +260,15 @@ public class OthelloApp {
             switch (choice) {
                 case "a" -> list();
                 case "b" -> quit();
+                case "c" -> {
+                    Player bot = new ComputerPlayer("bot", new MonteCarloStrategy(Difficulty.MEDIUM));
+                    try {
+                        List<Move> hints = bot.determineMove(client.getGame());
+                        print("You could play: " + hints.get(0).getIndex());
+                    } catch (NoValidMoves e) {
+                        print("You have no valid moves.");
+                    }
+                }
                 default -> {
                     try {
                         if (client.getGame() == null) {
@@ -212,15 +286,6 @@ public class OthelloApp {
                             client.sendMove(64);
                             continue;
                         }
-                        if (choice.equals("hint")) {
-                            Player bot = new ComputerPlayer("bot", new MonteCarloStrategy(Difficulty.MEDIUM));
-                            try {
-                                List<Move> hints = bot.determineMove(client.getGame());
-                                print("You could play: " + hints.get(0).getIndex());
-                            } catch (NoValidMoves e) {
-                                print("You have no valid moves.");
-                            }
-                        }
                         int choiceIndex = Integer.parseInt(choice) - 1;
                         if (choiceIndex >= 0 && choiceIndex < moves.size()) {
                             client.sendMove(moves.get(choiceIndex).getIndex());
@@ -235,6 +300,9 @@ public class OthelloApp {
         }
     }
 
+    /**
+     * Handles user input and interaction with client for game menu if player is a ComputerPlayer.
+     */
     private void runAIGameMenu() {
         if (client.getPlayer().getMark() == Mark.BLACK) {
             print(client.getGame().toString());
@@ -260,6 +328,11 @@ public class OthelloApp {
         }
     }
 
+    /**
+     * Handles user input for choosing difficulty menu and returns the chosen difficulty.
+     *
+     * @return chosen difficulty by user
+     */
     private Difficulty runDifficultyMenu() {
         print(CHOOSE_DIFFICULTY);
         while (true) {

@@ -25,5 +25,10 @@ public interface Move {
      */
     Mark getMark();
 
+    /**
+     * Getter for the index of the move
+     *
+     * @return move's index
+     */
     int getIndex();
 }
