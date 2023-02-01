@@ -100,10 +100,9 @@ public class ClientHandler implements Runnable {
                                         }
                                         game.nextTurn();
                                         send(Protocol.sendMove(moveIndex));
+                                        Thread.sleep(100);
                                         opponent.send(Protocol.sendMove(moveIndex));
-                                    }
 
-                                    try {
                                         if (game.isGameOver()) {
                                             if (game.getWinner() != null) {
                                                 send(Protocol.sendWin(game.getWinner().getName()));
@@ -116,13 +115,16 @@ public class ClientHandler implements Runnable {
                                             reset();
 
                                         }
-                                    } catch (NullPointerException e) {
-                                        System.out.println(e.getMessage());
-                                        System.out.println(username);
+
                                     }
+
 
                                 } catch (NumberFormatException ignored) {
                                     sendError("Move index is not a number");
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                } catch (NullPointerException ignored) {
+                                    // needed as game or opponent can be null if a disconnect happens due to reset()
                                 }
                             } else {
                                 sendError("No move index");
@@ -135,7 +137,6 @@ public class ClientHandler implements Runnable {
         } catch (IOException e) {
             close();
         }
-        close();
     }
 
     public void sendError(String msg) {
