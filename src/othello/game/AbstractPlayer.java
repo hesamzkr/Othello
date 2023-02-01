@@ -20,12 +20,19 @@ public abstract class AbstractPlayer implements Player {
     }
 
     /**
-     * @return
+     * Gets the name of a player
+     *
+     * @return string of the player's name.
      */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets the mark of a player.
+     *
+     * @return the mark of a player.
+     */
     public Mark getMark() {
         return mark;
     }

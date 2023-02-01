@@ -11,7 +11,7 @@ import java.util.List;
  * Stores the current state of the game, as well as store information related to a node such as which move was played to get to the game state of its parent.
  */
 public class State {
-    private Game game;
+    private final Game game;
     private Player player;
 
     /**

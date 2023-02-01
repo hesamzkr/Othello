@@ -85,7 +85,7 @@ public class MonteCarloStrategy implements Strategy {
      */
     private Node select(Node node, Game newGame) {
         while (!((McNode) node).canExpandNode() && !newGame.isGameOver()) { //Keep going until a node has been reached that can still be expanded or the game has ended.
-            node = ((McNode) node).selectNode();
+            node = ((McNode) node).selectNodeWithBestUct();
             List<Move> move = node.getState().moveToParent;
             if (move != null && !move.isEmpty()) {
                 newGame.doMove(move);

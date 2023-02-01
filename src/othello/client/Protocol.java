@@ -30,8 +30,8 @@ public final class Protocol {
     /**
      * When provided with illegal inputs, the server or client can respond with an error.
      *
-     * @param message
-     * @return
+     * @param message that should be formatted.
+     * @return an error string according to the protocol.
      */
     public static String sendError(String message) {
         return ERROR + SEPARATOR + message;
@@ -40,8 +40,8 @@ public final class Protocol {
     /**
      * The initial message sent by the client once a connection has been established.
      *
-     * @param username
-     * @return
+     * @param username that should be formatted
+     * @return a hello string according to the protocol.
      */
     public static String sendHelloClient(String username) {
         return HELLO + SEPARATOR + "Client" + username;
@@ -51,7 +51,7 @@ public final class Protocol {
     /**
      * Response to the initial HELLO by the client.
      *
-     * @return
+     * @return a hello string according to the protocol.
      */
     public static String sendHelloServer() {
         return HELLO + SEPARATOR + "Server";
@@ -60,17 +60,17 @@ public final class Protocol {
     /**
      * Response to initial HELLO by the client.
      *
-     * @return
+     * @return a hello string according to the protocol with extensions.
      */
-    public static String sendHelloExServer() {
+    public static String sendHelloExtensionServer() {
         return HELLO + SEPARATOR + "Server" + CHAT + RANK;
     }
 
     /**
      * Sent by the client to claim a username on the server.
      *
-     * @param username
-     * @return
+     * @param username that should be formatted.
+     * @return a login string according to the protocl.
      */
     public static String sendLogin(String username) {
         return LOGIN + SEPARATOR + username;
@@ -81,8 +81,8 @@ public final class Protocol {
      * Lists the different usernames that are currently logged into the server, including the requesting client.
      * The order of the usernames can be arbitrary.
      *
-     * @param list
-     * @return
+     * @param list of clients.
+     * @return a list of clients according to the protocol.
      */
     public static String sendList(List<String> list) {
         StringBuilder msg = new StringBuilder(LIST);
@@ -96,9 +96,9 @@ public final class Protocol {
      * Sent by the server to all players that are put into a newly-started game.
      * Only players that were queued (see QUEUE) are allowed to be put into a game. A player can only be in at most one game simultaneously.
      *
-     * @param p1
-     * @param p2
-     * @return
+     * @param p1 player1's username
+     * @param p2 player2's username
+     * @return a string containing the player name according to the protocol.
      */
     public static String sendNewGame(String p1, String p2) {
         return NEWGAME + SEPARATOR + p1 + SEPARATOR + p2;
@@ -107,8 +107,8 @@ public final class Protocol {
     /**
      * Sent by the client to indicate which row(s) or column(s) the player wants to push.
      *
-     * @param index
-     * @return
+     * @param index of the move that should be sent.
+     * @return a move string according to the protocol.
      */
     public static String sendMove(int index) {
         return MOVE + SEPARATOR + index;
@@ -117,8 +117,8 @@ public final class Protocol {
     /**
      * Sent if the game ended with one of the players winning.
      *
-     * @param username
-     * @return
+     * @param username that won.
+     * @return a win string according to the protocol.
      */
     public static String sendWin(String username) {
         return GAMEOVER + SEPARATOR + VICTORY + SEPARATOR + username;
@@ -127,8 +127,8 @@ public final class Protocol {
     /**
      * Sent if the game ended due to losing connection to one of the players. The winner is the player with whom the connection is still alive.
      *
-     * @param username
-     * @return
+     * @param username that won
+     * @return a win by disconnect string according to the protocol.
      */
     public static String sendWinDisconnect(String username) {
         return GAMEOVER + SEPARATOR + DISCONNECT + SEPARATOR + username;
@@ -137,7 +137,7 @@ public final class Protocol {
     /**
      * Sent if the game ended in a draw.
      *
-     * @return
+     * @return a string representing a draw according to the protocol.
      */
     public static String sendDraw() {
         return GAMEOVER + SEPARATOR + DRAW;

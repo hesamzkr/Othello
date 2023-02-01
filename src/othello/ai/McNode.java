@@ -12,10 +12,10 @@ import java.util.Random;
  */
 public class McNode implements Node {
 
-    private State state;
-    private Node parent;
+    private final State state;
+    private final Node parent;
 
-    private List<Node> childArray;
+    private final List<Node> childArray;
 
     private Node currentNode;
 
@@ -24,7 +24,7 @@ public class McNode implements Node {
      */
     private int numSims;
 
-    private Score score;
+    private final Score score;
 
     public McNode(Node parent, State state) {
         this.parent = parent;
@@ -84,11 +84,11 @@ public class McNode implements Node {
      *
      * @return the node with the highest uct value.
      */
-    public Node selectNode() {
-        currentNode = this;
+    public Node selectNodeWithBestUct() {
         double bestUct = Integer.MIN_VALUE;
+        currentNode = this;
         for (Node child : childArray) {
-            double uctValue = getUctValue(child);
+            double uctValue = CalculateUctValue(child);
             if (uctValue > bestUct) {
                 bestUct = uctValue;
                 currentNode = child;
@@ -103,13 +103,13 @@ public class McNode implements Node {
      * @param child node for which the uct value should be calculated
      * @return the uct value of the node.
      */
-    private double getUctValue(Node child) { //New UCT class?
+    private double CalculateUctValue(Node child) {
         double uctValue;
         if (((McNode) child).getNumSims() == 0) { //Having 0 simulations will lead to a uct value of infinity (dividing by 0).
             uctValue = 1;
         } else {
             uctValue = (child.getScoreForPlayer(child.getState().getPlayer())) / (((McNode) child).getNumSims() * 1.0)
-                    + (Math.sqrt(0.7 * (Math.log(getNumSims() * 1.0) / ((McNode) child).getNumSims())));
+                    + (Math.sqrt(0.7 * (Math.log(getNumSims() * 1.0) / ((McNode) child).getNumSims()))); //0.7 worked better as a constant instead of the theoretical sqrt(2).
         }
         return uctValue;
     }
@@ -129,7 +129,7 @@ public class McNode implements Node {
         Random random = new Random();
 
         List<Move> moves = state.getUnexploredMoves(); //Gets all the moves from that state.
-        List<int[]> validIndices = this.getState().getValidIndices(); //Gets the valid indices for that player for the current state. No biases, all duplicates have been removed.
+        List<int[]> validIndices = this.getState().getValidIndices(); //Gets the valid indices for that player for the current state. All duplicates have been removed, unlike the valid moves.
 
         int index = random.nextInt(validIndices.size()); //Get a random row/column pair from the valid indices.
         int[] movePair = validIndices.remove(index);

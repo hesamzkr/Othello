@@ -45,7 +45,7 @@ public interface Game {
      * Creates a new instance of game with
      * same state and returns it
      *
-     * @return
+     * @return a copy of the game.
      */
     Game deepCopy();
 

@@ -24,7 +24,7 @@ public interface Client {
     /**
      * Sends a message to a client handler on the server.
      *
-     * @param message
+     * @param message that should be sent.
      */
     void send(String message);
 

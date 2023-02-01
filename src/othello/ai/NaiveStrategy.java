@@ -41,8 +41,8 @@ public class NaiveStrategy implements Strategy {
         row = validIndices.get(index)[0];
         col = validIndices.get(index)[1];
 
-        for (int[] i : validIndices) {
-            if ((i[0] == 0 && i[1] == 0) || (i[0] == 0 && i[1] == 7) || (i[0] == 7 && i[1] == 0) || (i[0] == 7 && i[1] == 7)) {
+        for (int[] i : validIndices) { //If there are corners available to play, select those instead of the random positions.
+            if ((i[0] == 0 && i[1] == 0) || (i[0] == 0 && i[1] == 7) || (i[0] == 7 && i[1] == 0) || (i[0] == 7 && i[1] == 7)) { //Positions of all the corners.
                 row = i[0];
                 col = i[1];
             }

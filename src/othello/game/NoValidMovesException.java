@@ -5,7 +5,7 @@ package othello.game;
  */
 public class NoValidMovesException extends Exception {
     /**
-     * Constructor of the exception with a exceotion constant message
+     * Constructor of the exception with an exception constant message
      */
     public NoValidMovesException() {
         super("You have no valid moves to play");
