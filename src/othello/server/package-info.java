@@ -1,3 +1,0 @@
-
-
-package othello.server;

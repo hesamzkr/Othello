@@ -44,10 +44,10 @@ public class OthelloClient implements Client, Runnable {
                         case Protocol.NEWGAME -> {
                             if (protocolSplit[1].equals(player.getName())) {
                                 game = new OthelloGame(player, new HumanPlayer(protocolSplit[2]));
-                                listener.printNewGameFound(protocolSplit[2]);
+                                listener.printNewGameFound(protocolSplit[2], Mark.BLACK);
                             } else {
                                 game = new OthelloGame(new HumanPlayer(protocolSplit[1]), player);
-                                listener.printNewGameFound(protocolSplit[1]);
+                                listener.printNewGameFound(protocolSplit[1], Mark.WHITE);
                             }
                         }
                         case Protocol.MOVE -> {

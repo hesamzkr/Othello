@@ -42,7 +42,7 @@ public class OthelloServer implements Server, Runnable {
         matchMakingThread = new Thread(() -> {
             while (true) {
                 synchronized (queue) {
-                    if (!queue.isEmpty() && queue.size() % 2 == 0) {
+                    if (queue.size() >= 2) {
                         ClientHandler clientHandler1 = queue.remove();
                         ClientHandler clientHandler2 = queue.remove();
                         clientHandler1.setOpponent(clientHandler2);
@@ -52,20 +52,6 @@ public class OthelloServer implements Server, Runnable {
                         clientHandler2.setGame(game);
                         clientHandler1.sendNewGame(clientHandler1.getUsername(), clientHandler2.getUsername());
                         clientHandler2.sendNewGame(clientHandler1.getUsername(), clientHandler2.getUsername());
-                        new Thread(() -> {
-                            while (!game.isGameOver()) {
-                                Thread.onSpinWait();
-                            }
-                            if (game.getWinner() != null) {
-                                clientHandler1.send(Protocol.sendWin(game.getWinner().getName()));
-                                clientHandler2.send(Protocol.sendWin(game.getWinner().getName()));
-                            } else {
-                                clientHandler1.send(Protocol.sendDraw());
-                                clientHandler2.send(Protocol.sendDraw());
-                            }
-                            clientHandler1.reset();
-                            clientHandler2.reset();
-                        }).start();
                     }
                 }
             }
