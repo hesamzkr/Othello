@@ -7,57 +7,68 @@ import othello.game.Player;
 
 import java.util.List;
 
+/**
+ * Stores the current state of the game, as well as store information related to a node such as which move was played to get to the game state of its parent.
+ */
 public class State {
     private Game game;
     private Player player;
 
-    public List<Move> moveToParent;
+    /**
+     * Should only be accessed by other classes in this package, such as the McNode class.
+     */
+    protected List<Move> moveToParent;
 
     private List<Move> unexploredMoves;
 
+    /**
+     * Which locations on the board can be played move by the player.
+     */
     private List<int[]> validIndices;
 
-    /**
-     * setting the player (or AI) as opponent should allow it to also
-     * recommend moves to the player.
-     *
-     * @param game
-     */
+
     public State(Game game, List<Move> moveToParent) {
         this.moveToParent = moveToParent;
-        this.game = game; //deepcopy?
-//        this.unexploredMoves = game.getValidMoves(game.getTurn().getMark());
-//        this.validIndices = ((OthelloGame) game).showValids();
-//        this.player = game.getTurn(); //change later
+        this.game = game;
         if (game != null) {
             this.unexploredMoves = game.getValidMoves(game.getTurn().getMark());
             this.validIndices = ((OthelloGame) game).showValids(unexploredMoves);
-            this.player = game.getTurn(); //change later
+            this.player = game.getTurn();
         }
     }
 
+    /**
+     * Gets the game.
+     *
+     * @return the game.
+     */
     public Game getGame() {
         return game;
     }
 
+    /**
+     * Gets the player who has the turn for this game state.
+     *
+     * @return the current player.
+     */
     public Player getPlayer() {
         return player;
     }
 
-//    public void randomMove() {
-//        NaiveStrategy strat = new NaiveStrategy();
-//        game.doMove(strat.determineMove(game));
-//    }
-
-    public Move getMoveToParent() {
-        return getMoveToParent();
-    }
-
-
+    /**
+     * Get the valid moves that not have been explored yet.
+     *
+     * @return a list of moves.
+     */
     public List<Move> getUnexploredMoves() {
         return unexploredMoves;
     }
 
+    /**
+     * Gets the row and column of the locations that can be played.
+     *
+     * @return a list of row/column pairs that.
+     */
     public List<int[]> getValidIndices() {
         return validIndices;
     }

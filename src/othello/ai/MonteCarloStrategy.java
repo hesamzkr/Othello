@@ -4,8 +4,14 @@ import othello.game.*;
 
 import java.util.List;
 
+/**
+ * Performs the MCTS algorithm which involves selection, expansion, simulation and backpropagation in order to find the most optimal move to play.
+ */
 public class MonteCarloStrategy implements Strategy {
 
+    /**
+     * Represents how often MCTS should be iterated based on the selected difficulty.
+     */
     private int numIterations;
 
     public MonteCarloStrategy(Difficulty difficulty) {
@@ -21,6 +27,13 @@ public class MonteCarloStrategy implements Strategy {
         return "Monte Carlo Tree Search ";
     }
 
+    /**
+     * Determines which move to play by going through the four stages of MCTS (selection, expansion, simulation and backpropagation)
+     * and iterating that a specified number of times.
+     *
+     * @param game the current game for which the most optimal move should be calculated for.
+     * @return the most optimal move according to MCTS.
+     */
     @Override
     public List<Move> determineMove(Game game) {
         Node root = new McNode(null, new State(game, null));
@@ -32,7 +45,7 @@ public class MonteCarloStrategy implements Strategy {
             ((McNode) newNode).backPropagation(score);
         }
 
-        Node childWithMostVisits = ((McNode) root).getNodeWithMostVisits();
+        Node childWithMostVisits = ((McNode) root).getNodeWithMostSims();
         if (childWithMostVisits.getState().moveToParent.isEmpty() || childWithMostVisits.getState().moveToParent == null) {
             System.out.println(childWithMostVisits.getState().getPlayer().getMark());
             System.out.println(childWithMostVisits.getChildArray().size());
@@ -44,19 +57,14 @@ public class MonteCarloStrategy implements Strategy {
     }
 
     /**
-     * Takes an existing game and should simulate how it plays out using random players
+     * Randomly simulates how a game plays out from a certain game-state.
      *
-     * @param newGame
-     * @return
+     * @param newGame from which the rollout should happen.
+     * @return the score of the game depending on who won.
      */
     private Score simulate(Game newGame) {
         OthelloGame copy = ((OthelloGame) newGame).deepCopy();
         while (!copy.isGameOver()) {
-//            try {
-//                newGame.doMove(new NaiveStrategy().determineMove(newGame));
-//            } catch (NoValidMoves ignored) {
-//            }
-//            ((OthelloGame) newGame).nextTurn();
             try {
                 Mark current = copy.getTurn().getMark();
                 if (copy.getValidMoves(current).isEmpty()) {
@@ -71,37 +79,21 @@ public class MonteCarloStrategy implements Strategy {
     }
 
     /**
-     * Traverses through the tree -> make sure that same moves were played to get to these nodes
-     * MctsNode rootNode = new MctsNode(null, null, game);
-     * <p>
-     * public MctsNode(MctsNode parent, TicTacToeMove move, TicTacToeGame game) {
-     * this.parent = parent;
-     * moveUsedToGetToNode = move;
-     * unexploredMoves = game.getAvailableMoves();
-     * reward = new Reward(0, 0);
-     * player = game.getPlayerToMove();
-     * }
+     * Select which node should be expanded next.
      *
-     * @param node
-     * @param newGame
-     * @return
+     * @param node    the current node in the search tree.
+     * @param newGame the current game state.
+     * @return the selected node for expansion.
      */
     private Node select(Node node, Game newGame) {
-        //boolean condition1 = ((McNode) node).canExpandNode();
-        // condition2 = newGame.isGameOver();
         while (!((McNode) node).canExpandNode() && !newGame.isGameOver()) {
             node = ((McNode) node).selectNode();
             List<Move> move = ((McNode) node).getState().moveToParent;
-            if (move != null && !move.isEmpty()) { //was first != null
-//                if (!((OthelloGame) newGame).isValidLocation(move.get(0).getRow(), move.get(0).getCol())) {
-//                    return node;
-//                }
+            if (move != null && !move.isEmpty()) {
                 newGame.doMove(move);
                 ((OthelloGame) newGame).nextTurn();
             }
         }
         return node;
     }
-
-
 }

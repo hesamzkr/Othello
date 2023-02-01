@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * A strategy that determines moves randomly or plays corners.
+ */
 public class NaiveStrategy implements Strategy {
 
     @Override
@@ -16,27 +19,13 @@ public class NaiveStrategy implements Strategy {
         return "Naive Strategy";
     }
 
-//    @Override
-//    public List<Move> determineMove(Game game) throws NoValidMoves {
-//        List<Move> moves = game.getValidMoves(game.getTurn().getMark());
-//        Random random = new Random();
-//
-//        if (moves.isEmpty()) {
-//            throw new NoValidMoves();
-//        }
-//        List<int[]> validIndices = ((OthelloGame) game).showValids(moves);
-//        int index = random.nextInt(validIndices.size());
-//        int row = validIndices.get(index)[0];
-//        int col = validIndices.get(index)[1];
-//        List<Move> playMoves = new ArrayList<>();
-//        for (Move m : moves) {
-//            if (m.getRow() == row && m.getCol() == col) {
-//                playMoves.add(m);
-//            }
-//        }
-//        return playMoves;
-//    }
-
+    /**
+     * Finds a random move to play, or a corner move if available.
+     *
+     * @param game the game for which a move should be selected.
+     * @return a randomly selected move or a corner move.
+     * @throws NoValidMoves
+     */
     public List<Move> determineMove(Game game) throws NoValidMoves {
         List<Move> moves = game.getValidMoves(game.getTurn().getMark());
         Random random = new Random();

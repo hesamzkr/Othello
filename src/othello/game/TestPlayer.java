@@ -30,7 +30,6 @@ public class TestPlayer extends ComputerPlayer {
         int row = moveIndex / Board.DIM;
         int col = moveIndex % Board.DIM;
         List<Move> moves = game.getValidMoves(super.mark);
-        List<Move> checker = ((OthelloGame) game).combineMoves();
         if (moves.isEmpty()) {
             throw new NoValidMoves();
         }
