@@ -1,39 +1,40 @@
 ## Name
-Choose a self-explaining name for your project.
+
+Multiplayer Othello Game
 
 ## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+A multiplayer game of Othello where you can either play as yourself and get hints from the AIs or let the AI play for
+you entirely. It's through a client-server connection which will then handle your request and send it to other players.
+The client is a textual user interface, which means you interact with it through a console and by typing your inputs to
+the program.
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+
+Need to have Java on your machine to run the jar files for the server and client. Or additionally run and compile the
+Java classes of client.OthelloApp and server.OthelloServerApp yourself.
 
 ## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+
+Create a server with a specific port. by running the jar file for server or server.OthelloServerApp
+Then run at least two instances of the client jar file or client.OthelloApp.
+Give the clients the address and port of the server and follow the menus given to you by the clients.
+Client only sends the queue request to the server **after** the player who will be playing the game has been chosen.
 
 ## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+
+Email us at:
+
+- h.zakeri@student.utwente.nl
+- n.j.vanmaare@student.utwente.nl
 
 ## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+The server could be fixed to be faster. and client's UI can become more friendly
+by giving users more clear instructions and bette menus.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+## Visuals
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+![image](img2.jpg)
+![image](img1.jpg)
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
