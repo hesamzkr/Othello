@@ -84,14 +84,14 @@ public class McNode implements Node {
      *
      * @return the node with the highest uct value.
      */
-    public Node selectNode() { //UCB1 is a selection policy
+    public Node selectNode() {
         currentNode = this;
-        double max = Integer.MIN_VALUE;
+        double bestUct = Integer.MIN_VALUE;
         for (Node child : childArray) {
             double uctValue = getUctValue(child);
-            if (uctValue > max) {
-                max = uctValue;
-                currentNode = child; //Why the current node?
+            if (uctValue > bestUct) {
+                bestUct = uctValue;
+                currentNode = child;
             }
         }
         return currentNode;
@@ -105,7 +105,7 @@ public class McNode implements Node {
      */
     private double getUctValue(Node child) { //New UCT class?
         double uctValue;
-        if (((McNode) child).getNumSims() == 0) {
+        if (((McNode) child).getNumSims() == 0) { //Having 0 simulations will lead to a uct value of infinity (dividing by 0).
             uctValue = 1;
         } else {
             uctValue = (child.getScoreForPlayer(child.getState().getPlayer())) / (((McNode) child).getNumSims() * 1.0)
@@ -146,9 +146,6 @@ public class McNode implements Node {
         for (Move m : randomMoves) {
             state.getUnexploredMoves().remove(m); //Remove all those moves from that state's unexplored moves.
         }
-//        if (!randomMoves.isEmpty()) { //Only actual valid moves available should they be played.
-//            game.doMove(randomMoves);
-//        }
         game.nextTurn(); //go to next turn to create new nodes.
 
         if (game.getValidMoves(game.getTurn().getMark()).isEmpty()) { //If the next turn results in no valid moves, skip that turn.
@@ -175,7 +172,7 @@ public class McNode implements Node {
      *
      * @param score the score that should be back-propagated.
      */
-    public void backPropagation(Score score) { //TODO: give backpropagation the average of the scores.
+    public void backPropagation(Score score) {
         this.getScore().incScore(score);
         this.numSims++;
         if (getParent() != null) {
@@ -210,20 +207,5 @@ public class McNode implements Node {
         }
 
         return bestChild;
-    }
-
-    /**
-     * Prints the search tree of a node.
-     */
-    public void printTree() {
-        String playerRewards = "";
-
-        for (var key : score.getScores().keySet()) {
-            playerRewards += String.format("%s: %s", key, score.getScorePlayer((Player) key));
-        }
-        System.out.println(String.format("Player: %s, Move: %s, Simulations: %s, Rewards: %s", this.state.getPlayer(), state.moveToParent != null ? state.moveToParent : null, numSims, playerRewards));
-        for (Node child : childArray) {
-            ((McNode) child).printTree();
-        }
     }
 }

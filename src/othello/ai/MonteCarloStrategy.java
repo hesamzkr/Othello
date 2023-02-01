@@ -22,6 +22,11 @@ public class MonteCarloStrategy implements Strategy {
         }
     }
 
+    /**
+     * Get the name of the strategy.
+     *
+     * @return the name of the MCTS strategy.
+     */
     @Override
     public String getName() {
         return "Monte Carlo Tree Search ";
@@ -36,7 +41,7 @@ public class MonteCarloStrategy implements Strategy {
      */
     @Override
     public List<Move> determineMove(Game game) {
-        Node root = new McNode(null, new State(game, null));
+        McNode root = new McNode(null, new State(game, null)); //Start creating a tree at the root node.
         for (int i = 0; i < numIterations; i++) {
             Game newGame = game.deepCopy();
             Node newNode = select(root, newGame);
@@ -45,14 +50,7 @@ public class MonteCarloStrategy implements Strategy {
             ((McNode) newNode).backPropagation(score);
         }
 
-        Node childWithMostVisits = ((McNode) root).getNodeWithMostSims();
-        if (childWithMostVisits.getState().moveToParent.isEmpty() || childWithMostVisits.getState().moveToParent == null) {
-            System.out.println(childWithMostVisits.getState().getPlayer().getMark());
-            System.out.println(childWithMostVisits.getChildArray().size());
-            ((McNode) childWithMostVisits).printTree();
-            System.out.println("Something very wrong is going on.");
-            throw new RuntimeException("Something very wrong is going on.");
-        }
+        Node childWithMostVisits = root.getNodeWithMostSims();
         return childWithMostVisits.getState().moveToParent;
     }
 
@@ -63,11 +61,11 @@ public class MonteCarloStrategy implements Strategy {
      * @return the score of the game depending on who won.
      */
     private Score simulate(Game newGame) {
-        OthelloGame copy = ((OthelloGame) newGame).deepCopy();
+        OthelloGame copy = ((OthelloGame) newGame).deepCopy(); //A copy of the game is created in order to preserve the game state of each node.
         while (!copy.isGameOver()) {
             try {
                 Mark current = copy.getTurn().getMark();
-                if (copy.getValidMoves(current).isEmpty()) {
+                if (copy.getValidMoves(current).isEmpty()) { //If the current player has no valid moves, go to the next turn.
                     throw new NoValidMoves();
                 }
                 copy.doMove(new NaiveStrategy().determineMove(copy));
@@ -86,9 +84,9 @@ public class MonteCarloStrategy implements Strategy {
      * @return the selected node for expansion.
      */
     private Node select(Node node, Game newGame) {
-        while (!((McNode) node).canExpandNode() && !newGame.isGameOver()) {
+        while (!((McNode) node).canExpandNode() && !newGame.isGameOver()) { //Keep going until a node has been reached that can still be expanded or the game has ended.
             node = ((McNode) node).selectNode();
-            List<Move> move = ((McNode) node).getState().moveToParent;
+            List<Move> move = node.getState().moveToParent;
             if (move != null && !move.isEmpty()) {
                 newGame.doMove(move);
                 ((OthelloGame) newGame).nextTurn();

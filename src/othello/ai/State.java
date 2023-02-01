@@ -30,7 +30,7 @@ public class State {
     public State(Game game, List<Move> moveToParent) {
         this.moveToParent = moveToParent;
         this.game = game;
-        if (game != null) {
+        if (game != null) { //In order to get the following fields, ensure that the game is not null.
             this.unexploredMoves = game.getValidMoves(game.getTurn().getMark());
             this.validIndices = ((OthelloGame) game).showValids(unexploredMoves);
             this.player = game.getTurn();

@@ -31,18 +31,17 @@ public class NaiveStrategy implements Strategy {
         Random random = new Random();
 
         if (moves.isEmpty()) {
-            throw new NoValidMoves();
+            throw new NoValidMoves(); //Cannot determine a random move when there are no valid moves to play.
         }
         List<int[]> validIndices = ((OthelloGame) game).showValids(moves);
         int row;
         int col;
-
-        int index = random.nextInt(validIndices.size());
+        int index = random.nextInt(validIndices.size()); //Select a random position on the board.
         row = validIndices.get(index)[0];
         col = validIndices.get(index)[1];
 
-        for (int[] i : validIndices) {
-            if ((i[0] == 0 && i[1] == 0) || (i[0] == 0 && i[1] == 7) || (i[0] == 7 && i[1] == 0) || (i[0] == 7 && i[1] == 7)) {
+        for (int[] i : validIndices) { //Will set row and col to the position of a corner if it is a valid position.
+            if ((i[0] == 0 && i[1] == 0) || (i[0] == 0 && i[1] == 7) || (i[0] == 7 && i[1] == 0) || (i[0] == 7 && i[1] == 7)) { //Positions of all corners.
                 row = i[0];
                 col = i[1];
             }
@@ -50,7 +49,7 @@ public class NaiveStrategy implements Strategy {
 
         List<Move> playMoves = new ArrayList<>();
         for (Move m : moves) {
-            if (m.getRow() == row && m.getCol() == col) {
+            if (m.getRow() == row && m.getCol() == col) { //Add all the moves which are played at the random position.
                 playMoves.add(m);
             }
         }

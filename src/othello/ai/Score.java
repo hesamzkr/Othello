@@ -41,7 +41,7 @@ public class Score {
      * @param score that should be added to the current scores.
      */
     public void incScore(Score score) {
-        for (var keys : score.getScores().keySet()) {
+        for (var keys : score.getScores().keySet()) { //The keys are the players.
             scores.put(keys, scores.get(keys) + score.getScorePlayer(keys));
         }
     }
