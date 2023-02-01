@@ -11,6 +11,10 @@ the program.
 
 ## Installation
 
+SDK: Oracle OpenJDK 17.0.1
+
+Language level: 17
+
 Need to have Java on your machine to run the jar files for the server and client. Or additionally run and compile the
 Java classes of client.OthelloApp and server.OthelloServerApp yourself.
 
