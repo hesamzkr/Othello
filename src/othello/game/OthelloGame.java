@@ -410,8 +410,6 @@ public class OthelloGame implements Game {
      * @return a list that only contains unique rows and columns.
      */
     public List<int[]> showValids(List<Move> moves) {
-        //List<Move> moves = getValidMoves(getTurn().getMark());
-        //Set<int[]> cache = new HashSet<>();
         List<int[]> valids = new ArrayList<>();
         for (Move m : moves) {
             int[] rowcol = new int[2];
@@ -428,7 +426,7 @@ public class OthelloGame implements Game {
                 valids.add(rowcol);
             }
         }
-        return valids; // NOT DOING THIS CORRECTLY
+        return valids;
     }
 
     /**
