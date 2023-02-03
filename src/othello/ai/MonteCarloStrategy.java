@@ -14,11 +14,13 @@ public class MonteCarloStrategy implements Strategy {
      */
     private int numIterations;
 
+    private long thinking = 0L;
+
     public MonteCarloStrategy(Difficulty difficulty) {
         switch (difficulty) {
             case EASY -> numIterations = 10;
             case MEDIUM -> numIterations = 1600;
-            case HARD -> numIterations = 30000;
+            case HARD -> thinking = 5000L;
         }
     }
 
@@ -42,14 +44,25 @@ public class MonteCarloStrategy implements Strategy {
     @Override
     public List<Move> determineMove(Game game) {
         McNode root = new McNode(null, new State(game, null)); //Start creating a tree at the root node.
-        for (int i = 0; i < numIterations; i++) {
-            Game newGame = game.deepCopy();
-            Node newNode = select(root, newGame);
-            newNode = ((McNode) newNode).expandNode((OthelloGame) newGame);
-            Score score = simulate(newGame);
-            ((McNode) newNode).backPropagation(score);
+        if (thinking == 0) {
+            for (int i = 0; i < numIterations; i++) {
+                Game newGame = game.deepCopy();
+                Node newNode = select(root, newGame);
+                newNode = ((McNode) newNode).expandNode((OthelloGame) newGame);
+                Score score = simulate(newGame);
+                ((McNode) newNode).backPropagation(score);
+            }
+        } else {
+            long t = System.currentTimeMillis();
+            long end = t + thinking;
+            while (System.currentTimeMillis() < end) {
+                Game newGame = game.deepCopy();
+                Node newNode = select(root, newGame);
+                newNode = ((McNode) newNode).expandNode((OthelloGame) newGame);
+                Score score = simulate(newGame);
+                ((McNode) newNode).backPropagation(score);
+            }
         }
-
         Node childWithMostVisits = root.getNodeWithMostSims();
         return childWithMostVisits.getState().moveToParent;
     }

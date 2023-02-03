@@ -167,6 +167,9 @@ public class OthelloClient implements Client, Runnable {
             if (game.isGameOver()) {
                 return;
             }
+            if (game.getValidMoves(game.getTurn().getMark()).isEmpty()) {
+                throw new NoValidMovesException();
+            }
             List<Move> moves = player.determineMove(game);
             int aiMoveIndex = moves.get(0).getIndex();
             sendMove(aiMoveIndex);

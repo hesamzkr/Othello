@@ -73,6 +73,7 @@ public class OthelloGame implements Game {
      * @param m mark for which the valid moves are calculated for
      * @return list of valid moves for the mark
      */
+    //@ensures (\forall int i; 0 <= i && i < \result.size() ; board.isField(\result.get(i).getRow(),\result.get(i).getCol()));
     public List<Move> getValidMoves(Mark m) {
         List<Move> validMoves = new ArrayList<>();
 
@@ -118,8 +119,6 @@ public class OthelloGame implements Game {
     public List<Move> combineMoves() {
         List<Move> combinedMoves = new ArrayList<>();
         List<Move> moves = getValidMoves(turn.getMark());
-        List<int[]> ints = showValids(moves);
-        int size = showValids(moves).size();
         for (int[] rc : showValids(moves)) { // go through all row/col pairs
             List<Move> combine = new ArrayList<>(); //For moves with the same row/col
             for (Move m : moves) {
@@ -149,6 +148,8 @@ public class OthelloGame implements Game {
      * @param col of the position from which the scan is performed.
      * @return a move which contains all the pieces that can be flipped.
      */
+    //@requires board.isField(row,col);
+    //@ensures board.getField(\result.getRow(),\result.getCol()) == Mark.EMPTY;
     public Move ScanUpperDiagLeft(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
         toFlip.add(new OthelloMove(m, row - 1, col - 1));
@@ -178,6 +179,8 @@ public class OthelloGame implements Game {
      * @param col of the position from which the scan is performed.
      * @return a move which contains all the pieces that can be flipped.
      */
+    //@requires board.isField(row,col);
+    //@ensures board.getField(\result.getRow(),\result.getCol()) == Mark.EMPTY;
     public Move ScanUpper(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
         toFlip.add(new OthelloMove(m, row - 1, col));
@@ -205,6 +208,8 @@ public class OthelloGame implements Game {
      * @param col of the position from which the scan is performed.
      * @return a move which contains all the pieces that can be flipped.
      */
+    //@requires board.isField(row,col);
+    //@ensures board.getField(\result.getRow(),\result.getCol()) == Mark.EMPTY;
     public Move ScanUpperDiagRight(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
         toFlip.add(new OthelloMove(m, row - 1, col + 1));
@@ -234,6 +239,8 @@ public class OthelloGame implements Game {
      * @param col of the position from which the scan is performed.
      * @return a move which contains all the pieces that can be flipped.
      */
+    //@requires board.isField(row,col);
+    //@ensures board.getField(\result.getRow(),\result.getCol()) == Mark.EMPTY;
     public Move ScanLeftPiece(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
         toFlip.add(new OthelloMove(m, row, col - 1));
@@ -261,6 +268,8 @@ public class OthelloGame implements Game {
      * @param col of the position from which the scan is performed.
      * @return a move which contains all the pieces that can be flipped.
      */
+    //@requires board.isField(row,col);
+    //@ensures board.getField(\result.getRow(),\result.getCol()) == Mark.EMPTY;
     public Move ScanRightPiece(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
         toFlip.add(new OthelloMove(m, row, col + 1));
@@ -288,6 +297,8 @@ public class OthelloGame implements Game {
      * @param col of the position from which the scan is performed.
      * @return a move which contains all the pieces that can be flipped.
      */
+    //@requires board.isField(row,col);
+    //@ensures board.getField(\result.getRow(),\result.getCol()) == Mark.EMPTY;
     public Move ScanLowerDiagLeft(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
         toFlip.add(new OthelloMove(m, row + 1, col - 1));
@@ -317,6 +328,8 @@ public class OthelloGame implements Game {
      * @param col of the position from which the scan is performed.
      * @return a move which contains all the pieces that can be flipped.
      */
+    //@requires board.isField(row,col);
+    //@ensures board.getField(\result.getRow(),\result.getCol()) == Mark.EMPTY;
     public Move ScanLowerDiagRight(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
         toFlip.add(new OthelloMove(m, row + 1, col + 1));
@@ -346,6 +359,8 @@ public class OthelloGame implements Game {
      * @param col of the position from which the scan is performed.
      * @return a move which contains all the pieces that can be flipped.
      */
+    //@requires board.isField(row,col);
+    //@ensures board.getField(\result.getRow(),\result.getCol()) == Mark.EMPTY;
     public Move ScanLower(Mark m, int row, int col) {
         ArrayList<OthelloMove> toFlip = new ArrayList<>();
         toFlip.add(new OthelloMove(m, row + 1, col));
@@ -524,7 +539,7 @@ public class OthelloGame implements Game {
 
 
     /**
-     * Given to the AI for to be used for modularity
+     * Gives scores after a game which can be given to an AI.
      *
      * @return Score of the game
      */
@@ -535,7 +550,7 @@ public class OthelloGame implements Game {
             if (board.isFull() && winner != null) {
                 if ((board.getField(0, 0) == winner.getMark()) && (board.getField(0, 7) == winner.getMark()) &&
                         (board.getField(7, 0) == winner.getMark()) && (board.getField(7, 7) == winner.getMark())) {
-                    bonus += 0.0005;
+                    bonus += 0.5;
                 }
             }
             if (winner == player1) {
